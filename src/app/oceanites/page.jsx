@@ -1,0 +1,94 @@
+"use client";
+import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import NotificationMsg from "@/components/NotificationMsg";
+import "../globals.css";
+import { ArrowBack } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import OceaniteCard from "@/components/OceaniteCard";
+import { UIStore, UserStore } from "@/store/OceanStore";
+import LeftSideBar from "@/components/LeftSideBar";
+import MsgInputTextarea from "@/components/InputTextArea";
+
+const OceaniteAtolls = () => {
+  const { profileData } = UserStore();
+  const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
+
+  const router = useRouter();
+
+  return (
+    <div>
+      <div className="w-screen flex h-screen relative overflow-x-hidden customScrollbar">
+        <div
+          onClick={() => {
+            isMsgsOpen ? setIsMsgsOpen(false) : router.push("/");
+          }}
+          className="fixed lg:hidden top-[1px] left-[1px] z-30 text-white bg-blue-700 bg-opacity-80 rounded-tl-none rounded-xl p-[2px] cursor-pointer"
+        >
+          <ArrowBack className="size-7" />
+        </div>
+
+        {/* NAVIGATION BAR STARTS HERE */}
+        <Navbar
+          navStyle={
+            "fixed -bottom-2 pb-2 sm:me-1 px-[2px] flex w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[62%] sm:rounded-t-2xl z-20 border-t border-slate-700 translate-x-1/2 right-1/2 lg:top-0 lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
+          }
+        />
+        {/* NAVIGATION BAR ENDS HERE */}
+
+        <LeftSideBar
+          styles={` ${
+            isMsgsOpen && !isOCardOpen
+              ? "opacity-100 fixed"
+              : "opacity-0 hidden"
+          } lg:opacity-100 transition-opacity h-full lg:p-4 pb-[56px] ps-2 pt-2 pe-2 bg-background dark:bg-d_background lg:ps-3 lg:pe-1 left-0 w-full sm:ps-[12%] sm:pe-[13%] lg:left-auto rounded-xl top-0 lg:hidden lg:w-[40%] xl:w-[32%]`}
+        />
+
+        {/* MAIN CONTENT STARTS HERE */}
+        <div className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px]">
+          {/* OCEANITES STARTS HERE */}
+
+          <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
+            <MsgInputTextarea
+              placeholder={"Search your Oceanite..."}
+              submitBtn={"search"}
+            />
+          </div>
+          <div className=" max-w-2xl m-auto ">
+            <OceaniteCard
+              name={profileData?.name}
+              username={profileData?.username}
+              wave={profileData?.wave}
+              avatar_url={profileData?.avatar?.split("<|>")[0]}
+              anchors={"4545k"}
+              anchorings={"4545k"}
+            />
+            <OceaniteCard
+              name={profileData?.name}
+              username={profileData?.username}
+              wave={profileData?.wave}
+              avatar_url={profileData?.avatar?.split("<|>")[0]}
+              anchors={profileData?.anchors}
+              anchorings={profileData?.anchorings}
+            />
+            <OceaniteCard
+              name={profileData?.name}
+              username={profileData?.username}
+              wave={profileData?.wave}
+              avatar_url={profileData?.avatar?.split("<|>")[0]}
+              anchors={profileData?.anchors}
+              anchorings={profileData?.anchorings}
+            />
+          </div>
+
+          {/* OCEANITES ENDS HERE */}
+
+          <div className="h-1 w-full my-20"></div>
+        </div>
+        {/* MAIN CONTENT ENDS HERE */}
+      </div>
+    </div>
+  );
+};
+
+export default OceaniteAtolls;
