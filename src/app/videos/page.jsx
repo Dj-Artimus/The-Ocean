@@ -279,11 +279,11 @@ const VideosPage = () => {
           </div>
 
           <div
-            className="mt-2 h-1 bg-gray-600 cursor-pointer"
+            className="mt-2 h-1 bg-gray-600 cursor-pointer rounded-md bg-opacity-40"
             onClick={handleSeek}
           >
             <div
-              className="h-full bg-white"
+              className="h-full rounded-md bg-blue-600 bg-opacity-50"
               style={{
                 width: `${
                   (currentTime / videoRef.current?.duration) * 100 || 0
