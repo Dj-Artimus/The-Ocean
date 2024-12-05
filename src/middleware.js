@@ -26,6 +26,7 @@ export const config = {
      * - login, signup, landing-page, verify-email (unprotected routes)
      * - SVG, PNG, JPG, JPEG, GIF, WEBP (image file extensions)
      */
-    '/((?!_next/static|_next/image|favicon.ico|login|signup|landing-page|verify-email|select-username|auth/callback|$|\..*\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
+    // '/((?!_next/static|_next/image|favicon.ico|login|signup|landing-page|verify-email|select-username|auth/callback|$|\..*\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
+    '/((?!_next/static|_next/image|favicon.ico|login|signup|landing-page|verify-email|select-username|auth/callback|.*\.(?:svg|png|jpg|jpeg|gif|webp)).*)',
   ],
 };

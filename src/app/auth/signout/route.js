@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase copy/server'
+import { createClient } from '@/utils/supabase/client'
 import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 

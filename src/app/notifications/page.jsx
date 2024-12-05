@@ -6,7 +6,7 @@ import "../globals.css";
 import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import LeftSideBar from "@/components/LeftSideBar";
-import { UIStore } from "@/store/OceanStore";
+import { UIStore } from "@/store/UIStore";
 
 const Notifications = () => {
   const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();

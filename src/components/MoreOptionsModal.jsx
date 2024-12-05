@@ -1,6 +1,5 @@
 "use client";
 
-import { DropletStore, UIStore } from "@/store/OceanStore";
 import {
   Close,
   Delete,
@@ -10,6 +9,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { errorToast } from "./ToasterProvider";
 import InputTextarea from "./InputTextArea";
+import { UIStore } from "@/store/UIStore";
+import { DropletStore } from "@/store/DropletStore";
 
 const MoreOptionsModal = () => {
   const {

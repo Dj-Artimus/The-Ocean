@@ -4,7 +4,8 @@ import OceanBoard from "./OceanBoard";
 import OceanScore from "./OceanScore";
 import Footer from "./Footer";
 import "../app/globals.css";
-import { UIStore, UserStore } from "@/store/OceanStore";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
 
 const RightSideBar = ({ styles }) => {
   const { profileData } = UserStore();

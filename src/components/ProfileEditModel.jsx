@@ -1,5 +1,4 @@
 "use client";
-import { UIStore, UserStore } from "@/store/OceanStore";
 import { TextareaAutosize } from "@mui/base";
 import {
   AssignmentTurnedIn,
@@ -26,6 +25,8 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { successToast } from "./ToasterProvider";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
 
 const months = [
   { value: 1, label: "January" },
@@ -177,6 +178,10 @@ const ProfileEditModal = ({profileData}) => {
                           selectPoster.current.click();
                         }}
                         src={ posterData.newSource || posterData.currentSource}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/images/defaultPoster.png";
+                        }}
                         alt="poster"
                         className="my-2 w-full max-h-[26vh] lg:max-h-72 rounded-xl border border-slate-700 object-cover "
                       />
@@ -190,6 +195,10 @@ const ProfileEditModal = ({profileData}) => {
                         accept="image/*" // Allow only images
                         className="hidden"
                         onChange={(e) => handleFileChange(e, "avatar")}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/images/jellyfishFallback.png";
+                        }}
                       />
                       <img
                         onClick={(e) => {

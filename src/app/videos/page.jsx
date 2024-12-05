@@ -5,82 +5,54 @@ import { motion, useAnimation } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
-import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import AssistantIcon from "@mui/icons-material/Assistant";
-import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
-import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
-import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-import AssistantOutlinedIcon from "@mui/icons-material/AssistantOutlined";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/navigation";
 import { ArrowBack, Cyclone } from "@mui/icons-material";
-import { DropletStore } from "@/store/OceanStore";
 import VideosContentElement from "@/components/VideosContentElement";
+import { DropletStore } from "@/store/DropletStore";
+import { UIStore } from "@/store/UIStore";
+import VideoReactions from "@/components/VideoReactions";
 
 const VideosPage = () => {
   const router = useRouter();
-  const { GetFeedVideos } = DropletStore();
-
-  const [stared, setStared] = useState(false);
-  const [rippled, setRippled] = useState(false);
-  const [gemmed, setGemmed] = useState(false);
+  const { GetFeedVideos, feedVideos, setDropletDataType } = DropletStore();
+  const { setIsMsgsOpen, setIsOCardOpen } = UIStore();
 
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [showControls, setShowControls] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const controls = useAnimation();
   const videoRef = useRef(null);
-  const [videos, setVideos] = useState([]);
+  // const [videos, setVideos] = useState([]);
 
   const getVideos = async () => {
-    const videoData = await GetFeedVideos();
-    const organizedData = videoData?.map((data) => {
-        return data?.videos?.map((url) => {
-          return {
-            url: url?.split("<|>")[0],
-            author_name: data?.user_id?.name,
-            username: data?.user_id?.username,
-            avatar: data?.user_id?.avatar?.split("<|>")[0],
-            author_id: data?.user_id?.id,
-            droplet_id: data?.id,
-            content: data?.content,
-            stars: data?.stars,
-            ripples: data?.ripples,
-            redrops: data?.redrops,
-          };
-        });
-      })
-      ?.flat();
-
-    // Fisher-Yates Shuffle Algorithm
-    const shuffleVideos = (array) => {
-      for (let i = array?.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1)); // Random index
-        [array[i], array[j]] = [array[j], array[i]]; // Swap
-      }
-      return array;
-    };
-
-    // Shuffle the organizedData array
-    const shuffledVideos = shuffleVideos(organizedData);
-
-    console.log("organizedData", organizedData);
-    console.log("shuffledVideos", shuffledVideos);
-    setVideos(shuffledVideos);
+    // const videoData =
+    if (!hasMore) return;
+    const newVideos = await GetFeedVideos(page , 5);
+    if (newVideos?.length < 5 || newVideos === "end") {
+      setHasMore(false); // Stop fetching if fewer than limit
+    }
+    ;
   };
 
   useEffect(() => {
-    getVideos();
+    setIsMsgsOpen(false);
+    setIsOCardOpen(false);
+    setDropletDataType('feedVideos');
   }, []);
 
-  const videoCount = videos?.length;
+  useEffect(() => {
+    getVideos();
+  }, [page]);
+
+  const videoCount = feedVideos?.length;
 
   const handlers = useSwipeable({
     onSwipedUp: () => !expanded && changeVideo("up"),
@@ -103,6 +75,11 @@ const VideosPage = () => {
       videoRef.current.play();
       setIsPlaying(true);
     }
+
+    if( currentVideo === (videoCount - 2) ){
+      setPage( (prev) => prev + 1 );
+    }
+
   }, [currentVideo, controls]);
 
   useEffect(() => {
@@ -116,13 +93,6 @@ const VideosPage = () => {
     }
     return () => clearInterval(interval);
   }, [isPlaying]);
-
-  const handleLike = () =>
-    console.log("Liked video:", videos[currentVideo]?.droplet_id);
-  const handleComment = () =>
-    console.log("rippled on video:", videos[currentVideo]?.droplet_id);
-  const handleShare = () =>
-    console.log("Shared video:", videos[currentVideo]?.droplet_id);
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -175,12 +145,12 @@ const VideosPage = () => {
         >
           <video
             ref={videoRef}
-            key={videos[currentVideo]?.droplet_id}
+            key={feedVideos[currentVideo]?.droplet_id}
             autoPlay
             loop
             muted={false}
             playsInline
-            src={videos[currentVideo]?.url}
+            src={feedVideos[currentVideo]?.url}
             className="w-full h-full rounded-lg p-1 object-contain"
           />
         </motion.div>
@@ -201,82 +171,31 @@ const VideosPage = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
           <div className="flex items-center mb-2">
             <img
-              src={videos[currentVideo]?.avatar}
-              alt={videos[currentVideo]?.author_name}
+              src={feedVideos[currentVideo]?.avatar}
+              alt={feedVideos[currentVideo]?.author_name}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/images/jellyfishFallback.png";
+              }}
               className="w-10 h-10 rounded-full mr-2"
             />
             <div>
               <h3 className="text-white font-semibold">
-                {videos[currentVideo]?.author_name}
+                {feedVideos[currentVideo]?.author_name}
               </h3>
               <p className="text-slate-300 flex justify-center gap-[2px] text-sm">
                 <Cyclone className="size-[18px]" />{" "}
-                {videos[currentVideo]?.username}
+                {feedVideos[currentVideo]?.username}
               </p>
             </div>
           </div>
           <VideosContentElement
-            content={videos[currentVideo]?.content}
+            content={feedVideos[currentVideo]?.content}
             expanded={expanded}
             setExpanded={setExpanded}
           />
 
-          <div className="flex max-w-[700px] justify-between items-center text-white">
-            <div className="flex items-center gap-2">
-              <div
-                onClick={() => setStared(!stared)}
-                className="-ms-[6px] cursor-pointer hover:scale-110 active:scale-95"
-                title="like"
-              >
-                {stared ? (
-                  <StarRoundedIcon className="size-[33px] text-amber-400 stroke-amber-500 translate-x-2" />
-                ) : (
-                  <StarOutlineRoundedIcon className="size-[33px] translate-x-2" />
-                )}
-              </div>
-              <h1> {videos[currentVideo]?.stars} </h1>
-            </div>
-            <div className="flex items-center gap-1">
-              <div
-                onClick={() => setRippled(!rippled)}
-                className="cursor-pointer hover:scale-110 active:scale-95"
-              >
-                {rippled ? (
-                  <AssistantIcon
-                    className="size-7 text-sky-500 stroke-sky-700 dark:stroke-none "
-                    title="Comment"
-                  />
-                ) : (
-                  <AssistantOutlinedIcon className="size-7" title="Comment" />
-                )}
-              </div>
-              <h1>{videos[currentVideo]?.ripples}</h1>
-            </div>
-            <div className="flex items-center gap-1">
-              <RepeatRoundedIcon
-                className="size-7 cursor-pointer hover:scale-110 active:scale-95"
-                title="Repost"
-              />
-              <h1> {videos[currentVideo]?.redrops} </h1>
-            </div>
-            <IosShareRoundedIcon
-              className="size-7 cursor-pointer hover:scale-110 active:scale-95"
-              title="Share"
-            />
-            <div
-              onClick={() => setGemmed(!gemmed)}
-              className="cursor-pointer hover:scale-110 active:scale-95"
-            >
-              {gemmed ? (
-                <BookmarkRoundedIcon
-                  className="size-7 text-emerald-500 stroke-emerald-600 "
-                  title="Save"
-                />
-              ) : (
-                <BookmarkBorderRoundedIcon className="size-7" title="Save" />
-              )}
-            </div>
-          </div>
+          <VideoReactions video={feedVideos[currentVideo]} />
 
           <div
             className="mt-2 h-1 bg-gray-600 cursor-pointer rounded-md bg-opacity-40"

@@ -7,10 +7,12 @@ import { useState } from "react";
 export default function InputTextarea({
   placeholder,
   submitBtn,
+  type,
   input,
   setInput,
   handleSubmit,
-  minRows
+  minRows,
+  isProcessing
 }) {
   const [isValidInput, setIsValidInput] = useState(false);
   return (
@@ -26,17 +28,29 @@ export default function InputTextarea({
           setInput(e.target.value);
           setIsValidInput(Boolean(e.target.value.length));
         }}
+        onKeyDown={(e) => {
+          if ( type === 'search' && (e.key === "Enter" && !e.shiftKey)) {
+            e.preventDefault(); // Prevents adding a new line
+            if(e.target.value.length){
+              handleSubmit(); // Replace with your search handler function
+            }
+          }
+        }}
       />
       <button
-        disabled={!isValidInput}
+        disabled={!isValidInput  || isProcessing}
         onClick={(e) => {
           handleSubmit(e);
         }}
-        className={`${!isValidInput && "text-slate-600"} active:text-blue-600  `}
+        type="submit"
+        className={`${
+          (!isValidInput || isProcessing) && "text-slate-600"
+        } active:text-blue-600  `}
       >
-        {submitBtn ? ( submitBtn
-          // <Search className="absolute right-3 bottom-[18px] size-7" />
+        {submitBtn ? (
+          submitBtn
         ) : (
+          // <Search className="absolute right-3 bottom-[18px] size-7" />
           <SendIcon className="absolute right-3 bottom-[18px] size-7" />
         )}
       </button>

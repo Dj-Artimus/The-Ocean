@@ -5,7 +5,7 @@ import { GitHub, Google, Email } from "@mui/icons-material";
 import Link from "next/link";
 import PasswordMeter from "@/components/PasswordMeter";
 import '../globals.css'
-import { AuthStore } from "@/store/OceanStore";
+import { AuthStore } from "@/store/AuthStore";
 
 const SignUp = () => {
 

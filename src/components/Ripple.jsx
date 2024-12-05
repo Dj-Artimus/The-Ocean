@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import RippleContentElement from "./RippleContentElement";
-import { UIStore, UserStore } from "@/store/OceanStore";
 import { MoreVert } from "@mui/icons-material";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
 
 const Ripple = ({
   avatar_url,
@@ -17,13 +18,13 @@ const Ripple = ({
     setContentToEdit,
     setContentEditId,
     setIsMoreOptionsModalOpen,
-    setContentToEditType
+    setContentToEditType,
   } = UIStore();
   const { profileData } = UserStore();
   const [isEchoesExpanded, setIsEchoesExpanded] = useState(false);
 
   return (
-    <div author_id={user_id} className="my-2 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-2xl border-slate-700 w-full">
+    <div author_id={user_id} droplet_id={droplet_id} className="my-2 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-2xl border-slate-700 w-full">
       <div className="">
         <div className="flex items-start fc gap-[5px] ms-[9px]">
           <div className="flex-shrink-0 cursor-pointer">
@@ -42,7 +43,6 @@ const Ripple = ({
                   </h1>
                 </div>
                 <div className="flex w-full items-center cursor-pointer">
-                  {/* <h1 className="font-semibold line-clamp-1">{name}</h1> */}
                   <h1 className=" text-sm line-clamp-1 text-text_clr2 break-all dark:text-d_text_clr2">
                     {wave}
                   </h1>

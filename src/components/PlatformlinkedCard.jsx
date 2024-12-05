@@ -6,6 +6,10 @@ const PlatformlinkedCard = ({avatar_url, platform}) => {
     <div className="flex-shrink-0 bg-foreground dark:bg-d_foreground bg-opacity-50 p-2 rounded-xl relative flex flex-col items-center justify-between w-24 shadow-md dark:shadow-sm shadow-teal-800 dark:shadow-teal-500 hover:bg-ternary dark:hover:bg-d_ternary hover:scale-105 transition-transform duration-300">
     <img
       src={avatar_url}
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = "/images/jellyfishFallback.png";
+      }}
       alt="profile"
       className="w-[74px] rounded-full my-1 border-2 border-slate-500"
     />

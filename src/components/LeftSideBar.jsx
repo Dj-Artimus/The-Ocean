@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import UserMsgProfile from "./UserMsgProfile";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import '../app/globals.css'
-import { UIStore } from "@/store/OceanStore";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
 
 const LeftSideBar = ({styles}) => {
   const { isMsgsOpen, isOCardOpen} = UIStore();
+  const { anchoringsData } = UserStore();
     const [isOnline, setIsOnline] = useState(true);
 
   return (
@@ -19,27 +21,11 @@ const LeftSideBar = ({styles}) => {
           className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar"
         >
           {/* USERS PROFILE IN MESSAGES STARTS HERE */}
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
-          <UserMsgProfile avatar_url={"/images/profileImg.png"} name={"Dj Artimus Jan"} wave={"Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"} isOnline={isOnline} />
+          {
+            anchoringsData?.map((anchoring) => { 
+             return <UserMsgProfile key={anchoring.anchoring_id.id} avatar_url={anchoring?.anchoring_id?.avatar.split('<|>')[0]} name={anchoring?.anchoring_id.name} wave={anchoring?.anchoring_id?.wave} profile_id = { anchoring?.anchoring_id?.id } isOnline={anchoring?.anchoring_id?.is_online || false} />
+             })
+          }
 
           {/* USERS PROFILE IN MESSAGES ENDS HERE */}
         </div>

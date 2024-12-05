@@ -1,4 +1,5 @@
-import { UIStore } from "@/store/OceanStore";
+
+import { UIStore } from "@/store/UIStore";
 import { Close, ArrowForwardIosRounded } from "@mui/icons-material";
 import React, { useState, useEffect } from "react";
 

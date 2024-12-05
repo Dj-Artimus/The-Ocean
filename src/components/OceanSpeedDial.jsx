@@ -5,8 +5,9 @@ import {
   Diversity1,
   Notifications,
 } from "@mui/icons-material";
-import { UIStore } from "@/store/OceanStore";
 import { redirect } from "next/navigation";
+import Button from "./Button";
+import { UIStore } from "@/store/UIStore";
 
 const actions = [
 
@@ -81,7 +82,7 @@ export default function OceanSpeedDial() {
         }`}
       >
         {actions.map((action, index) => (
-          <button
+          <Button
             key={index}
             onClick={() => {
               handleActionClick(action.name);
@@ -91,19 +92,19 @@ export default function OceanSpeedDial() {
             title={action.name}
           >
             {action.icon}
-          </button>
+          </Button>
         ))}
       </div>
       {/* Speed Dial Button */}
       { !isCreateDropletModalOpen && (
-        <button
+        <Button
           onClick={toggleSpeedDial}
           className={`bg-blue-600 text-white rounded-xl rounded-br-none flex items-center justify-center shadow-lg transition-transform transform hover:scale-110 focus:outline-none p-1`}
         >
           <Cyclone
             className={`size-6 transition-all ${isOpen ? "rotate-45" : ""}`}
           />
-        </button>
+        </Button>
       )}
     </div>
   );

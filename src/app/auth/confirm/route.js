@@ -1,6 +1,5 @@
+import { createClient } from '@/utils/supabase/client'
 import {NextRequest, NextResponse } from 'next/server'
-
-import { createClient } from '@/utils/supabase copy/server'
 
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request) {

@@ -3,9 +3,6 @@ import { useEffect } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import { initializeTheme } from "@/utils/ThemeToggle";
-import { UIStore, UserStore } from "@/store/OceanStore";
-import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from '../lib/reactQueryClient';
 import UILoader from "@/components/UILoader";
 import DropletModal from "@/components/DropletModal";
 import { errorToast, ToasterProvider } from "@/components/ToasterProvider";
@@ -15,6 +12,9 @@ import VideoViewer from "@/components/VideoViewer";
 import MoreOptionsModal from "@/components/MoreOptionsModal";
 import RippleDrawer from "@/components/SwipeableRippleDrawer";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
+import ShareOptionsModal from "@/components/ShareOptionsModal";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,22 +30,22 @@ const geistMono = localFont({
 export default function RootLayout({ children }) {
 
   const { toggleDarkMode, isUILoading, setIsUILoading } = UIStore();
-  const { GetUserProfile, setProfileData } = UserStore();
+  const { fetchProfileData, subscribeToProfileChanges, setupSubscriptionsForProfileData, isProfileDataFetched, updateOnlineStatus } = UserStore();
 
-  const originalConsoleError = console.error;
+  const originalConsoleError = console?.error;
 
   console.error = (message, ...args) => {
     // Convert non-string messages to strings for safe handling
     const messageStr = typeof message === "string" ? message : JSON.stringify(message);
 
     // Handle specific network errors
-    if (messageStr.includes("Failed to fetch") || messageStr.includes("AuthRetryableFetchError")) {
+    if (messageStr?.includes("Failed to fetch") || messageStr?.includes("AuthRetryableFetchError")) {
       errorToast("Network error. Please check your internet connection.");
       return; // Skip logging this error to console
     }
 
     // Handle extension-related errors (e.g., TempMail, Grammarly, etc.)
-    if (messageStr.includes("autoCorrectionCache")) {
+    if (messageStr?.includes("autoCorrectionCache")) {
       console.warn("An extension might be causing this error: ", messageStr);
       return; // Skip logging this error to console
     }
@@ -54,52 +54,59 @@ export default function RootLayout({ children }) {
     originalConsoleError(message, ...args);
   };
 
-  const setUserProfileData = async () => {
-    try {
-      const data = await GetUserProfile();
-      console.log(data)
-      setProfileData(data);
-    } catch (error) { }
-  }
 
   useEffect(() => {
-
     const cleanup = initializeTheme(toggleDarkMode);
-
-    setUserProfileData();
-    // Initialize theme and handle cleanup of event listeners
     return cleanup; // Cleanup event listener on component unmount
 
   }, []);
 
+  useEffect(() => {
+    const subscribeToProfileData = async () => {
+      await setupSubscriptionsForProfileData('user-profile')
+    }
+    subscribeToProfileData();
+  }, [fetchProfileData, subscribeToProfileChanges]);
+
+
+  useEffect(() => {
+
+    // Call this function at regular intervals
+    // setInterval(() => updateOnlineStatus(true), 30000); // Every 30 seconds
+    updateOnlineStatus(true);
+    // Update to offline when user disconnects
+    window.addEventListener('beforeunload', () => updateOnlineStatus(false));
+
+  }, []);
+
+
   return (
-    <ErrorBoundary>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background dark:bg-d_background text-text_clr dark:text-d_text_clr `}
-        >
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background dark:bg-d_background text-text_clr dark:text-d_text_clr customScrollbar `}
+      >
 
-          <QueryClientProvider client={queryClient} >
+        <ErrorBoundary>
 
 
-              {
-                // isUILoading ?
-                // <UILoader />
-                // :
-                <>
-                  <ToasterProvider />
-                  <DropletModal />
-                  <ImageViewer />
-                  <VideoViewer />
-                  <FilesUploadingLoader />
-                  {children}
-                  <RippleDrawer />
-                  <MoreOptionsModal />
-                </>
-              }
-          </QueryClientProvider>
-        </body>
-      </html>
-    </ErrorBoundary>
+          {
+            !isProfileDataFetched ?
+              <UILoader />
+              :
+              <>
+                <ToasterProvider />
+                <DropletModal />
+                <ImageViewer />
+                <VideoViewer />
+                <FilesUploadingLoader />
+                {children}
+                <RippleDrawer />
+                <MoreOptionsModal />
+                <ShareOptionsModal />
+              </>
+          }
+        </ErrorBoundary>
+      </body>
+    </html>
   );
 }

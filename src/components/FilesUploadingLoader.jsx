@@ -1,4 +1,5 @@
-import { UIStore } from "@/store/OceanStore";
+
+import { UIStore } from "@/store/UIStore";
 import { Cyclone } from "@mui/icons-material";
 import { Box, LinearProgress } from "@mui/material";
 import React from "react";

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import Link from "next/link";
-import { UserStore } from "@/store/OceanStore";
 import { useRouter } from "next/navigation";
+import { UserStore } from "@/store/UserStore";
 
 const UsernameSelectionPage = () => {
   const { CheckTakenUsernames, UpdateUsername, GetUserId } = UserStore();

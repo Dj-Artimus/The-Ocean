@@ -3,22 +3,33 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import NotificationMsg from "@/components/NotificationMsg";
 import "../globals.css";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Search } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import OceaniteCard from "@/components/OceaniteCard";
-import { UIStore, UserStore } from "@/store/OceanStore";
 import LeftSideBar from "@/components/LeftSideBar";
 import MsgInputTextarea from "@/components/InputTextArea";
+import { UserStore } from "@/store/UserStore";
+import { UIStore } from "@/store/UIStore";
+import InputTextarea from "@/components/InputTextArea";
+import { useState } from "react";
 
 const OceaniteAtolls = () => {
-  const { profileData } = UserStore();
+  const { profileData, SearchOceanites } = UserStore();
   const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [oceanitesData, setOceanitesData] = useState([]);
+
+  const handleSubmit = async () => {
+    const oceanites = await SearchOceanites(searchKeyword);
+    console.log('oceanites:', oceanites)
+    setOceanitesData(oceanites);
+  } 
 
   const router = useRouter();
 
   return (
     <div>
-      <div className="w-screen flex h-screen relative overflow-x-hidden customScrollbar">
+      <div className="w-screen flex h-screen relative overflow-x-hidden">
         <div
           onClick={() => {
             isMsgsOpen ? setIsMsgsOpen(false) : router.push("/");
@@ -41,7 +52,7 @@ const OceaniteAtolls = () => {
             isMsgsOpen && !isOCardOpen
               ? "opacity-100 fixed"
               : "opacity-0 hidden"
-          } lg:opacity-100 transition-opacity h-full lg:p-4 pb-[56px] ps-2 pt-2 pe-2 bg-background dark:bg-d_background lg:ps-3 lg:pe-1 left-0 w-full sm:ps-[12%] sm:pe-[13%] lg:left-auto rounded-xl top-0 lg:hidden lg:w-[40%] xl:w-[32%]`}
+          } lg:opacity-100 transition-opacity z-10 h-full lg:p-4 pb-[56px] ps-2 pt-2 pe-2 bg-background dark:bg-d_background lg:ps-3 lg:pe-1 left-0 w-full sm:ps-[12%] sm:pe-[13%] lg:left-auto rounded-xl top-0 lg:hidden lg:w-[40%] xl:w-[32%]`}
         />
 
         {/* MAIN CONTENT STARTS HERE */}
@@ -49,36 +60,30 @@ const OceaniteAtolls = () => {
           {/* OCEANITES STARTS HERE */}
 
           <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
-            <MsgInputTextarea
+            {/* <MsgInputTextarea
               placeholder={"Search your Oceanite..."}
               submitBtn={"search"}
-            />
+            /> */}
+            <InputTextarea placeholder={"Search Oceanite..."} input={searchKeyword} setInput={setSearchKeyword} handleSubmit={handleSubmit} type={'search'} submitBtn={<Search className="absolute right-3 bottom-[18px] size-7"  />} />
           </div>
           <div className=" max-w-2xl m-auto ">
-            <OceaniteCard
-              name={profileData?.name}
-              username={profileData?.username}
-              wave={profileData?.wave}
-              avatar_url={profileData?.avatar?.split("<|>")[0]}
-              anchors={"4545k"}
-              anchorings={"4545k"}
-            />
-            <OceaniteCard
-              name={profileData?.name}
-              username={profileData?.username}
-              wave={profileData?.wave}
-              avatar_url={profileData?.avatar?.split("<|>")[0]}
-              anchors={profileData?.anchors}
-              anchorings={profileData?.anchorings}
-            />
-            <OceaniteCard
-              name={profileData?.name}
-              username={profileData?.username}
-              wave={profileData?.wave}
-              avatar_url={profileData?.avatar?.split("<|>")[0]}
-              anchors={profileData?.anchors}
-              anchorings={profileData?.anchorings}
-            />
+            {
+              oceanitesData?.map((profileData) => { 
+
+                return <OceaniteCard
+                key={profileData?.id}
+                oceaniteData={profileData}
+                user_id={profileData?.id}
+                ocean_id={profileData?.user_id}
+                name={profileData?.name}
+                username={profileData?.username}
+                wave={profileData?.wave}
+                avatar_url={profileData?.avatar?.split("<|>")[0]}
+                anchors={profileData?.anchors}
+                anchorings={profileData?.anchorings}
+                />
+              })
+           }
           </div>
 
           {/* OCEANITES ENDS HERE */}

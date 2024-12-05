@@ -10,13 +10,14 @@ import { redirect } from "next/navigation";
 import next from "next";
 import { Switch } from "@mui/joy";
 import { toggleTheme } from "@/utils/ThemeToggle";
-import { AuthStore, UIStore } from "@/store/OceanStore";
 import { successToast } from "./ToasterProvider";
+import { UIStore } from "@/store/UIStore";
+import { AuthStore } from "@/store/AuthStore";
 
 
 export default function ProfileMenu({ children }) {
 
-  const { darkModeOn, toggleDarkMode } = UIStore();
+  const { darkModeOn, toggleDarkMode, expectedVersion, setExpectedVersion } = UIStore();
   const { Logout } = AuthStore();
 
   const createHandleMenuClick = (menuItem) => {
@@ -30,6 +31,8 @@ export default function ProfileMenu({ children }) {
       } else if (menuItem === "Logout") {
         await Logout();
         redirect('/landing-page')
+      }else if (menuItem === "ExpectedVersion") {
+        setExpectedVersion(!expectedVersion);
       }
     };
   };
@@ -49,6 +52,11 @@ export default function ProfileMenu({ children }) {
           <MenuItem onClick={createHandleMenuClick("DarkMode")}>
             <div className="flex items-center gap-2">
               Dark Mode <Switch checked={darkModeOn} />
+            </div>
+          </MenuItem>
+          <MenuItem onClick={createHandleMenuClick("ExpectedVersion")}>
+            <div className="flex items-center gap-2">
+              Expected Version <Switch checked={expectedVersion} />
             </div>
           </MenuItem>
           <MenuItem onClick={createHandleMenuClick("Logout")}>

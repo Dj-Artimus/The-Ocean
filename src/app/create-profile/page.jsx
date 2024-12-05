@@ -11,8 +11,8 @@ import {
   Select,
   CircularProgress,
 } from "@mui/material";
-import { UserStore } from "@/store/OceanStore";
 import { useRouter } from "next/navigation";
+import { UserStore } from "@/store/UserStore";
 
 const countries = [
   { code: "US", name: "United States" },

@@ -1,11 +1,13 @@
 "use client";
-import { DropletStore, UIStore, UserStore } from "@/store/OceanStore";
 import { TextareaAutosize } from "@mui/base";
 import { Close, Image, Movie, WaterDrop } from "@mui/icons-material";
 import React, { useState, useEffect, useRef } from "react";
 import PlatformSelector from "./PlatformSelector";
 import { errorToast, successToast } from "./ToasterProvider";
 import { Box, CircularProgress } from "@mui/material";
+import { UIStore } from "@/store/UIStore";
+import { UserStore } from "@/store/UserStore";
+import { DropletStore } from "@/store/DropletStore";
 
 const DropletModal = () => {
   const {
@@ -17,10 +19,10 @@ const DropletModal = () => {
     setImgViewerSources,
     setVidViewerSources,
     setVidViewerIndex,
-    setImgViewerIndex
+    setImgViewerIndex,
   } = UIStore();
   const { FileUploader } = UserStore();
-  const {  DropDroplet } = DropletStore();
+  const { DropDroplet } = DropletStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -59,14 +61,16 @@ const DropletModal = () => {
 
   const revokeURLs = () => {
     // Revoke URLs for images
-    dropletImages && dropletImages.forEach((image) => {
-      if (image.source) URL.revokeObjectURL(image.source);
-    });
+    dropletImages &&
+      dropletImages.forEach((image) => {
+        if (image.source) URL.revokeObjectURL(image.source);
+      });
 
     // Revoke URLs for videos
-    dropletVideos && dropletVideos.forEach((video) => {
-      if (video.source) URL.revokeObjectURL(video.source);
-    });
+    dropletVideos &&
+      dropletVideos.forEach((video) => {
+        if (video.source) URL.revokeObjectURL(video.source);
+      });
   };
 
   const handleClose = () => {
@@ -83,7 +87,7 @@ const DropletModal = () => {
   };
 
   const handleFileChange = async (e, type) => {
-    type === 'images' ?  setDropletImages([]) : setDropletVideos([]);
+    type === "images" ? setDropletImages([]) : setDropletVideos([]);
     const files = Array.from(e.target.files); // Convert FileList to an array
     if (!files.length) return;
 
@@ -128,14 +132,14 @@ const DropletModal = () => {
     e.preventDefault();
     setIsProcessing(true);
 
-    console.log( 'start process', dropletImages, dropletVideos )
-    
     if (dropletContent.trim().length === 0) {
-      return errorToast("Droplet cannot be empty !");
+      errorToast("Droplet cannot be empty !");
+      setIsProcessing(false);
+      return null;
     }
-    
+
     setIsMediaFileUploading(true);
-    
+
     const images = await uploadMedia(dropletImages, setDropletImages);
     const videos = await uploadMedia(dropletVideos, setDropletImages);
 
@@ -148,7 +152,6 @@ const DropletModal = () => {
       videos: videos?.map((vid) => `${vid.url}<|>${vid.path}`) || [],
     });
 
-    
     if (isDropletDropped) {
       successToast("Droplet Successfully Dropped in the Ocean");
       setDropletContent("");
@@ -161,7 +164,6 @@ const DropletModal = () => {
       errorToast("Failed to drop the droplet.");
     }
     setIsProcessing(false);
-
   };
 
   return (
@@ -202,8 +204,15 @@ const DropletModal = () => {
                 <div className="relative">
                   {dropletImages[0]?.source && (
                     <img
-                      src={ dropletImages[0]?.source }
-                      onClick={() => { console.log(dropletImages); const images = dropletImages.map((img) => { return img.source }); setImgViewerSources(images); setImgViewerIndex(0); }}
+                      src={dropletImages[0]?.source}
+                      onClick={() => {
+                        console.log(dropletImages);
+                        const images = dropletImages.map((img) => {
+                          return img.source;
+                        });
+                        setImgViewerSources(images);
+                        setImgViewerIndex(0);
+                      }}
                       className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
                     />
                   )}
@@ -227,8 +236,14 @@ const DropletModal = () => {
                   {dropletVideos[0]?.source && (
                     <video
                       src={dropletVideos[0]?.source}
-                      onClick={() => { const videos = dropletVideos.map((vid) => { return vid.source }); setVidViewerSources(videos); setVidViewerIndex(0); }}
-                      controls = {false}
+                      onClick={() => {
+                        const videos = dropletVideos.map((vid) => {
+                          return vid.source;
+                        });
+                        setVidViewerSources(videos);
+                        setVidViewerIndex(0);
+                      }}
+                      controls={false}
                       className=" absolute rounded-lg h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
                     />
                   )}
@@ -256,6 +271,7 @@ const DropletModal = () => {
               <button
                 type="submit"
                 onClick={handleSubmit}
+                disabled={isProcessing}
                 className="bg-blue-600 text-white rounded-full text-xl tracking-wide w-20 p-4 py-1 hover:scale-105 flex justify-center items-center active:scale-95 "
               >
                 {isProcessing ? (

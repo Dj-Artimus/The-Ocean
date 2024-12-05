@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import AccordionBasic from "@/components/Accordion";
@@ -10,20 +10,40 @@ import ProfileRightSideBar from "@/components/ProfileRightSideBar";
 import ProfilePanel from "@/components/ProfilePanel";
 import OceanBoard from "@/components/OceanBoard";
 import StreamConnectionsPanel from "@/components/StreamConnectionsPanel";
-import { UIStore, UserStore } from "@/store/OceanStore";
 import ProfileEditModal from "@/components/ProfileEditModel";
 import LeftSideBar from "@/components/LeftSideBar";
 import { ArrowBack } from "@mui/icons-material";
 import ProfileTreasureTabs from "@/components/ProfileTreasureTabs";
+import UILoader from "@/components/UILoader";
+import { UserStore } from "@/store/UserStore";
+import { UIStore } from "@/store/UIStore";
 
-export default function Home() {
-  const { profileData } = UserStore();
-  const { isProfileEditModalOpen, isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
+export default function Profile() {
+  const { profileData, isProfileDataFetched } = UserStore();
+  const {
+    isProfileEditModalOpen,
+    isMsgsOpen,
+    setIsMsgsOpen,
+    isOCardOpen,
+    setIsOCardOpen,
+    expectedVersion,
+  } = UIStore();
+  const treasureRef = useRef();
 
   const router = useRouter();
 
+  useEffect(() => {
+    setIsMsgsOpen(false);
+    setIsOCardOpen(false);
+  }, []);
+
+  if (!isProfileDataFetched) return <UILoader />;
+
   return (
-    <div className="w-screen flex h-screen relative overflow-x-hidden lg:px-[4%] xl:px-[10%] customScrollbar ">
+    <div
+      ref={treasureRef}
+      className="w-screen flex h-screen relative overflow-x-hidden lg:px-[4%] xl:px-[10%] customScrollbar "
+    >
       {isProfileEditModalOpen && <ProfileEditModal profileData={profileData} />}
 
       {/* NAVIGATION BAR STARTS HERE */}
@@ -57,6 +77,7 @@ export default function Home() {
             {/* PROFILE DETAILS STARTS HERE */}
 
             <ProfilePanel
+              user_id={profileData?.id}
               name={profileData?.name}
               username={profileData?.username}
               gender={profileData?.gender}
@@ -75,28 +96,29 @@ export default function Home() {
               anchorings={profileData?.anchorings}
             />
 
-            {/* PROFILE DETAILS ENDS HERE */}
-            <hr className="m-2 border-slate-700" />
-            {/* CONNECTING SOCIAL PLATFORM STREAMS STARTS HERE */}
-            <StreamConnectionsPanel />
-            {/* CONNECTING SOCIAL PLATFORM STREAMS ENDS HERE */}
-
-            {/* OCEAN BOARD FOR SMALL DEVICES STARTS HERE */}
-
-            <div className="lg:hidden">
-              <hr className="m-2 border-slate-700" />
-              <AccordionBasic title={"Ocean Board"}>
-                <div className="xs4:w-fit w-full m-auto flex justify-center">
-                  <OceanBoard />
+            {expectedVersion && (
+              <>
+                {/* PROFILE DETAILS ENDS HERE */}
+                <hr className="m-2 border-slate-700" />
+                {/* CONNECTING SOCIAL PLATFORM STREAMS STARTS HERE */}
+                <StreamConnectionsPanel avatar={profileData?.avatar?.split("<|>")[0]} />
+                {/* CONNECTING SOCIAL PLATFORM STREAMS ENDS HERE */}
+                {/* OCEAN BOARD FOR SMALL DEVICES STARTS HERE */}
+                <div className="lg:hidden">
+                  <hr className="m-2 border-slate-700" />
+                  <AccordionBasic title={"Ocean Board"}>
+                    <div className="xs4:w-fit w-full m-auto flex justify-center">
+                      <OceanBoard username={profileData?.username} />
+                    </div>
+                  </AccordionBasic>
                 </div>
-              </AccordionBasic>
-            </div>
-
-            {/* OCEAN BOARD FOR SMALL DEVICES ENDS HERE */}
+                {/* OCEAN BOARD FOR SMALL DEVICES ENDS HERE */}
+              </>
+            )}
           </div>
         </div>
         <div className="my-1 relative px-2 shadow-blue-600 rounded-3xl border-slate-700">
-          <ProfileTreasureTabs />
+          <ProfileTreasureTabs treasureRef={treasureRef} />
           <div className="h-20 w-full"></div>
         </div>
       </div>

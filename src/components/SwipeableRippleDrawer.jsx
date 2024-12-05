@@ -1,48 +1,65 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { DropletStore, UIStore } from "@/store/OceanStore";
-import { Close } from "@mui/icons-material";
+import { Close, CycloneRounded } from "@mui/icons-material";
 import RipplesAnimation from "./RipplesAnimation";
 import Ripple from "./Ripple";
 import Echo from "./Echoes";
 import InputTextarea from "./InputTextArea";
+import { UIStore } from "@/store/UIStore";
+import { DropletStore } from "@/store/DropletStore";
 
 const RippleDrawer = () => {
   const {
     isRippleDrawerOpen,
     setIsRippleDrawerOpen,
-    rippleDrawerDropletId,
-    ripplesRefreshId,
     setRipplesRefreshId,
+    rippleDrawerDropletId,
   } = UIStore();
-  const { RippleDroplet, GetRipples } = DropletStore();
+  const {
+    RippleDroplet,
+    dropletRipples,
+    setDropletRipples,
+    GetRipples,
+    setupSubscriptionsForRipplesData,
+    subscribeToRippleChanges,
+  } = DropletStore();
   const [drawerHeight, setDrawerHeight] = useState("50%"); // Starting height
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const [rippleInput, setRippleInput] = useState("");
-  const [ripplesData, setRipplesData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const rippleRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRippleSubmit = async () => {
-    const ripple = await RippleDroplet(rippleDrawerDropletId, rippleInput);
+    const ripple = await RippleDroplet(rippleInput);
     setRipplesRefreshId(ripple);
-    if (isRippleDrawerOpen) {
-        await getRipplesData(rippleDrawerDropletId);
-    }
     setRippleInput("");
   };
 
-  const getRipplesData = async (droplet_id) => {
-    const data = await GetRipples(droplet_id);
-    setRipplesData(data);
-  };
-
   useEffect(() => {
-    if (isRippleDrawerOpen) {
-      getRipplesData(rippleDrawerDropletId);
-    } else if ( !isRippleDrawerOpen ){
-      setRipplesData([]);
-    }
-  }, [rippleDrawerDropletId, ripplesRefreshId, isRippleDrawerOpen]);
+    let unsubscribe;
+
+    const manageRippleSubscriptions = async () => {
+      if (isRippleDrawerOpen) {
+        console.log("Ripple drawer opened.");
+        // Fetch ripples when the drawer is opened
+        await GetRipples();
+        unsubscribe = await setupSubscriptionsForRipplesData(); // Fetch and subscribe
+      } else {
+        // console.log("Ripple drawer closed.");
+        setDropletRipples([]); // Clear ripple state when the drawer is closed
+        if (unsubscribe) unsubscribe(); // Cleanup subscription
+      }
+    };
+
+    manageRippleSubscriptions();
+
+    return () => {
+      if (unsubscribe) unsubscribe(); // Cleanup on unmount
+    };
+  }, [isRippleDrawerOpen]); // Depend only on the drawer state
 
   const toggleDrawer = () => {
     setIsRippleDrawerOpen(!isRippleDrawerOpen);
@@ -82,7 +99,35 @@ const RippleDrawer = () => {
     setIsRippleDrawerOpen(false);
     setRippleInput("");
     setDrawerHeight("50%");
+    setDropletRipples([]);
   };
+
+  const handleInfiniteScroll = async () => {
+    const element = rippleRef.current;
+    if (element) {
+      const { scrollTop, scrollHeight, clientHeight } = element;
+      if (
+        hasMore &&
+        clientHeight + 100 < scrollHeight &&
+        scrollTop + clientHeight >= scrollHeight - 100
+      ) {
+        console.log("Fetch more data!");
+        if (page > 1) await GetRipples();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const element = rippleRef.current;
+    if (element) {
+      element.addEventListener("scroll", handleInfiniteScroll);
+    }
+    return () => {
+      if (element) {
+        element.removeEventListener("scroll", handleInfiniteScroll);
+      }
+    };
+  }, [handleInfiniteScroll]);
 
   return (
     <>
@@ -125,54 +170,36 @@ const RippleDrawer = () => {
 
               <div className="h-full flex flex-col">
                 {/* RIPPLE CONTENT STARTS HERE */}
-                <div className="py-2 p-1 mb-28 overflow-y-auto customScrollbar">
-                  {ripplesData.map((ripple) => {
-                    return (
-                      <Ripple
-                        key={ripple?.id}
-                        ripple_id={ripple?.id}
-                        droplet_id={ripple?.droplet_id}
-                        user_id={ripple?.user_id?.id}
-                        avatar_url={ripple?.user_id?.avatar?.split("<|>")[0]}
-                        name={ripple?.user_id?.name}
-                        wave={ripple?.user_id?.wave}
-                        rippleContent={ripple?.content}
-                      />
-                    );
-                  })}
-
-                  {/* <Ripple
-                    avatar_url={"/images/profileImg.png"}
-                    name={"Jan David Don Full stack developer on the rise "}
-                    wave={
-                      "Building skills in mern stack Building skills in mern stack"
-                    }
-                    rippleContent={
-                      "Full stack developer on the pkills iin mern stack"
-                    }
-                    echoes={
-                      <div className="divide-y divide-slate-800">
-                        <Echo
-                          avatar_url={"/images/profileImg.png"}
-                          name={
-                            "Jan David Don Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"
-                          }
-                          rippleContent={
-                            "Another RERipple Full stack developer on the pkills iin mern stack"
-                          }
+                <div
+                  ref={rippleRef}
+                  className="py-2 p-1 mb-28 overflow-y-auto customScrollbar"
+                >
+                  {dropletRipples.length === 0 ? (
+                    <div className="w-full px-5 py-3 text-lg text-center text-text_clr2 dark:text-d_text_clr2">
+                      <h1>Guess What No-One Rippled this Droplet!,</h1>
+                      <h1>Be the First Oceanite to Ripple it... 😎</h1>
+                    </div>
+                  ) : (
+                    dropletRipples.map((ripple) => {
+                      return (
+                        <Ripple
+                          key={ripple?.id}
+                          ripple_id={ripple?.id}
+                          droplet_id={ripple?.droplet_id}
+                          user_id={ripple?.user_id?.id}
+                          avatar_url={ripple?.user_id?.avatar?.split("<|>")[0]}
+                          name={ripple?.user_id?.name}
+                          wave={ripple?.user_id?.wave}
+                          rippleContent={ripple?.content}
                         />
-                        <Echo
-                          avatar_url={"/images/profileImg.png"}
-                          name={
-                            "Jan David Don Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"
-                          }
-                          rippleContent={
-                            "Another RERipple Full stack developer on the pkills iin mern stack"
-                          }
-                        />
-                      </div>
-                    }
-                  /> */}
+                      );
+                    })
+                  )}
+                  {isLoading && (
+                    <div className="animate-pulse w-full flex justify-center items-center">
+                      <CycloneRounded className="animate-spin size-8" />
+                    </div>
+                  )}
                 </div>
                 {/* RIPPLE CONTENT ENDS HERE */}
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Droplet from "./Droplet";
-import { DropletStore, UIStore } from "@/store/OceanStore";
+import { DropletStore } from "@/store/DropletStore";
+import { UIStore } from "@/store/UIStore";
 
 function CustomprofileTreasureTabIndexPanel({ children, value, index }) {
   return (
@@ -16,66 +17,64 @@ function CustomprofileTreasureTabIndexPanel({ children, value, index }) {
 
 const treasureTabs = ["Treasure", "Droplets", "Gems", "Stars", "Ripples"];
 
-export default function ProfileTreasureTabs() {
+export default function ProfileTreasureTabs({oceanite_id}) {
   const {
+    GetTreasureDroplets,
     GetUserDroplets,
     GetUserStaredDroplets,
     GetUserGemmedDroplets,
     GetUserRippledDroplets,
+    treasureDroplets,
+    userDroplets,
+    userStaredDroplets,
+    userGemmedDroplets,
+    userRippledDroplets,
+    userReDroppedDroplets,
+    setDropletDataType,
+    dropletsData,
   } = DropletStore();
 
-  const {
-    dropletsRefreshId,
-    profileTreasureTabIndex,
-    setProfileTreasureTabIndex,
-  } = UIStore();
-  const [dropletsData, setDropletsData] = useState([]);
+  const { dropletsRefreshId } = UIStore();
+
+  const [profileTreasureTabIndex, setProfileTreasureTabIndex] = useState(1);
+  const [droplets, setDroplets] = useState(userDroplets);
+
+  const dropletDataTypes = [
+    { type: "treasureDroplets", data: treasureDroplets },
+    { type: "userDroplets", data: userDroplets },
+    { type: "userGemmedDroplets", data: userGemmedDroplets },
+    { type: "userStaredDroplets", data: userStaredDroplets },
+    { type: "userRippledDroplets", data: userRippledDroplets },
+  ];
 
   const getDropletData = async (index = profileTreasureTabIndex) => {
     switch (index) {
       case 0:
-        // return setDropletsData(await GetUserDroplets());
-        console.log("treasure");
-        return setDropletsData([]);
+        return await GetTreasureDroplets(oceanite_id && oceanite_id );
       case 1:
-        return setDropletsData(await GetUserDroplets());
+        return await GetUserDroplets(oceanite_id && oceanite_id );
       case 2:
-        const gemmedDropletData = await GetUserGemmedDroplets();
-        console.log("gemmed Data: ", gemmedDropletData);
-        return setDropletsData(
-          gemmedDropletData?.map((data) => {
-            return data.droplet_id;
-          })
-        );
+        return await GetUserGemmedDroplets(oceanite_id && oceanite_id );
       case 3:
-        const staredDropletData = await GetUserStaredDroplets();
-        return setDropletsData(
-          staredDropletData?.map((data) => {
-            return data.droplet_id;
-          })
-        );
+        return await GetUserStaredDroplets(oceanite_id && oceanite_id );
       case 4:
-        const RippledDropletData = await GetUserRippledDroplets();
-        return setDropletsData(
-          RippledDropletData?.map((data) => {
-            return data.droplet_id;
-          })
-        );
+        return await GetUserRippledDroplets(oceanite_id && oceanite_id );
     }
   };
 
-  // useEffect(() => {
-  //   getDropletData();
-  // }, []);
-
   useEffect(() => {
+    setDropletDataType(dropletDataTypes[profileTreasureTabIndex].type);
     getDropletData();
-  }, [dropletsRefreshId]);
+  }, []);
 
   const handleChange = (index) => {
     setProfileTreasureTabIndex(index);
     getDropletData(index);
+    setDropletDataType(dropletDataTypes[index].type);
+    setDroplets(dropletDataTypes[profileTreasureTabIndex].data);
   };
+
+  
 
   return (
     <div className="w-full">
@@ -106,24 +105,35 @@ export default function ProfileTreasureTabs() {
         index={profileTreasureTabIndex}
       >
         <div>
-          {dropletsData?.map((droplet, index) => {
-            return (
-              <Droplet
-                key={index}
-                droplet_id={droplet?.id}
-                author_id={droplet?.user_id?.id}
-                avatar_url={droplet?.user_id?.avatar}
-                name={droplet?.user_id?.name}
-                username={droplet?.user_id?.username}
-                wave={droplet?.user_id?.wave}
-                platform={droplet?.platform}
-                time={"5h"}
-                content={droplet?.content}
-                images={droplet?.images}
-                videos={droplet?.videos}
-              />
-            );
-          })}
+
+          {/* {dropletsData.map((droplet, index) => { */}
+
+          {dropletDataTypes[profileTreasureTabIndex]?.data?.map((droplet, index) => {
+              return (
+                <Droplet
+                  key={index}
+                  droplet_id={droplet?.id}
+                  dropletDataType={
+                    dropletDataTypes[profileTreasureTabIndex].type
+                  }
+                  tabIndex={profileTreasureTabIndex}
+                  author_id={droplet?.user_id?.id}
+                  avatar_url={droplet?.user_id?.avatar}
+                  name={droplet?.user_id?.name}
+                  username={droplet?.user_id?.username}
+                  wave={droplet?.user_id?.wave}
+                  platform={droplet?.platform}
+                  time={droplet?.created_at}
+                  content={droplet?.content}
+                  images={droplet?.images}
+                  videos={droplet?.videos}
+                  stars={droplet?.stars}
+                  ripples={droplet?.ripples}
+                  redrops={droplet?.redrops}
+                />
+              );
+            }
+          )}
         </div>
       </CustomprofileTreasureTabIndexPanel>
     </div>

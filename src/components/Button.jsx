@@ -1,17 +1,18 @@
 import React from 'react'
 import {motion} from 'framer-motion'
 
-const Button = ({text , type , color }) => {
+const Button = ( props ) => {
   return (
     <motion.button 
     whileHover = {{
-        scale : 1.025
+        scale : 1.1
     }}
     whileTap={{
-        scale : 0.975
+        scale : 0.9
     }}
-     type={type ? type : "submit"} 
-      className= {`${ color ? color : "bg-blue-800" } p-2 w-full rounded-lg text-xl font-semibold text-white`}  >{text}</motion.button>
+     type={props.type ? props.type : "submit"} 
+     {...props}
+       >{props.children}</motion.button>
   )
 }
 

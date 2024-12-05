@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { redirect } from "next/navigation";
-import { UIStore, UserStore } from "@/store/OceanStore";
 import {
   AddBox,
   BadgeRounded,
@@ -11,24 +10,18 @@ import {
   OndemandVideo,
 } from "@mui/icons-material";
 import ProfileMenu from "./ProfileMenu";
+import { UserStore } from "@/store/UserStore";
+import { UIStore } from "@/store/UIStore";
 
 const Navbar = ({ navStyle }) => {
   const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen } =
     UIStore();
   const { profileData } = UserStore();
-
-  const [isOpen, setIsOpen] = useState(false);
-  // Toggle Speed Dial
-
   return (
     <div className={`${navStyle} bg-primary dark:bg-d_primary`}>
       {/* HOME NAVIGATION STARTS HERE */}
       <div
         onClick={() => {
-          try {
-            setIsMsgsOpen(false);
-            setIsOCardOpen(false);
-          } catch (error) {}
           redirect("/");
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
@@ -40,10 +33,6 @@ const Navbar = ({ navStyle }) => {
       {/* VIDEOS NAVIGATION STARTS HERE */}
       <div
         onClick={() => {
-          try {
-            setIsMsgsOpen(false);
-            setIsOCardOpen(false);
-          } catch (error) {}
           redirect("/videos");
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
@@ -119,6 +108,7 @@ const Navbar = ({ navStyle }) => {
           <ProfileMenu>
             <img
               src={profileData?.avatar}
+              onError={(e) => { e.target.onerror = null; e.target.src = '/images/jellyfishFallback.png' }}
               alt="profile"
               className="size-8 xl:size-10 rounded-xl border-2 border-slate-400 hover:border-blue-500 hover:border-4"
             />

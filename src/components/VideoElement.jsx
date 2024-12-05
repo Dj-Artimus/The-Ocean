@@ -1,4 +1,5 @@
-import { UIStore } from "@/store/OceanStore";
+
+import { UIStore } from "@/store/UIStore";
 import React, { useEffect, useRef, useState } from "react";
 
 // To track mute/unmute across all videos

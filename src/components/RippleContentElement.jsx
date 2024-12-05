@@ -7,8 +7,10 @@ import {
   StarOutlineRounded,
   StarRounded,
 } from "@mui/icons-material";
+import { UIStore } from "@/store/UIStore";
 
 const RippleContentElement = ({ content, echoes }) => {
+  const { expectedVersion } = UIStore();
   const [expanded, setExpanded] = useState(false);
   const [isEchoesAvailabel, setIsEchoesAvailabel] = useState(echoes);
   const [showToggle, setShowToggle] = useState(false);
@@ -60,42 +62,44 @@ const RippleContentElement = ({ content, echoes }) => {
       </div>
 
       <div className="flex justify-between items-center -mb-1 ">
-        <div className="flex items-center justify-between gap-2 ">
-          <div className="flex items-end gap-[10px]">
-            <div
-              onClick={() => handleStarARipple(ripple_id)}
-              className="-ms-[6px] cursor-pointer hover:scale-110 active:scale-95"
-              title="like"
-            >
-              {stared ? (
-                <StarRounded className="size-6 text-amber-400 stroke-amber-500 translate-x-2" />
-              ) : (
-                <StarOutlineRounded className="size-6 translate-x-2" />
-              )}
+        {expectedVersion && (
+          <div className="flex items-center justify-between gap-2 ">
+            <div className="flex items-end gap-[10px]">
+              <div
+                onClick={() => handleStarARipple(ripple_id)}
+                className="-ms-[6px] cursor-pointer hover:scale-110 active:scale-95"
+                title="like"
+              >
+                {stared ? (
+                  <StarRounded className="size-6 text-amber-400 stroke-amber-500 translate-x-2" />
+                ) : (
+                  <StarOutlineRounded className="size-6 translate-x-2" />
+                )}
+              </div>
+              {/* <h1>{getStars(droplet_id)}</h1> */}
+              <h1>{stars}</h1>
             </div>
-            {/* <h1>{getStars(droplet_id)}</h1> */}
-            <h1>{stars}</h1>
-          </div>
-          <div className="flex items-center gap-1">
-            <div
-              onClick={() => {
-                setCommented(!commented);
-                // setIsCommentDrawerOpen(!isCommentDrawerOpen);
-              }}
-              className="cursor-pointer hover:scale-110 active:scale-95"
-            >
-              {commented ? (
-                <Assistant
-                  className="size-5 text-sky-500 stroke-sky-700 dark:stroke-none "
-                  title="Comment"
-                />
-              ) : (
-                <AssistantOutlined className="size-5" title="Comment" />
-              )}
+            <div className="flex items-center gap-1">
+              <div
+                onClick={() => {
+                  setCommented(!commented);
+                  // setIsCommentDrawerOpen(!isCommentDrawerOpen);
+                }}
+                className="cursor-pointer hover:scale-110 active:scale-95"
+              >
+                {commented ? (
+                  <Assistant
+                    className="size-5 text-sky-500 stroke-sky-700 dark:stroke-none "
+                    title="Comment"
+                  />
+                ) : (
+                  <AssistantOutlined className="size-5" title="Comment" />
+                )}
+              </div>
+              <h1 className="mt-[2px]"> {ripples} </h1>
             </div>
-            <h1 className="mt-[2px]"> {ripples} </h1>
           </div>
-        </div>
+        )}
         <div className="flex justify-between gap-3">
           {isEchoesAvailabel && (
             <button

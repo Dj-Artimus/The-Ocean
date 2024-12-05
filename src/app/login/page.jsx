@@ -5,6 +5,7 @@ import { GitHub, Google } from "@mui/icons-material";
 import Link from "next/link";
 
 const LoginPage = () => {
+  const { Login, OAuthLogin } = AuthStore();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -16,18 +17,16 @@ const LoginPage = () => {
     setIsLoadingPage(false);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     setIsSubmitted(true);
 
-    // const error = validatePassword(password);
-    // setPasswordError(error);
-
-    // if (!error) {
+    if (email && password) {
       // Proceed with form submission
+      await Login(email,password)
       console.log("Form submitted successfully");
       // Reset the form or redirect the user as necessary
-    // }
+    }
   };
 
   return (
@@ -121,6 +120,7 @@ const LoginPage = () => {
               variant="text"
               fullWidth
               startIcon={<GitHub />}
+              onClick={ async () => { await OAuthLogin('github') }}
               className="border-gray-300 text-gray-700 rounded-lg py-[9px] shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
             >
               Sign in with GitHub
@@ -129,6 +129,7 @@ const LoginPage = () => {
               variant="text"
               fullWidth
               startIcon={<Google />}
+              onClick={ async () => { await OAuthLogin('google') }}
               className="border-gray-300 text-gray-700 rounded-lg py-2 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
             >
               Sign in with Google
