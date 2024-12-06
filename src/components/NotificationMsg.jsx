@@ -13,8 +13,7 @@ const NotificationMsg = ({
     <div className="my-2 border bg-foreground dark:bg-d_foreground cursor-pointer shadow-sm shadow-blue-600 rounded-2xl border-slate-700 w-full">
       <div className="flex items-start gap-[5px] ms-[9px]">
         <div className="flex-shrink-0">
-          <Image
-            fill
+          <img
             src={avatar_url}
             alt="profile"
             className="size-14 my-2 rounded-xl border-2 border-slate-500"

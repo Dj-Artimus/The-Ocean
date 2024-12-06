@@ -52,8 +52,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
         <CustomizedBadges count={unreadMsgCount}>
           {/* count={0}> */}
           <div className="flex-shrink-0 relative">
-            <Image
-              fill
+            <img
               src={avatar_url}
               alt="profile"
               className={` size-10 lg:size-12 rounded-xl border-2 ${

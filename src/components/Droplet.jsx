@@ -216,36 +216,34 @@ const Droplet = ({
     }
   }, [rippleDrawerOpen, isRippleInitiated, droplet_id, checkIsDropletRippled]);
 
-  const loadDropletData =
-    (async () => {
-      try {
-        setIsDropletLoading(true);
-        if (droplet_id) {
-          const [isStared, isGemmed, rippled] = await Promise.all([
-            CheckIsDropletStaredByUser(droplet_id),
-            CheckIsUserGemmedDroplet(droplet_id),
-            CheckIsUserRippledDroplet(droplet_id),
-          ]);
-          setStared(isStared);
-          setGemmed(isGemmed);
-          setRippled(rippled);
-        }
-      } catch (error) {
-        console.error("Error loading droplet data:", error);
-      } finally {
-        setIsDropletLoading(false);
+  const loadDropletData = useCallback(async () => {
+    try {
+      setIsDropletLoading(true);
+      if (droplet_id) {
+        const [isStared, isGemmed, rippled] = await Promise.all([
+          CheckIsDropletStaredByUser(droplet_id),
+          CheckIsUserGemmedDroplet(droplet_id),
+          CheckIsUserRippledDroplet(droplet_id),
+        ]);
+        setStared(isStared);
+        setGemmed(isGemmed);
+        setRippled(rippled);
       }
-    },
-    [
-      setIsDropletLoading,
-      droplet_id,
-      CheckIsDropletStaredByUser,
-      CheckIsUserGemmedDroplet,
-      CheckIsUserRippledDroplet,
-      setStared,
-      setGemmed,
-      setRippled,
-    ]);
+    } catch (error) {
+      console.error("Error loading droplet data:", error);
+    } finally {
+      setIsDropletLoading(false);
+    }
+  }, [
+    setIsDropletLoading,
+    droplet_id,
+    CheckIsDropletStaredByUser,
+    CheckIsUserGemmedDroplet,
+    CheckIsUserRippledDroplet,
+    setStared,
+    setGemmed,
+    setRippled,
+  ]);
 
   useEffect(() => {
     loadDropletData();
@@ -267,14 +265,15 @@ const Droplet = ({
             <div className="flex gap-2">
               <div className="flex-shrink-0">
                 <Image
-                  fill
+                  width={56}
+                  height={56}
                   src={avatar_url}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/images/jellyfishFallback.png";
                   }}
                   alt="profile"
-                  className="size-14 my-2 rounded-2xl border-2 border-slate-500"
+                  className="my-2 rounded-2xl border-2 border-slate-500"
                 />
               </div>
               <div className="mx-1 leading-snug mt-1 hidden xs:block max-w-96">
@@ -358,17 +357,17 @@ const Droplet = ({
           {images?.length > 1 ? (
             <div className="relative">
               {/* Slider image display */}
-              <Image
-                fill
-                src={images[currentImage]?.split("<|>")[0]}
-                alt={`Image ${currentImage + 1}`}
-                onClick={() => {
-                  setImgViewerIndex(currentImage);
-                  setImgViewerSources(images);
-                }}
-                {...swipeHandlersForImages}
-                className="rounded-xl shadow shadow-slate-500 p-[2px] xl:max-h-96 xs4:max-h-[80vh] m-auto"
-              />
+                <img
+                  src={images[currentImage]?.split("<|>")[0] || "/fallback.jpg"}
+                  alt={`Image ${currentImage + 1}`}
+                  onClick={() => {
+                    setImgViewerIndex(currentImage);
+                    setImgViewerSources(images);
+                  }}
+                  {...swipeHandlersForImages}
+                  className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
+                />
+
               {/* Dot navigation */}
               <div className="flex justify-center mt-2 space-x-2">
                 {images?.map((_, index) => (
@@ -385,15 +384,14 @@ const Droplet = ({
           ) : (
             // Single image display
             images[0] && (
-              <Image
-                fill
-                src={images[0]?.split("<|>")[0]}
-                alt="Image"
-                onClick={() => {
-                  setImgViewerSources([images[0]]);
-                }}
-                className="rounded-xl shadow shadow-slate-500 p-[2px] xl:max-h-96 xs4:max-h-[80vh] mb-3 m-auto"
-              />
+                <img
+                  src={images[0]?.split("<|>")[0]}
+                  alt="Image"
+                  onClick={() => {
+                    setImgViewerSources([images[0]]);
+                  }}
+                  className="rounded-xl shadow shadow-slate-500 p-[2px] xl:max-h-96 xs4:max-h-[80vh] mb-3 m-auto"
+                />
             )
           )}
           {/* Video Gallery or Slider */}

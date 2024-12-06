@@ -80,8 +80,7 @@ const ImageViewer = () => {
 
             {/* Image */}
             <div>
-              <Image
-                fill
+              <img
                 src={imgViewerSources[imgViewerIndex]?.split("<|>")[0]}
                 alt={`Image ${imgViewerIndex + 1}`}
                 {...swipeHandlersForImages}

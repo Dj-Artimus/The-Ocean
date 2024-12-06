@@ -61,8 +61,7 @@ const OceaniteCard = ({
         <div className="flex items-center w-full justify-between">
           <div className="flex gap-2">
             <div className="flex-shrink-0">
-              <Image
-                fill
+              <img
                 src={avatar_url}
                 alt="profile"
                 className="size-14 my-2 rounded-2xl border-2 border-slate-500"

@@ -142,8 +142,7 @@ export default function Chat() {
                 <div className="flex items-center w-full  px-3 pt-1  justify-between">
                   <div className="flex gap-2 w-full">
                     <div className="flex-shrink-0">
-                      <Image
-                      fill
+<img
                         src={
                           communicatorDetails[communicatorId]?.avatar.split(
                             "<|>"

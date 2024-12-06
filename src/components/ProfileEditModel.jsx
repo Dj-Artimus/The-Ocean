@@ -1,8 +1,5 @@
 "use client";
-import {
-  Close,
-  EditNote,
-} from "@mui/icons-material";
+import { Close, EditNote } from "@mui/icons-material";
 import React, { useState, useEffect, useRef } from "react";
 
 import {
@@ -41,8 +38,12 @@ const years = Array.from(
   (_, i) => new Date().getFullYear() - i
 );
 
-const ProfileEditModal = ({profileData}) => {
-  const { isProfileEditModalOpen, setIsProfileEditModalOpen, setIsMediaFileUploading } = UIStore();
+const ProfileEditModal = ({ profileData }) => {
+  const {
+    isProfileEditModalOpen,
+    setIsProfileEditModalOpen,
+    setIsMediaFileUploading,
+  } = UIStore();
   const { CreateProfile, GetUserId, FileUploader } = UserStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -51,14 +52,14 @@ const ProfileEditModal = ({profileData}) => {
 
   const [name, setName] = useState(profileData.name);
   const [posterData, setPosterData] = useState({
-    currentSource: profileData.poster?.split('<|>')[0],
+    currentSource: profileData.poster?.split("<|>")[0],
     newSource: null,
     file: null,
     path: null,
     storageBucket: "posters",
   });
   const [avatarData, setAvatarData] = useState({
-    currentSource: profileData.avatar?.split('<|>')[0],
+    currentSource: profileData.avatar?.split("<|>")[0],
     newSource: null,
     file: null,
     path: null,
@@ -66,10 +67,14 @@ const ProfileEditModal = ({profileData}) => {
   });
 
   const [day, setDay] = useState(Number(profileData?.dob?.split("-")[2]) || "");
-  const [month, setMonth] = useState(Number(profileData?.dob?.split("-")[1]) || "");
-  const [year, setYear] = useState(Number(profileData?.dob?.split("-")[0]) || "");
-  const [gender, setGender] = useState( profileData?.gender || '' );
-  const [wave, setWave] = useState( profileData?.wave || '' );
+  const [month, setMonth] = useState(
+    Number(profileData?.dob?.split("-")[1]) || ""
+  );
+  const [year, setYear] = useState(
+    Number(profileData?.dob?.split("-")[0]) || ""
+  );
+  const [gender, setGender] = useState(profileData?.gender || "");
+  const [wave, setWave] = useState(profileData?.wave || "");
   const selectPoster = useRef();
   const selectAvatar = useRef();
 
@@ -94,7 +99,17 @@ const ProfileEditModal = ({profileData}) => {
 
     // Preview the image
     const fileUrl = URL.createObjectURL(file);
-    type === "poster" ? setPosterData( prevData => ({...prevData, newSource:fileUrl, file: file })) : setAvatarData( prevData => ({...prevData, newSource:fileUrl , file: file }));
+    type === "poster"
+      ? setPosterData((prevData) => ({
+          ...prevData,
+          newSource: fileUrl,
+          file: file,
+        }))
+      : setAvatarData((prevData) => ({
+          ...prevData,
+          newSource: fileUrl,
+          file: file,
+        }));
   };
 
   const handleSubmit = async (e) => {
@@ -102,20 +117,29 @@ const ProfileEditModal = ({profileData}) => {
 
     setIsMediaFileUploading(true);
 
-    const poster = posterData.file && await FileUploader(posterData.storageBucket, posterData.file)
-    const avatar = avatarData.file && await FileUploader(avatarData.storageBucket, avatarData.file)
+    const poster =
+      posterData.file &&
+      (await FileUploader(posterData.storageBucket, posterData.file));
+    const avatar =
+      avatarData.file &&
+      (await FileUploader(avatarData.storageBucket, avatarData.file));
 
     setIsMediaFileUploading(false);
 
     const dob = new Date(Date.UTC(year, month - 1, day));
 
-    const isProfileUpdated = await CreateProfile(
-      { name, dob, gender, wave, avatar: avatar? `${avatar?.url}<|>${avatar?.path}`: profileData?.avatar , poster: poster? `${poster?.url}<|>${poster?.path}` : profileData?.poster },
-    );
+    const isProfileUpdated = await CreateProfile({
+      name,
+      dob,
+      gender,
+      wave,
+      avatar: avatar ? `${avatar?.url}<|>${avatar?.path}` : profileData?.avatar,
+      poster: poster ? `${poster?.url}<|>${poster?.path}` : profileData?.poster,
+    });
 
-    if(isProfileUpdated) {
-       setIsProfileEditModalOpen(false);
-       successToast('Profile Updated Successfully.')
+    if (isProfileUpdated) {
+      setIsProfileEditModalOpen(false);
+      successToast("Profile Updated Successfully.");
     }
   };
 
@@ -142,7 +166,10 @@ const ProfileEditModal = ({profileData}) => {
               </div>
               <div className="flex">
                 {/* <PlaylistAddCheck onClick={handleSubmit} className="size-8 cursor-pointer" /> */}
-                <Close onClick={handleClose} className="size-7 cursor-pointer" />
+                <Close
+                  onClick={handleClose}
+                  className="size-7 cursor-pointer"
+                />
               </div>
             </div>
 
@@ -166,12 +193,11 @@ const ProfileEditModal = ({profileData}) => {
                         className="hidden"
                         onChange={(e) => handleFileChange(e, "poster")}
                       />
-                      <Image
-                      fill
+                      <img
                         onClick={() => {
                           selectPoster.current.click();
                         }}
-                        src={ posterData.newSource || posterData.currentSource}
+                        src={posterData.newSource || posterData.currentSource}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = "/images/defaultPoster.png";
@@ -194,13 +220,12 @@ const ProfileEditModal = ({profileData}) => {
                           e.target.src = "/images/jellyfishFallback.png";
                         }}
                       />
-                      <Image
-                      fill
+                      <img
                         onClick={(e) => {
                           e.stopPropagation(); // Stop click from propagating to the poster div
                           selectAvatar.current.click();
                         }}
-                        src={ avatarData.newSource || avatarData.currentSource}
+                        src={avatarData.newSource || avatarData.currentSource}
                         alt="profile"
                         className="size-[22%] min-w-14 m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
                       />
@@ -251,9 +276,9 @@ const ProfileEditModal = ({profileData}) => {
                         className="text-gray-900 dark:text-gray-100"
                       >
                         {Array.from({ length: 31 }, (_, i) => (
-                            <MenuItem key={i + 1} value={i + 1}>
-                              {i + 1}
-                            </MenuItem>
+                          <MenuItem key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </MenuItem>
                         ))}
                       </Select>
                     </FormControl>

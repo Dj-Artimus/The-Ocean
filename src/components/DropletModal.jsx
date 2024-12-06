@@ -204,8 +204,7 @@ const DropletModal = () => {
               <div className="flex gap-1 xs1:gap-2 xs2:gap-4 text-slate-800 dark:text-slate-200">
                 <div className="relative">
                   {dropletImages[0]?.source && (
-                    <Image
-                      fill
+                    <img
                       alt='attached img'
                       src={dropletImages[0]?.source}
                       onClick={() => {

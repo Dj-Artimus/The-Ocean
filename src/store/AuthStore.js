@@ -25,8 +25,7 @@ export const AuthStore = create((set) => ({
                 // Display an error message to the user
                 return;
             }
-            successToast('Email sent successfully');
-            console.log(data);
+            successToast('Success! Email sent for verification');
             redirect('/verify-email');
         } catch (err) {
             console.log('Sign-up failed:', err);
@@ -47,8 +46,7 @@ export const AuthStore = create((set) => ({
                 // Display an error message to the user
                 return;
             }
-            successToast('Login Successfully ');
-            console.log(data);
+            successToast('Login Successfully');
             redirect('/');
         } catch (err) {
             console.log('Sign-in failed:', err);
@@ -75,10 +73,9 @@ export const AuthStore = create((set) => ({
                 options
             })
             if (error) {
-                toast.error("Something went wrong, Please try again")
+                errorToast("Something went wrong, Please try again")
                 return console.log(error);
             }
-            console.log(data)
             return data
         } catch (error) {
             return console.log(error);

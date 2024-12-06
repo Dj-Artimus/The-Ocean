@@ -55,8 +55,7 @@ const ProfilePanel = ({
       {/* PROFILE PIC AND BANNER STARTS HERE */}
       <div className="relative">
         <div className="w-full max-h-[50vw] sm:max-h-[40vw] lg:max-h-[30vw] min-h-[25vw]">
-          <Image
-            fill
+          <img
             src={poster_url}
             onError={(e) => {
               e.target.onerror = null;
@@ -67,8 +66,7 @@ const ProfilePanel = ({
           />
         </div>
         <div className="absolute bottom-0 left-0 w-full p-2">
-          <Image
-            fill
+          <img
             src={avatar_url}
             alt="profile"
             onError={(e) => {
@@ -128,8 +126,7 @@ const ProfilePanel = ({
                 <div className="flex items-center justify-center gap-2">
                   <span>•</span>
                   <span>{age}</span>
-                  <Image
-                    fill
+                  <img
                     src={`images/${
                       gender == "other"
                         ? "jellyfish"

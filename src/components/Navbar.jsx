@@ -107,8 +107,7 @@ const Navbar = ({ navStyle }) => {
           }}
         >
           <ProfileMenu>
-            <Image
-              fill
+            <img
               src={profileData?.avatar}
               onError={(e) => {
                 e.target.onerror = null;

@@ -169,8 +169,7 @@ const VideosPage = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
           <div className="flex items-center mb-2">
-            <Image
-              fill
+            <img
               src={feedVideos[currentVideo]?.avatar}
               alt={feedVideos[currentVideo]?.author_name}
               onError={(e) => {
