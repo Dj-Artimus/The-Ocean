@@ -12,6 +12,7 @@ import {
 import ProfileMenu from "./ProfileMenu";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
+import Image from "next/image";
 
 const Navbar = ({ navStyle }) => {
   const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen } =
@@ -106,9 +107,13 @@ const Navbar = ({ navStyle }) => {
           }}
         >
           <ProfileMenu>
-            <img
+            <Image
+              fill
               src={profileData?.avatar}
-              onError={(e) => { e.target.onerror = null; e.target.src = '/images/jellyfishFallback.png' }}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/images/jellyfishFallback.png";
+              }}
               alt="profile"
               className="size-8 xl:size-10 rounded-xl border-2 border-slate-400 hover:border-blue-500 hover:border-4"
             />

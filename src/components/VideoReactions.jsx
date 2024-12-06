@@ -11,7 +11,7 @@ import {
   StarOutlineRounded,
   StarRounded,
 } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "./Button";
 
 const VideoReactions = ({ video }) => {
@@ -25,7 +25,7 @@ const VideoReactions = ({ video }) => {
     expectedVersion,
     setDropletIdToShare,
     setIsShareOptionsModalOpen,
-    setDropletContentToShare
+    setDropletContentToShare,
   } = UIStore();
   const {
     StarDroplet,
@@ -46,57 +46,63 @@ const VideoReactions = ({ video }) => {
   const [isGemming, setIsGemming] = useState(false);
   const [isRippleInitiated, setIsRippleInitiated] = useState(false);
 
-  const checkIsDropletRippled = async (video_id) => {
-    try {
-      if (video_id) {
-        const rippled = await CheckIsUserRippledDroplet(video_id);
-        return setRippled(rippled);
-      }
-    } catch (error) {}
-  };
-
-  const handleStarADroplet = async (video_id) => {
-    try {
-      console.log("stared a droplet and id is", video_id);
-      setIsStaring(true);
-      if (video_id) {
-        if (stared) {
-          const isUnStared = await UnStarDroplet(video_id);
-          setStared(!isUnStared);
-        } else {
-          const isStared = await StarDroplet(video_id);
-          setStared(isStared);
+  const checkIsDropletRippled = useCallback(
+    async (video_id) => {
+      try {
+        if (video_id) {
+          const rippled = await CheckIsUserRippledDroplet(video_id);
+          return setRippled(rippled);
         }
-      }
-    } catch (error) {
-    } finally {
-      setIsStaring(false);
-    }
-  };
+      } catch (error) {}
+    },
+    [CheckIsUserRippledDroplet, setRippled]
+  );
 
-  const handleGemDroplet = async (video_id) => {
-    setIsGemming(true);
-    console.log("finding video_id for gem a droplet", video);
-    console.log("video_id for gem a droplet", video_id);
-    try {
-      if (video_id) {
-        if (gemmed) {
-          const isGemmed = await UnGemDroplet(video_id);
-          setGemmed(!isGemmed);
-        } else {
-          const isGemmed = await GemDroplet(video_id);
-          setGemmed(isGemmed);
+  const handleStarADroplet = useCallback(
+    async (video_id) => {
+      try {
+        setIsStaring(true);
+        if (video_id) {
+          if (stared) {
+            const isUnStared = await UnStarDroplet(video_id);
+            setStared(!isUnStared);
+          } else {
+            const isStared = await StarDroplet(video_id);
+            setStared(isStared);
+          }
         }
+      } catch (error) {
+      } finally {
+        setIsStaring(false);
       }
-    } catch (error) {
-    } finally {
-      setIsGemming(false);
-    }
-  };
+    },
+    [setIsStaring, setStared, StarDroplet, UnStarDroplet]
+  );
+
+  const handleGemDroplet = useCallback(
+    async (video_id) => {
+      setIsGemming(true);
+      try {
+        if (video_id) {
+          if (gemmed) {
+            const isGemmed = await UnGemDroplet(video_id);
+            setGemmed(!isGemmed);
+          } else {
+            const isGemmed = await GemDroplet(video_id);
+            setGemmed(isGemmed);
+          }
+        }
+      } catch (error) {
+      } finally {
+        setIsGemming(false);
+      }
+    },
+    [setIsGemming, UnGemDroplet, GemDroplet, setGemmed, gemmed]
+  );
 
   useEffect(() => {
     checkIsDropletRippled(video?.droplet_id);
-  }, [ripplesRefreshId && isRippleInitiated]);
+  }, [isRippleInitiated, checkIsDropletRippled, video?.droplet_id]);
 
   useEffect(() => {
     if (!rippleDrawerOpen && isRippleInitiated) {
@@ -106,25 +112,41 @@ const VideoReactions = ({ video }) => {
       };
       checkRippled();
     }
-  }, [rippleDrawerOpen]);
+  }, [
+    rippleDrawerOpen,
+    isRippleInitiated,
+    isRippleInitiated,
+    checkIsDropletRippled,
+    video?.droplet_id,
+  ]);
 
-  const loadDropletData = async (video_id) => {
-    try {
-      if (video_id) {
-        const [isStared, isGemmed, rippled] = await Promise.all([
-          CheckIsDropletStaredByUser(video_id),
-          CheckIsUserGemmedDroplet(video_id),
-          CheckIsUserRippledDroplet(video_id),
-        ]);
-        setStared(isStared);
-        setGemmed(isGemmed);
-        setRippled(rippled);
+  const loadDropletData = useCallback(
+    async (video_id) => {
+      try {
+        if (video_id) {
+          const [isStared, isGemmed, rippled] = await Promise.all([
+            CheckIsDropletStaredByUser(video_id),
+            CheckIsUserGemmedDroplet(video_id),
+            CheckIsUserRippledDroplet(video_id),
+          ]);
+          setStared(isStared);
+          setGemmed(isGemmed);
+          setRippled(rippled);
+        }
+      } catch (error) {
+        console.error("Error loading droplet data:", error);
+      } finally {
       }
-    } catch (error) {
-      console.error("Error loading droplet data:", error);
-    } finally {
-    }
-  };
+    },
+    [
+      CheckIsDropletStaredByUser,
+      CheckIsUserGemmedDroplet,
+      CheckIsUserRippledDroplet,
+      setStared,
+      setGemmed,
+      setRippled,
+    ]
+  );
 
   useEffect(() => {
     loadDropletData(video?.droplet_id);
@@ -135,7 +157,7 @@ const VideoReactions = ({ video }) => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [video]);
+  }, [video, loadDropletData, subscribeToDropletChanges]);
 
   return (
     <div className="flex max-w-[700px] justify-between items-center text-white">

@@ -1,19 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useSwipeable } from "react-swipeable";
+import React, { useState } from "react";
 import AnchorIcon from "@mui/icons-material/Anchor";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
-import AssistantIcon from "@mui/icons-material/Assistant";
-import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
-import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
-import IosShareRoundedIcon from "@mui/icons-material/IosShareRounded";
-import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
-import AssistantOutlinedIcon from "@mui/icons-material/AssistantOutlined";
-import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { getPlatformIcon } from "@/utils/PlatformIconGetter";
-import VideoElement from "./VideoElement";
-import DropletContentElement from "./DropletContentElement";
-import OceanScore from "./OceanScore";
+
 import {
   Anchor,
   Facebook,
@@ -24,10 +12,10 @@ import {
   X,
   YouTube,
 } from "@mui/icons-material";
-import { UIStore } from "@/store/UIStore";
 import Button from "./Button";
 import { UserStore } from "@/store/UserStore";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 const OceaniteCard = ({
   oceaniteData,
@@ -41,8 +29,13 @@ const OceaniteCard = ({
   anchors,
   anchorings,
 }) => {
-  const { profileData, AnchorOceanite, UnAnchorOceanite, anchoringsIds, setOceaniteProfileData } =
-    UserStore();
+  const {
+    profileData,
+    AnchorOceanite,
+    UnAnchorOceanite,
+    anchoringsIds,
+    setOceaniteProfileData,
+  } = UserStore();
   const [isAnchoring, setIsAnchoring] = useState(false);
 
   const handleAnchor = async (anchoring_id) => {
@@ -68,7 +61,8 @@ const OceaniteCard = ({
         <div className="flex items-center w-full justify-between">
           <div className="flex gap-2">
             <div className="flex-shrink-0">
-              <img
+              <Image
+                fill
                 src={avatar_url}
                 alt="profile"
                 className="size-14 my-2 rounded-2xl border-2 border-slate-500"

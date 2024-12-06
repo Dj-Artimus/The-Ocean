@@ -142,7 +142,7 @@ const VerifyEmail = () => {
             variant="body2"
             className="text-center mt-4 text-gray-600 dark:text-gray-400"
           >
-            Didn't receive the OTP?{" "}
+            Didn&apos;t receive the OTP?{" "}
             <Link
               href="#"
               className="text-blue-600 hover:underline dark:text-blue-400"

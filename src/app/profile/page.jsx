@@ -35,7 +35,7 @@ export default function Profile() {
   useEffect(() => {
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
-  }, []);
+  }, [setIsMsgsOpen,setIsMsgsOpen]);
 
   if (!isProfileDataFetched) return <UILoader />;
 

@@ -137,6 +137,9 @@ export const UIStore = create(
         set({ dropletContentToShare: content })
     },
 
+    notificationsCount : 0,
+    setNotificationsCount: (count) => { set({notificationsCount: count}) },
+
 }), {
     name: 'ui-store', // Storage key in localStorage
     getStorage: () => localStorage, // You can replace with sessionStorage

@@ -7,6 +7,7 @@ import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
 import { Badge } from "@mui/material";
 import CustomizedBadges from "./CustomizedBadge";
+import Image from "next/image";
 
 const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
   const { setIsMsgsOpen, expectedVersion } = UIStore();
@@ -29,7 +30,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     FetchUnreadMessagesCount(profile_id).then((count) => {
       setUnreadMsgCount(count);
     });
-  }, []);
+  }, [FetchUnreadMessagesCount, setUnreadMsgCount, profile_id]);
 
   return (
     <div
@@ -51,7 +52,8 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
         <CustomizedBadges count={unreadMsgCount}>
           {/* count={0}> */}
           <div className="flex-shrink-0 relative">
-            <img
+            <Image
+              fill
               src={avatar_url}
               alt="profile"
               className={` size-10 lg:size-12 rounded-xl border-2 ${

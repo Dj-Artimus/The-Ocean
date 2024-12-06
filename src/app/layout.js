@@ -59,14 +59,14 @@ export default function RootLayout({ children }) {
     const cleanup = initializeTheme(toggleDarkMode);
     return cleanup; // Cleanup event listener on component unmount
 
-  }, []);
+  }, [toggleDarkMode]);
 
   useEffect(() => {
     const subscribeToProfileData = async () => {
       await setupSubscriptionsForProfileData('user-profile')
     }
     subscribeToProfileData();
-  }, [fetchProfileData, subscribeToProfileChanges]);
+  }, [fetchProfileData, subscribeToProfileChanges, setupSubscriptionsForProfileData]);
 
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function RootLayout({ children }) {
     // Update to offline when user disconnects
     window.addEventListener('beforeunload', () => updateOnlineStatus(false));
 
-  }, []);
+  }, [updateOnlineStatus]);
 
 
   return (

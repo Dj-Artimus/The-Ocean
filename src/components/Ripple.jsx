@@ -3,6 +3,7 @@ import RippleContentElement from "./RippleContentElement";
 import { MoreVert } from "@mui/icons-material";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
+import Image from "next/image";
 
 const Ripple = ({
   avatar_url,
@@ -24,11 +25,16 @@ const Ripple = ({
   const [isEchoesExpanded, setIsEchoesExpanded] = useState(false);
 
   return (
-    <div author_id={user_id} droplet_id={droplet_id} className="my-2 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-2xl border-slate-700 w-full">
+    <div
+      author_id={user_id}
+      droplet_id={droplet_id}
+      className="my-2 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-2xl border-slate-700 w-full"
+    >
       <div className="">
         <div className="flex items-start fc gap-[5px] ms-[9px]">
           <div className="flex-shrink-0 cursor-pointer">
-            <img
+            <Image
+              fill
               src={avatar_url}
               alt="profile"
               className="size-10 my-2 rounded-xl border-2 border-slate-500"
@@ -54,7 +60,7 @@ const Ripple = ({
                     console.log("openig model..");
                     setContentEditId(ripple_id);
                     setContentToEdit(rippleContent);
-                    setContentToEditType('Ripple');
+                    setContentToEditType("Ripple");
                     setIsMoreOptionsModalOpen(true);
                   }}
                   className="w-fit h-fit rounded-xl"

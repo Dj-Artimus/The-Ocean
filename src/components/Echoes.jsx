@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DropletContentElement from "./DropletContentElement";
 import RippleContentElement from "./RippleContentElement";
+import Image from "next/image";
 
-const Echo = ({ avatar_url, name, rippleContent  }) => {
+const Echo = ({ avatar_url, name, rippleContent }) => {
   const [showMoreContent, setShowMoreContent] = useState(false);
   const [isOverflowed, setIsOverflowed] = useState(false);
   const [contentHeight, setContentHeight] = useState("auto");
@@ -22,7 +23,8 @@ const Echo = ({ avatar_url, name, rippleContent  }) => {
       <div className="">
         <div className="flex items-start fc gap-[5px] ms-[9px]">
           <div className="flex-shrink-0 cursor-pointer">
-            <img
+            <Image
+              fill
               src={avatar_url}
               alt="profile"
               className="size-10 my-2 rounded-xl border-2 border-slate-500"

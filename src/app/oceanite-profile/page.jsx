@@ -41,7 +41,7 @@ export default function OceaniteProfile() {
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
     if (!oceaniteProfileData?.id) router.push("/");
-  }, []);
+  }, [setIsMsgsOpen,setIsOCardOpen,oceaniteProfileData?.id,router]);
 
   useEffect(() => {
     // Set up real-time subscription for updates
@@ -51,11 +51,7 @@ export default function OceaniteProfile() {
     return () => {
       if (channel) channel.unsubscribe();
     };
-    // const subscribeToProfileData = async () => {
-    //   await subscribeToProfileChanges('oceanite-profile')
-    // }
-    // if(oceaniteProfileData?.id) subscribeToProfileData();
-  }, [oceaniteProfileData]);
+  }, [oceaniteProfileData,subscribeToProfileChanges]);
 
   if (!isProfileDataFetched) return <UILoader />;
 

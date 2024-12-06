@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { Menu as BaseMenu } from "@mui/base/Menu";
@@ -14,10 +14,9 @@ import { successToast } from "./ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { AuthStore } from "@/store/AuthStore";
 
-
 export default function ProfileMenu({ children }) {
-
-  const { darkModeOn, toggleDarkMode, expectedVersion, setExpectedVersion } = UIStore();
+  const { darkModeOn, toggleDarkMode, expectedVersion, setExpectedVersion } =
+    UIStore();
   const { Logout } = AuthStore();
 
   const createHandleMenuClick = (menuItem) => {
@@ -30,8 +29,8 @@ export default function ProfileMenu({ children }) {
         // Navigate to the profile page
       } else if (menuItem === "Logout") {
         await Logout();
-        redirect('/landing-page')
-      }else if (menuItem === "ExpectedVersion") {
+        redirect("/landing-page");
+      } else if (menuItem === "ExpectedVersion") {
         setExpectedVersion(!expectedVersion);
       }
     };
@@ -71,8 +70,7 @@ export default function ProfileMenu({ children }) {
 const resolveSlotProps = (fn, args) =>
   typeof fn === "function" ? fn(args) : fn;
 
-const Menu = React.forwardRef((props, ref) => {
-
+const Menu = forwardRef((props, ref) => {
   return (
     <BaseMenu
       ref={ref}
@@ -86,10 +84,7 @@ const Menu = React.forwardRef((props, ref) => {
           );
           return {
             ...resolvedSlotProps,
-            className: clsx(
-              `z-10`,
-              resolvedSlotProps?.className
-            ),
+            className: clsx(`z-10`, resolvedSlotProps?.className),
           };
         },
         listbox: (ownerState) => {
@@ -121,7 +116,7 @@ Menu.propTypes = {
   }),
 };
 
-const MenuButton = React.forwardRef((props, ref) => {
+const MenuButton = forwardRef((props, ref) => {
   const { className, ...other } = props;
   return (
     <BaseMenuButton
@@ -142,7 +137,7 @@ MenuButton.propTypes = {
   className: PropTypes.string,
 };
 
-const MenuItem = React.forwardRef((props, ref) => {
+const MenuItem = forwardRef((props, ref) => {
   const { className, ...other } = props;
   return (
     <BaseMenuItem

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
@@ -15,6 +15,7 @@ import VideosContentElement from "@/components/VideosContentElement";
 import { DropletStore } from "@/store/DropletStore";
 import { UIStore } from "@/store/UIStore";
 import VideoReactions from "@/components/VideoReactions";
+import Image from "next/image";
 
 const VideosPage = () => {
   const router = useRouter();
@@ -32,25 +33,24 @@ const VideosPage = () => {
   const videoRef = useRef(null);
   // const [videos, setVideos] = useState([]);
 
-  const getVideos = async () => {
+  const getVideos = useCallback(async () => {
     // const videoData =
     if (!hasMore) return;
-    const newVideos = await GetFeedVideos(page , 5);
+    const newVideos = await GetFeedVideos(page, 5);
     if (newVideos?.length < 5 || newVideos === "end") {
       setHasMore(false); // Stop fetching if fewer than limit
     }
-    ;
-  };
+  }, [hasMore, GetFeedVideos]);
 
   useEffect(() => {
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
-    setDropletDataType('feedVideos');
-  }, []);
+    setDropletDataType("feedVideos");
+  }, [setIsMsgsOpen, setIsOCardOpen, setDropletDataType]);
 
   useEffect(() => {
     getVideos();
-  }, [page]);
+  }, [page, getVideos]);
 
   const videoCount = feedVideos?.length;
 
@@ -76,11 +76,10 @@ const VideosPage = () => {
       setIsPlaying(true);
     }
 
-    if( currentVideo === (videoCount - 2) ){
-      setPage( (prev) => prev + 1 );
+    if (currentVideo === videoCount - 2) {
+      setPage((prev) => prev + 1);
     }
-
-  }, [currentVideo, controls]);
+  }, [currentVideo, controls, videoCount]);
 
   useEffect(() => {
     let interval;
@@ -170,7 +169,8 @@ const VideosPage = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
           <div className="flex items-center mb-2">
-            <img
+            <Image
+              fill
               src={feedVideos[currentVideo]?.avatar}
               alt={feedVideos[currentVideo]?.author_name}
               onError={(e) => {

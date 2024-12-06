@@ -8,6 +8,7 @@ import { UserStore } from "@/store/UserStore";
 import { Anchor, Sailing } from "@mui/icons-material";
 import Button from "./Button";
 import { formatCount } from "@/utils/TimeAndCountFormater";
+import Image from "next/image";
 
 const ProfilePanel = ({
   user_id,
@@ -30,7 +31,7 @@ const ProfilePanel = ({
     setOceaniteProfileData,
   } = UserStore();
   const [isAnchoring, setIsAnchoring] = useState(false);
-  
+
   const handleAnchor = async (anchoring_id) => {
     setIsAnchoring(true);
     try {
@@ -54,7 +55,8 @@ const ProfilePanel = ({
       {/* PROFILE PIC AND BANNER STARTS HERE */}
       <div className="relative">
         <div className="w-full max-h-[50vw] sm:max-h-[40vw] lg:max-h-[30vw] min-h-[25vw]">
-          <img
+          <Image
+            fill
             src={poster_url}
             onError={(e) => {
               e.target.onerror = null;
@@ -65,7 +67,8 @@ const ProfilePanel = ({
           />
         </div>
         <div className="absolute bottom-0 left-0 w-full p-2">
-          <img
+          <Image
+            fill
             src={avatar_url}
             alt="profile"
             onError={(e) => {
@@ -125,7 +128,8 @@ const ProfilePanel = ({
                 <div className="flex items-center justify-center gap-2">
                   <span>•</span>
                   <span>{age}</span>
-                  <img
+                  <Image
+                    fill
                     src={`images/${
                       gender == "other"
                         ? "jellyfish"

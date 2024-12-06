@@ -40,6 +40,8 @@ export const DropletStore = create(
         dropletDataType: '',
         setDropletDataType: (type) => { set({ dropletDataType: type }) },
 
+        notificationsData: [],
+
         DropDroplet: async (dropletData) => {
             const user = UserStore.getState().profileData;
             const user_id = user.id;
@@ -967,11 +969,24 @@ export const DropletStore = create(
                                 (droplet) => droplet.id === newDroplet.id
                             );
 
+                            const notificationExists = state.notificationsData.some(
+                                (notification) => notification.id === newDroplet.id
+                            );
+
                             if (!dropletExists) {
                                 const updatedDroplets = [newDroplet, ...state.dropletsData]; // Add new droplet to the top
                                 // get().setDropletsData(updatedDroplets);
                                 return {
                                     dropletsData: [...updatedDroplets],
+                                };
+                            }
+
+                            if (!notificationExists) {
+                                const updatedNotifications = [newDroplet, ...state.notificationsData]; // Add new droplet to the top
+                                // get().setDropletsData(updatedDroplets);
+                                UIStore.getState().setNotificationsCount(UIStore.getState().notificationsCount + 1);
+                                return {
+                                    notificationsData: [...updatedNotifications],
                                 };
                             }
 

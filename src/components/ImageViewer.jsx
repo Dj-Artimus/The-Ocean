@@ -1,6 +1,6 @@
-
 import { UIStore } from "@/store/UIStore";
 import { Close, ArrowForwardIosRounded } from "@mui/icons-material";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 
@@ -43,8 +43,8 @@ const ImageViewer = () => {
 
   // Swipe handlers
   const swipeHandlersForImages = useSwipeable({
-    onSwipedLeft: () => goToPrev() ,
-    onSwipedRight: () => goToNext() ,
+    onSwipedLeft: () => goToPrev(),
+    onSwipedRight: () => goToNext(),
   });
 
   return (
@@ -80,10 +80,11 @@ const ImageViewer = () => {
 
             {/* Image */}
             <div>
-              <img
+              <Image
+                fill
                 src={imgViewerSources[imgViewerIndex]?.split("<|>")[0]}
                 alt={`Image ${imgViewerIndex + 1}`}
-                {...swipeHandlersForImages } 
+                {...swipeHandlersForImages}
                 className={`max-w-[90vw] max-h-[90vh] object-contain shadow-slate-500 border border-slate-700 rounded-md shadow-sm transition-transform duration-500 ease-out ${
                   isClosing ? "scale-90 opacity-0" : "scale-100 opacity-100"
                 }`}

@@ -8,12 +8,16 @@ import {
 import { redirect } from "next/navigation";
 import Button from "./Button";
 import { UIStore } from "@/store/UIStore";
+import CustomizedBadges from "./CustomizedBadge";
+import { Badge } from "@mui/material";
 
 const actions = [
-
-  { icon: <BadgeRounded className="size-7" />, name: "o-card" },
-  { icon: <Notifications className="size-7" />, name: "notifications" },
+  {
+    icon: <Notifications className="size-7 text-white" />,
+    name: "notifications",
+  },
   { icon: <Diversity1 className="size-7" />, name: "oceanites" },
+  { icon: <BadgeRounded className="size-7" />, name: "o-card" },
 ];
 
 export default function OceanSpeedDial() {
@@ -22,6 +26,7 @@ export default function OceanSpeedDial() {
     isOCardOpen,
     setIsOCardOpen,
     isCreateDropletModalOpen,
+    notificationsCount,
   } = UIStore();
   const [isOpen, setIsOpen] = useState(false);
   const speedDialRef = useRef(null);
@@ -82,29 +87,44 @@ export default function OceanSpeedDial() {
         }`}
       >
         {actions.map((action, index) => (
-          <Button
-            key={index}
-            onClick={() => {
-              handleActionClick(action.name);
-            }}
-            className="bg-blue-600 text-white p-1 shadow-blue-400 rounded-xl flex items-center justify-center shadow-sm transition-transform transform hover:scale-110 focus:outline-none"
-            aria-label={action.name}
-            title={action.name}
-          >
-            {action.icon}
-          </Button>
+          <div key={index}>
+            {action.name === "notifications" && (
+              <div className="ms-5">
+                <CustomizedBadges count={notificationsCount} />
+              </div>
+            )}
+            <Button
+              onClick={() => {
+                handleActionClick(action.name);
+              }}
+              className="bg-blue-600 text-white p-1 shadow-blue-400 rounded-xl flex items-center justify-center shadow-sm transition-transform transform hover:scale-110 focus:outline-none"
+              aria-label={action.name}
+              title={action.name}
+            >
+              {action.icon}
+            </Button>
+          </div>
         ))}
       </div>
       {/* Speed Dial Button */}
-      { !isCreateDropletModalOpen && (
-        <Button
-          onClick={toggleSpeedDial}
-          className={`bg-blue-600 text-white rounded-xl rounded-br-none flex items-center justify-center shadow-lg transition-transform transform hover:scale-110 focus:outline-none p-1`}
+      {!isCreateDropletModalOpen && (
+        <Badge
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          color="primary"
+          variant={notificationsCount > 0 && "dot"}
         >
-          <Cyclone
-            className={`size-6 transition-all ${isOpen ? "rotate-45" : ""}`}
-          />
-        </Button>
+          <Button
+            onClick={toggleSpeedDial}
+            className={`bg-blue-600 text-white rounded-xl rounded-br-none flex items-center justify-center shadow-lg transition-transform transform hover:scale-110 focus:outline-none p-1`}
+          >
+            <Cyclone
+              className={`size-6 transition-all ${isOpen ? "rotate-45" : ""}`}
+            />
+          </Button>
+        </Badge>
       )}
     </div>
   );

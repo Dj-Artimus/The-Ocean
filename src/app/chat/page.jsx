@@ -43,7 +43,8 @@ export default function Chat() {
     FetchCommunicationMessages,
   } = CommunicationStore();
 
-  const { profileData, subscribeToOnlineStatus, setOceaniteProfileData } = UserStore();
+  const { profileData, subscribeToOnlineStatus, setOceaniteProfileData } =
+    UserStore();
 
   const [messageInput, setMessageInput] = useState("");
   const [isMsgSending, setIsMsgSending] = useState(false);
@@ -64,7 +65,7 @@ export default function Chat() {
 
   useEffect(() => {
     setIsMsgsOpen(true);
-  }, []);
+  }, [setIsMsgsOpen]); // Add 'setIsMsgsOpen' as a dependency
 
   useEffect(() => {
     if (communicatorId) {
@@ -74,15 +75,19 @@ export default function Chat() {
       };
       getMsgs();
     }
-  }, [communicatorId, isMsgsOpen]);
+  }, [
+    communicatorId,
+    isMsgsOpen,
+    MarkMessagesAsRead,
+    FetchCommunicationMessages,
+  ]); // Add all relevant dependencies
 
   useEffect(() => {
-    // if (!communicatorId) return;
     const messagesChannel = subscribeToMessages();
     return () => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
-  }, [communicatorId]);
+  }, [communicatorId, subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -137,7 +142,8 @@ export default function Chat() {
                 <div className="flex items-center w-full  px-3 pt-1  justify-between">
                   <div className="flex gap-2 w-full">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
+                      fill
                         src={
                           communicatorDetails[communicatorId]?.avatar.split(
                             "<|>"
@@ -149,7 +155,9 @@ export default function Chat() {
                     </div>
                     <div
                       onClick={() => {
-                        setOceaniteProfileData(communicatorDetails[communicatorId]);
+                        setOceaniteProfileData(
+                          communicatorDetails[communicatorId]
+                        );
                         router.push("/oceanite-profile");
                       }}
                       className="mx-1 leading-snug mt-[9px] w-full cursor-pointer hidden xs:block"

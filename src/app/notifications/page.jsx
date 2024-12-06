@@ -7,16 +7,19 @@ import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import LeftSideBar from "@/components/LeftSideBar";
 import { UIStore } from "@/store/UIStore";
+import { DropletStore } from "@/store/DropletStore";
 
 const Notifications = () => {
-  const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
+  const { isMsgsOpen, setIsMsgsOpen, isOCardOpen, setNotificationsCount } = UIStore();
+  const { notificationsData } = DropletStore();
+
+  setNotificationsCount(0);
 
   const router = useRouter();
 
   return (
     <div>
       <div className="w-screen flex h-screen relative overflow-x-hidden customScrollbar">
-        
         <div
           onClick={() => {
             isMsgsOpen ? setIsMsgsOpen(false) : router.push("/");
@@ -46,27 +49,19 @@ const Notifications = () => {
         <div className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px]">
           {/* NOTIFICATION MESSAGES STARTS HERE */}
 
-          <NotificationMsg
-            avatar_url={"/images/profileImg.png"}
-            name={
-              "Jan David Don Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"
-            }
-            platform={"x"}
-            notificationMsg={
-              "Full stack developer on the rise | Building skills in mern stack Building skills in mern stack Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"
-            }
-            timeOfNotification={"3h"}
-          />
-
-          <NotificationMsg
-            avatar_url={"/images/profileImg.png"}
-            name={"Jan David Don"}
-            platform={"facebook"}
-            notificationMsg={
-              "Full stack developer on the rise | Building skills in mern stack Building skills in mern stack"
-            }
-            timeOfNotification={"3h"}
-          />
+          {notificationsData?.length > 0 ? (
+            notificationsData.map((notification) => {
+              <NotificationMsg
+                avatar_url={notification?.user_id?.avatar.split('<|>')[0]}
+                name={notification?.user_id?.name}
+                platform={notification?.platform}
+                notificationMsg={ notification?.content }
+                timeOfNotification={ notification?.created_at }
+              />;
+            })
+          ) : (
+            <div className="w-full h-[80%] overflow-hidden flex justify-center items-center text-2xl" > <h1>No notifications found!</h1> </div>
+          )}
           {/* NOTIFICATION MESSAGES ENDS HERE */}
 
           <div className="h-1 w-full my-20"></div>

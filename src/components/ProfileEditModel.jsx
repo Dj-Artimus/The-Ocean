@@ -1,15 +1,7 @@
 "use client";
-import { TextareaAutosize } from "@mui/base";
 import {
-  AssignmentTurnedIn,
   Close,
   EditNote,
-  Image,
-  Movie,
-  Person,
-  PlaylistAddCheck,
-  Save,
-  WaterDrop,
 } from "@mui/icons-material";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -27,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { successToast } from "./ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
+import Image from "next/image";
 
 const months = [
   { value: 1, label: "January" },
@@ -173,7 +166,8 @@ const ProfileEditModal = ({profileData}) => {
                         className="hidden"
                         onChange={(e) => handleFileChange(e, "poster")}
                       />
-                      <img
+                      <Image
+                      fill
                         onClick={() => {
                           selectPoster.current.click();
                         }}
@@ -200,7 +194,8 @@ const ProfileEditModal = ({profileData}) => {
                           e.target.src = "/images/jellyfishFallback.png";
                         }}
                       />
-                      <img
+                      <Image
+                      fill
                         onClick={(e) => {
                           e.stopPropagation(); // Stop click from propagating to the poster div
                           selectAvatar.current.click();

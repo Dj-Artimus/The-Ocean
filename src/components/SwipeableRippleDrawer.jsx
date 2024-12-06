@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Close, CycloneRounded } from "@mui/icons-material";
 import RipplesAnimation from "./RipplesAnimation";
@@ -32,18 +32,17 @@ const RippleDrawer = () => {
   const rippleRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRippleSubmit = async () => {
+  const handleRippleSubmit = useCallback(async () => {
     const ripple = await RippleDroplet(rippleInput);
     setRipplesRefreshId(ripple);
     setRippleInput("");
-  };
+  },[RippleDroplet,setRipplesRefreshId,setRippleInput,rippleInput]);
 
   useEffect(() => {
     let unsubscribe;
 
     const manageRippleSubscriptions = async () => {
       if (isRippleDrawerOpen) {
-        console.log("Ripple drawer opened.");
         // Fetch ripples when the drawer is opened
         await GetRipples();
         unsubscribe = await setupSubscriptionsForRipplesData(); // Fetch and subscribe
@@ -59,15 +58,15 @@ const RippleDrawer = () => {
     return () => {
       if (unsubscribe) unsubscribe(); // Cleanup on unmount
     };
-  }, [isRippleDrawerOpen]); // Depend only on the drawer state
+  }, [isRippleDrawerOpen,GetRipples,setupSubscriptionsForRipplesData,setDropletRipples]); // Depend only on the drawer state
 
-  const toggleDrawer = () => {
+  const toggleDrawer = useCallback(() => {
     setIsRippleDrawerOpen(!isRippleDrawerOpen);
     if (isRippleDrawerOpen) setRippleInput("");
     setDrawerHeight("50%");
-  };
+  },[setIsRippleDrawerOpen,isRippleDrawerOpen,setRippleInput,setDrawerHeight]);
 
-  const handleDrag = (event, info) => {
+  const handleDrag = useCallback((event, info) => {
     const offsetY = info.offset.y;
 
     if (offsetY < 0) {
@@ -83,9 +82,9 @@ const RippleDrawer = () => {
       setDragOffsetY(offsetY); // Allow dragging down to close
       //   setDrawerHeight("50%");
     }
-  };
+  },[setDrawerHeight,setDrawerHeight]);
 
-  const handleDragEnd = (event, info) => {
+  const handleDragEnd = useCallback((event, info) => {
     if (info.offset.y > 80) {
       setIsRippleDrawerOpen(false); // Close drawer if dragged down by 150px or more
       setDrawerHeight("50%");
@@ -93,16 +92,16 @@ const RippleDrawer = () => {
       setDrawerHeight("50%");
     }
     setDragOffsetY(0); // Reset position
-  };
+  },[setIsRippleDrawerOpen,setDrawerHeight,setDragOffsetY]);
 
-  const handleOutsideClick = () => {
+  const handleOutsideClick = useCallback(() => {
     setIsRippleDrawerOpen(false);
     setRippleInput("");
     setDrawerHeight("50%");
     setDropletRipples([]);
-  };
+  },[setIsRippleDrawerOpen,setRippleInput,setDrawerHeight,setDropletRipples]);
 
-  const handleInfiniteScroll = async () => {
+  const handleInfiniteScroll = useCallback(async () => {
     const element = rippleRef.current;
     if (element) {
       const { scrollTop, scrollHeight, clientHeight } = element;
@@ -115,7 +114,7 @@ const RippleDrawer = () => {
         if (page > 1) await GetRipples();
       }
     }
-  };
+  },[rippleRef,GetRipples]);
 
   useEffect(() => {
     const element = rippleRef.current;
@@ -127,7 +126,7 @@ const RippleDrawer = () => {
         element.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [handleInfiniteScroll]);
+  }, [handleInfiniteScroll,rippleRef]);
 
   return (
     <>

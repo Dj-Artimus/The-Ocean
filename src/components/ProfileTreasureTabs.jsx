@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Droplet from "./Droplet";
 import { DropletStore } from "@/store/DropletStore";
 import { UIStore } from "@/store/UIStore";
@@ -34,10 +34,7 @@ export default function ProfileTreasureTabs({oceanite_id}) {
     dropletsData,
   } = DropletStore();
 
-  const { dropletsRefreshId } = UIStore();
-
   const [profileTreasureTabIndex, setProfileTreasureTabIndex] = useState(1);
-  const [droplets, setDroplets] = useState(userDroplets);
 
   const dropletDataTypes = [
     { type: "treasureDroplets", data: treasureDroplets },
@@ -47,7 +44,7 @@ export default function ProfileTreasureTabs({oceanite_id}) {
     { type: "userRippledDroplets", data: userRippledDroplets },
   ];
 
-  const getDropletData = async (index = profileTreasureTabIndex) => {
+  const getDropletData = (async (index = profileTreasureTabIndex) => {
     switch (index) {
       case 0:
         return await GetTreasureDroplets(oceanite_id && oceanite_id );
@@ -60,19 +57,18 @@ export default function ProfileTreasureTabs({oceanite_id}) {
       case 4:
         return await GetUserRippledDroplets(oceanite_id && oceanite_id );
     }
-  };
+  },[GetTreasureDroplets,GetUserDroplets,GetUserGemmedDroplets,GetUserStaredDroplets,GetUserRippledDroplets,oceanite_id]);
 
   useEffect(() => {
     setDropletDataType(dropletDataTypes[profileTreasureTabIndex].type);
     getDropletData();
-  }, []);
+  }, [setDropletDataType,getDropletData,profileTreasureTabIndex,dropletDataTypes]);
 
-  const handleChange = (index) => {
+  const handleChange = useCallback((index) => {
     setProfileTreasureTabIndex(index);
     getDropletData(index);
     setDropletDataType(dropletDataTypes[index].type);
-    setDroplets(dropletDataTypes[profileTreasureTabIndex].data);
-  };
+  },[setProfileTreasureTabIndex,getDropletData,setDropletDataType,dropletDataTypes,profileTreasureTabIndex]);
 
   
 

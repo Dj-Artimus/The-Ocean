@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSwipeable } from "react-swipeable";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
@@ -22,6 +22,7 @@ import Button from "./Button";
 import DropletLoader from "./DropletLoader";
 import { useRouter } from "next/navigation";
 import { getTime } from "@/utils/TimeAndCountFormater";
+import Image from "next/image";
 
 const Droplet = ({
   droplet_id,
@@ -89,14 +90,20 @@ const Droplet = ({
   const redirect = useRouter();
 
   // Handles image slider navigation
-  const handleImageChange = (index) => {
-    setCurrentImage(index);
-  };
+  const handleImageChange = useCallback(
+    (index) => {
+      setCurrentImage(index);
+    },
+    [setCurrentImage]
+  );
 
   // Handles video slider navigation
-  const handleVideoChange = (index) => {
-    setCurrentVideo(index);
-  };
+  const handleVideoChange = useCallback(
+    (index) => {
+      setCurrentVideo(index);
+    },
+    [setCurrentVideo]
+  );
 
   // Swipe handlers
   const swipeHandlersForImages = useSwipeable({
@@ -116,72 +123,88 @@ const Droplet = ({
     trackMouse: true,
   });
 
-  const handleAnchor = async (anchoring_id) => {
-    setIsAnchoring(true);
-    try {
-      if (anchoring_id) {
-        if (anchoringsIds.includes(anchoring_id)) {
-          const isAnchoring = await UnAnchorOceanite(anchoring_id);
-          // setAnchoring(!isAnchoring);
-        } else {
-          const isAnchoring = await AnchorOceanite(anchoring_id);
-          // setAnchoring(isAnchoring);
+  const handleAnchor = useCallback(
+    async (anchoring_id) => {
+      setIsAnchoring(true);
+      try {
+        if (anchoring_id) {
+          if (anchoringsIds.includes(anchoring_id)) {
+            const isAnchoring = await UnAnchorOceanite(anchoring_id);
+            // setAnchoring(!isAnchoring);
+          } else {
+            const isAnchoring = await AnchorOceanite(anchoring_id);
+            // setAnchoring(isAnchoring);
+          }
         }
+      } catch (error) {
+      } finally {
+        setIsAnchoring(false);
       }
-    } catch (error) {
-    } finally {
-      setIsAnchoring(false);
-    }
-  };
+    },
+    [setIsAnchoring, anchoringsIds, UnAnchorOceanite, AnchorOceanite]
+  );
 
-  const checkIsDropletRippled = async (droplet_id) => {
-    try {
-      if (droplet_id) {
-        const rippled = await CheckIsUserRippledDroplet(droplet_id);
-        return setRippled(rippled);
-      }
-    } catch (error) {}
-  };
-
-  const handleStarADroplet = async (droplet_id) => {
-    try {
-      setIsStaring(true);
-      if (droplet_id) {
-        if (stared) {
-          const isUnStared = await UnStarDroplet(droplet_id);
-          setStared(!isUnStared);
-        } else {
-          const isStared = await StarDroplet(droplet_id);
-          setStared(isStared);
+  const checkIsDropletRippled = useCallback(
+    async (droplet_id) => {
+      try {
+        if (droplet_id) {
+          const rippled = await CheckIsUserRippledDroplet(droplet_id);
+          return setRippled(rippled);
         }
-      }
-    } catch (error) {
-    } finally {
-      setIsStaring(false);
-    }
-  };
+      } catch (error) {}
+    },
+    [setRippled, CheckIsUserRippledDroplet]
+  );
 
-  const handleGemDroplet = async (droplet_id) => {
-    setIsGemming(true);
-    try {
-      if (droplet_id) {
-        if (gemmed) {
-          const isGemmed = await UnGemDroplet(droplet_id);
-          setGemmed(!isGemmed);
-        } else {
-          const isGemmed = await GemDroplet(droplet_id);
-          setGemmed(isGemmed);
+  const handleStarADroplet = useCallback(
+    async (droplet_id) => {
+      try {
+        setIsStaring(true);
+        if (droplet_id) {
+          if (stared) {
+            const isUnStared = await UnStarDroplet(droplet_id);
+            setStared(!isUnStared);
+          } else {
+            const isStared = await StarDroplet(droplet_id);
+            setStared(isStared);
+          }
         }
+      } catch (error) {
+      } finally {
+        setIsStaring(false);
       }
-    } catch (error) {
-    } finally {
-      setIsGemming(false);
-    }
-  };
+    },
+    [stared, setIsStaring, UnStarDroplet, StarDroplet, setStared]
+  );
+
+  const handleGemDroplet = useCallback(
+    async (droplet_id) => {
+      setIsGemming(true);
+      try {
+        if (droplet_id) {
+          if (gemmed) {
+            const isGemmed = await UnGemDroplet(droplet_id);
+            setGemmed(!isGemmed);
+          } else {
+            const isGemmed = await GemDroplet(droplet_id);
+            setGemmed(isGemmed);
+          }
+        }
+      } catch (error) {
+      } finally {
+        setIsGemming(false);
+      }
+    },
+    [isGemming, UnGemDroplet, GemDroplet, setGemmed, setIsGemming, gemmed]
+  );
 
   useEffect(() => {
     checkIsDropletRippled(droplet_id);
-  }, [ripplesRefreshId && isRippleInitiated]);
+  }, [
+    ripplesRefreshId && isRippleInitiated,
+    checkIsDropletRippled,
+    droplet_id,
+  ]);
 
   useEffect(() => {
     if (!rippleDrawerOpen && isRippleInitiated) {
@@ -191,27 +214,38 @@ const Droplet = ({
       };
       checkRippled();
     }
-  }, [rippleDrawerOpen]);
+  }, [rippleDrawerOpen, isRippleInitiated, droplet_id, checkIsDropletRippled]);
 
-  const loadDropletData = async () => {
-    try {
-      setIsDropletLoading(true);
-      if (droplet_id) {
-        const [isStared, isGemmed, rippled] = await Promise.all([
-          CheckIsDropletStaredByUser(droplet_id),
-          CheckIsUserGemmedDroplet(droplet_id),
-          CheckIsUserRippledDroplet(droplet_id),
-        ]);
-        setStared(isStared);
-        setGemmed(isGemmed);
-        setRippled(rippled);
+  const loadDropletData =
+    (async () => {
+      try {
+        setIsDropletLoading(true);
+        if (droplet_id) {
+          const [isStared, isGemmed, rippled] = await Promise.all([
+            CheckIsDropletStaredByUser(droplet_id),
+            CheckIsUserGemmedDroplet(droplet_id),
+            CheckIsUserRippledDroplet(droplet_id),
+          ]);
+          setStared(isStared);
+          setGemmed(isGemmed);
+          setRippled(rippled);
+        }
+      } catch (error) {
+        console.error("Error loading droplet data:", error);
+      } finally {
+        setIsDropletLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading droplet data:", error);
-    } finally {
-      setIsDropletLoading(false);
-    }
-  };
+    },
+    [
+      setIsDropletLoading,
+      droplet_id,
+      CheckIsDropletStaredByUser,
+      CheckIsUserGemmedDroplet,
+      CheckIsUserRippledDroplet,
+      setStared,
+      setGemmed,
+      setRippled,
+    ]);
 
   useEffect(() => {
     loadDropletData();
@@ -221,7 +255,7 @@ const Droplet = ({
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [droplet_id, loadDropletData, subscribeToDropletChanges]);
 
   return (
     <div className="">
@@ -232,7 +266,8 @@ const Droplet = ({
           <div className="flex items-center w-full justify-between">
             <div className="flex gap-2">
               <div className="flex-shrink-0">
-                <img
+                <Image
+                  fill
                   src={avatar_url}
                   onError={(e) => {
                     e.target.onerror = null;
@@ -323,7 +358,8 @@ const Droplet = ({
           {images?.length > 1 ? (
             <div className="relative">
               {/* Slider image display */}
-              <img
+              <Image
+                fill
                 src={images[currentImage]?.split("<|>")[0]}
                 alt={`Image ${currentImage + 1}`}
                 onClick={() => {
@@ -349,7 +385,8 @@ const Droplet = ({
           ) : (
             // Single image display
             images[0] && (
-              <img
+              <Image
+                fill
                 src={images[0]?.split("<|>")[0]}
                 alt="Image"
                 onClick={() => {

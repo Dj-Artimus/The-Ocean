@@ -1,6 +1,6 @@
 "use client";
 import { TextareaAutosize } from "@mui/base";
-import { Close, Image, Movie, WaterDrop } from "@mui/icons-material";
+import { Close, ImageRounded, Movie, WaterDrop } from "@mui/icons-material";
 import React, { useState, useEffect, useRef } from "react";
 import PlatformSelector from "./PlatformSelector";
 import { errorToast, successToast } from "./ToasterProvider";
@@ -8,6 +8,7 @@ import { Box, CircularProgress } from "@mui/material";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import { DropletStore } from "@/store/DropletStore";
+import Image from "next/image";
 
 const DropletModal = () => {
   const {
@@ -203,7 +204,9 @@ const DropletModal = () => {
               <div className="flex gap-1 xs1:gap-2 xs2:gap-4 text-slate-800 dark:text-slate-200">
                 <div className="relative">
                   {dropletImages[0]?.source && (
-                    <img
+                    <Image
+                      fill
+                      alt='attached img'
                       src={dropletImages[0]?.source}
                       onClick={() => {
                         console.log(dropletImages);
@@ -216,7 +219,7 @@ const DropletModal = () => {
                       className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
                     />
                   )}
-                  <Image
+                  <ImageRounded
                     onClick={() => {
                       selectImages.current.click();
                     }}

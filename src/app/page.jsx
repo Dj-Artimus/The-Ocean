@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Droplet from "@/components/Droplet";
@@ -53,7 +53,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const feedRef = useRef();
 
-  const fetchFeedData = async () => {
+  const fetchFeedData = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     const newDroplets = await GetFeedDroplets(page, 5);
@@ -64,7 +64,7 @@ export default function Home() {
       setPage((prevPage) => prevPage + 1);
     }
     setIsLoading(false);
-  };
+  }, [isLoading, hasMore, GetFeedDroplets, page]);
 
   const handleRefresh = async () => {
     setPage(0); // Reset pagination
@@ -84,9 +84,9 @@ export default function Home() {
     setIsOCardOpen(false);
     setDropletDataType("feedDroplets");
     fetchFeedData();
-  }, []);
+  }, [setIsMsgsOpen,setIsOCardOpen,setDropletDataType,fetchFeedData]);
 
-  const handleInfiniteScroll = async () => {
+  const handleInfiniteScroll = useCallback(async () => {
     const element = feedRef.current;
     if (element) {
       const { scrollTop, scrollHeight, clientHeight } = element;
@@ -99,7 +99,7 @@ export default function Home() {
         if (page > 1) await fetchFeedData();
       }
     }
-  };
+  },[feedRef, page, fetchFeedData, hasMore]);
 
   useEffect(() => {
     const element = feedRef.current;
@@ -111,7 +111,7 @@ export default function Home() {
         element.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [handleInfiniteScroll]);
+  }, [handleInfiniteScroll, feedRef]);
 
   if (!isFeedDropletsFetched) return <UILoader />;
   return (
