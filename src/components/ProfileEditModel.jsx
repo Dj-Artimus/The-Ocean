@@ -50,16 +50,16 @@ const ProfileEditModal = ({ profileData }) => {
 
   const router = useRouter();
 
-  const [name, setName] = useState(profileData.name);
+  const [name, setName] = useState(profileData?.name);
   const [posterData, setPosterData] = useState({
-    currentSource: profileData.poster?.split("<|>")[0],
+    currentSource: profileData?.poster?.split("<|>")[0],
     newSource: null,
     file: null,
     path: null,
     storageBucket: "posters",
   });
   const [avatarData, setAvatarData] = useState({
-    currentSource: profileData.avatar?.split("<|>")[0],
+    currentSource: profileData?.avatar?.split("<|>")[0],
     newSource: null,
     file: null,
     path: null,

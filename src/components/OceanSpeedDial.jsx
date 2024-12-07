@@ -113,7 +113,7 @@ export default function OceanSpeedDial() {
             vertical: "top",
             horizontal: "left",
           }}
-          color="primary"
+          color="error"
           variant={notificationsCount > 0 && "dot"}
         >
           <Button

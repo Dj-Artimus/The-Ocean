@@ -61,7 +61,7 @@ export default function OceaniteProfile() {
       className="w-screen flex h-screen relative overflow-x-hidden lg:px-[4%] xl:px-[10%] customScrollbar "
     >
       {isProfileEditModalOpen && (
-        <ProfileEditModal oceaniteProfileData={oceaniteProfileData} />
+        <ProfileEditModal profileData={oceaniteProfileData} />
       )}
 
       {/* NAVIGATION BAR STARTS HERE */}

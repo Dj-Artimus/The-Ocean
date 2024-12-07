@@ -44,7 +44,7 @@ export default function ProfileTreasureTabs({oceanite_id}) {
     { type: "userRippledDroplets", data: userRippledDroplets },
   ];
 
-  const getDropletData = (async (index = profileTreasureTabIndex) => {
+  const getDropletData = useCallback(async (index = profileTreasureTabIndex) => {
     switch (index) {
       case 0:
         return await GetTreasureDroplets(oceanite_id && oceanite_id );
@@ -62,13 +62,13 @@ export default function ProfileTreasureTabs({oceanite_id}) {
   useEffect(() => {
     setDropletDataType(dropletDataTypes[profileTreasureTabIndex].type);
     getDropletData();
-  }, [setDropletDataType,getDropletData,profileTreasureTabIndex,dropletDataTypes]);
+  }, [setDropletDataType,getDropletData]);
 
   const handleChange = useCallback((index) => {
     setProfileTreasureTabIndex(index);
     getDropletData(index);
     setDropletDataType(dropletDataTypes[index].type);
-  },[setProfileTreasureTabIndex,getDropletData,setDropletDataType,dropletDataTypes,profileTreasureTabIndex]);
+  },[setProfileTreasureTabIndex,getDropletData,setDropletDataType]);
 
   
 

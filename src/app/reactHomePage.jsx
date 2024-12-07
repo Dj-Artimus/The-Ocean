@@ -52,14 +52,16 @@ export default function ReactHomePage() {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     const newDroplets = await GetFeedDroplets(page, 5);
-    console.log('newDroplets', newDroplets)
+    console.log("newDroplets", newDroplets);
     if (newDroplets?.length < 5 || newDroplets === "end") {
       setHasMore(false); // Stop fetching if fewer than limit
-    } else if (newDroplets) {
-      setPage((prevPage) => prevPage + 1);
+    } else if (newDroplets?.length >= 5) {
+      setTimeout(() => {
+        setPage((prevPage) => prevPage + 1);
+      }, 500);
     }
     setIsLoading(false);
-  }, [isLoading, hasMore, GetFeedDroplets, page]);
+  }, [GetFeedDroplets,hasMore,setPage,page]);
 
   const handleRefresh = async () => {
     setPage(0); // Reset pagination
@@ -77,24 +79,31 @@ export default function ReactHomePage() {
     // Fetch initial droplets
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
+  }, [setIsMsgsOpen, setIsOCardOpen]);
+
+  useEffect(() => {
     setDropletDataType("feedDroplets");
     fetchFeedData();
-  }, [setIsMsgsOpen,setIsOCardOpen,setDropletDataType,fetchFeedData]);
+  }, [setDropletDataType, fetchFeedData]);
 
   const handleInfiniteScroll = useCallback(async () => {
     const element = feedRef.current;
     if (element) {
       const { scrollTop, scrollHeight, clientHeight } = element;
+    //   console.log("scrollTop", scrollTop);
+    //   console.log("scrollHeight", scrollHeight);
+    //   console.log("clientHeight", clientHeight);
+
       if (
         hasMore &&
         clientHeight + 100 < scrollHeight &&
         scrollTop + clientHeight >= scrollHeight - 100
       ) {
         console.log("Fetch more data!", page);
-        if (page > 1) await fetchFeedData();
+        if (page > 1 && !isLoading) await fetchFeedData();
       }
     }
-  },[feedRef, page, fetchFeedData, hasMore]);
+  }, [feedRef.current, fetchFeedData, hasMore,]);
 
   useEffect(() => {
     const element = feedRef.current;
@@ -106,7 +115,7 @@ export default function ReactHomePage() {
         element.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [handleInfiniteScroll, feedRef]);
+  }, [handleInfiniteScroll, feedRef.current]);
 
   if (!isFeedDropletsFetched) return <UILoader />;
   return (
@@ -139,95 +148,95 @@ export default function ReactHomePage() {
         {/* LEFT SIDE BAR ENDS HERE */}
 
         {/* MAIN CONTENT STARTS HERE */}
-          <div
-            className={`  ${
-              isMsgsOpen || isOCardOpen ? "hidden" : ""
-            } h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 relative pe p-2`}
-          >
-            {/* GREETINGS SECTIONS STARTS HERE */}
-            <div className=" lg:mt-14 flex flex-col gap-2 sm:gap-3">
-              {/* OCEANITES FINDER AND CONNECTOR STARTS HERE */}
-              <div className="bg-ternary dark:bg-blue-950 dark:bg-opacity-70 w-full items-center  p-3 px-4  rounded-2xl flex justify-between">
-                <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-sm sm:text-lg ">Looking for New</h1>{" "}
-                    <h1>Oceanites ?</h1>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Diversity1 />
-                    <h1>Lets connect !</h1>
-                  </div>
+        <div
+          className={`  ${
+            isMsgsOpen || isOCardOpen ? "hidden" : ""
+          } h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 relative pe p-2`}
+        >
+          {/* GREETINGS SECTIONS STARTS HERE */}
+          <div className=" lg:mt-14 flex flex-col gap-2 sm:gap-3">
+            {/* OCEANITES FINDER AND CONNECTOR STARTS HERE */}
+            <div className="bg-ternary dark:bg-blue-950 dark:bg-opacity-70 w-full items-center  p-3 px-4  rounded-2xl flex justify-between">
+              <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-sm sm:text-lg ">Looking for New</h1>{" "}
+                  <h1>Oceanites ?</h1>
                 </div>
-                <Button
-                  onClick={() => {
-                    router.push("/oceanites");
-                  }}
-                  className="bg-blue-500 text-d_text_clr px-2 w-12 rounded-full h-8"
-                >
-                  <ConnectWithoutContactRounded className="size-7" />
-                </Button>
-              </div>
-              {/* OCEANITES FINDER AND CONNECTOR ENDS HERE */}
-              {/* DROPLET DROPER GREETING STARTS HERE */}
-              <div className="bg-ternary dark:bg-d_ternary w-full  p-3 px-4  items-center rounded-2xl flex justify-between">
-                <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
-                  <h1>Whats Happening ?</h1>
-                  <h1>Whats on your mind!</h1>
+                <div className="flex items-center gap-2">
+                  <Diversity1 />
+                  <h1>Lets connect !</h1>
                 </div>
-                <Button
-                  onClick={() => {
-                    setIsCreateDropletModalOpen(true);
-                  }}
-                  className="bg-blue-500 text-d_text_clr px-2 rounded-full h-8"
-                >
-                  Drop
-                </Button>
               </div>
-              {/* DROPLET DROPER GREETING ENDS HERE */}
+              <Button
+                onClick={() => {
+                  router.push("/oceanites");
+                }}
+                className="bg-blue-500 text-d_text_clr px-2 w-12 rounded-full h-8"
+              >
+                <ConnectWithoutContactRounded className="size-7" />
+              </Button>
             </div>
-            {/* GREETINGS SECTIONS ENDS HERE */}
-            {/* DROPLETS START HERE */}
-            <div>
-              {feedDroplets?.map((droplet) => {
-                {
-                  /* {dropletsData?.map((droplet) => { */
-                }
-                return (
-                  <Droplet
-                    key={droplet?.id}
-                    droplet_id={droplet?.id}
-                    author_id={droplet?.user_id?.id}
-                    avatar_url={droplet?.user_id?.avatar}
-                    authorData={droplet?.user_id}
-                    name={droplet?.user_id?.name}
-                    username={droplet?.user_id?.username}
-                    wave={droplet?.user_id?.wave}
-                    platform={droplet?.platform}
-                    time={droplet?.created_at}
-                    content={droplet?.content}
-                    images={droplet?.images}
-                    videos={droplet?.videos}
-                    stars={droplet?.stars}
-                    ripples={droplet?.ripples}
-                    redrops={droplet?.redrops}
-                  />
-                );
-              })}
+            {/* OCEANITES FINDER AND CONNECTOR ENDS HERE */}
+            {/* DROPLET DROPER GREETING STARTS HERE */}
+            <div className="bg-ternary dark:bg-d_ternary w-full  p-3 px-4  items-center rounded-2xl flex justify-between">
+              <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
+                <h1>Whats Happening ?</h1>
+                <h1>Whats on your mind!</h1>
+              </div>
+              <Button
+                onClick={() => {
+                  setIsCreateDropletModalOpen(true);
+                }}
+                className="bg-blue-500 text-d_text_clr px-2 rounded-full h-8"
+              >
+                Drop
+              </Button>
             </div>
-            {/* DROPLETS ENDS HERE */}
-            {isLoading && (
-              <div className="animate-pulse w-full flex justify-center items-center">
-                <CycloneRounded className="animate-spin size-8" />
-              </div>
-            )}
-            {!hasMore && (
-              <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center gap-1">
-                <CrisisAlertRounded className="size-6 animate-spin" />
-                Increase Anchorings to See more...
-              </div>
-            )}
-            <div className="h-1 w-full my-20"></div>
+            {/* DROPLET DROPER GREETING ENDS HERE */}
           </div>
+          {/* GREETINGS SECTIONS ENDS HERE */}
+          {/* DROPLETS START HERE */}
+          <div>
+            {feedDroplets?.map((droplet) => {
+              {
+                /* {dropletsData?.map((droplet) => { */
+              }
+              return (
+                <Droplet
+                  key={droplet?.id}
+                  droplet_id={droplet?.id}
+                  author_id={droplet?.user_id?.id}
+                  avatar_url={droplet?.user_id?.avatar}
+                  authorData={droplet?.user_id}
+                  name={droplet?.user_id?.name}
+                  username={droplet?.user_id?.username}
+                  wave={droplet?.user_id?.wave}
+                  platform={droplet?.platform}
+                  time={droplet?.created_at}
+                  content={droplet?.content}
+                  images={droplet?.images}
+                  videos={droplet?.videos}
+                  stars={droplet?.stars}
+                  ripples={droplet?.ripples}
+                  redrops={droplet?.redrops}
+                />
+              );
+            })}
+          </div>
+          {/* DROPLETS ENDS HERE */}
+          {isLoading && (
+            <div className="animate-pulse w-full flex justify-center items-center">
+              <CycloneRounded className="animate-spin size-8" />
+            </div>
+          )}
+          {!hasMore && (
+            <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center gap-1">
+              <CrisisAlertRounded className="size-6 animate-spin" />
+              Increase Anchorings to See more...
+            </div>
+          )}
+          <div className="h-1 w-full my-20"></div>
+        </div>
         {/* MAIN CONTENT ENDS HERE */}
 
         {/* RIGHT SIDE BAR STARTS HERE */}
