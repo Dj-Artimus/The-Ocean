@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import { GitHub, Google } from "@mui/icons-material";
 import Link from "next/link";
+import { AuthStore } from "@/store/AuthStore";
 
 const LoginPage = () => {
   const { Login, OAuthLogin } = AuthStore();
@@ -38,13 +39,15 @@ const LoginPage = () => {
           <CircularProgress />
         </div>
       ) : (
-        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
-          <Typography
-            variant="h4"
-            className="text-center font-semibold mb-6 text-gray-800 dark:text-gray-200"
-          >
-            Welcome Back !
-          </Typography>
+        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-10 shadow-blue-300 dark:shadow-blue-800">
+          <div className="mb-6">
+            <Typography
+              variant="h4"
+              className="text-center font-semibold text-gray-800 dark:text-gray-200"
+            >
+              Welcome Back !
+            </Typography>
+          </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <TextField
@@ -136,18 +139,20 @@ const LoginPage = () => {
             </Button>
           </div>
 
-          <Typography
-            variant="body2"
-            className="text-center mt-4 text-gray-600 dark:text-gray-400"
-          >
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="text-blue-600 hover:underline dark:text-blue-400"
+          <div className="mt-4">
+            <Typography
+              variant="body2"
+              className="text-center text-gray-600 dark:text-gray-400"
             >
-              Sign Up
-            </Link>
-          </Typography>
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-blue-600 hover:underline dark:text-blue-400"
+              >
+                Sign Up
+              </Link>
+            </Typography>
+          </div>
         </div>
       )}
     </div>

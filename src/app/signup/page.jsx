@@ -58,13 +58,15 @@ const SignUp = () => {
           <CircularProgress />
         </div>
       ) : (
-        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
-          <Typography
-            variant="h4"
-            className="text-center font-semibold mb-6 text-gray-800 dark:text-gray-200"
-          >
-            Create Account
-          </Typography>
+        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-10 shadow-blue-300 dark:shadow-blue-800">
+          <div className="mb-6">
+            <Typography
+              variant="h4"
+              className="text-center font-semibold text-gray-800 dark:text-gray-200"
+            >
+              Create Account
+            </Typography>
+          </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <TextField
@@ -167,18 +169,20 @@ const SignUp = () => {
             </Button>
           </div>
 
-          <Typography
-            variant="body2"
-            className="text-center mt-4 text-gray-600 dark:text-gray-400"
-          >
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="text-blue-600 hover:underline dark:text-blue-400"
+          <div className=" mt-4">
+            <Typography
+              variant="body2"
+              className="text-center text-gray-600 dark:text-gray-400"
             >
-              Log in
-            </Link>
-          </Typography>
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-blue-600 hover:underline dark:text-blue-400"
+              >
+                Log in
+              </Link>
+            </Typography>
+          </div>
         </div>
       )}
     </div>
