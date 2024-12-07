@@ -105,6 +105,8 @@ const Menu = forwardRef((props, ref) => {
   );
 });
 
+Menu.displayName = 'Menu';
+
 Menu.propTypes = {
   /**
    * The props used for each slot inside the Menu.
@@ -130,6 +132,8 @@ const MenuButton = forwardRef((props, ref) => {
   );
 });
 
+MenuButton.displayName = 'MenuButton'
+
 MenuButton.propTypes = {
   /**
    * Class name applied to the root element.
@@ -151,6 +155,10 @@ const MenuItem = forwardRef((props, ref) => {
   );
 });
 
+MenuItem.displayName = 'MenuItem';
+
 MenuItem.propTypes = {
   className: PropTypes.string,
 };
+
+

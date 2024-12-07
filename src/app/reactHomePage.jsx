@@ -21,6 +21,7 @@ import { UIStore } from "@/store/UIStore";
 import Button from "@/components/Button";
 import InfiniteScroll from "react-infinite-scroll-component";
 import DropletLoader from "@/components/DropletLoader";
+import { debounce } from "@mui/material";
 
 export default function ReactHomePage() {
   const router = useRouter();
@@ -53,15 +54,16 @@ export default function ReactHomePage() {
     setIsLoading(true);
     const newDroplets = await GetFeedDroplets(page, 5);
     console.log("newDroplets", newDroplets);
-    if (newDroplets?.length < 5 || newDroplets === "end") {
+    if (newDroplets?.length > 0) {
+      if (newDroplets?.length < 5 || newDroplets === "end") {
+        setHasMore(false); // Stop fetching if fewer than limit
+      }
+      setPage((prevPage) => prevPage + 1);
+    } else {
       setHasMore(false); // Stop fetching if fewer than limit
-    } else if (newDroplets?.length >= 5) {
-      setTimeout(() => {
-        setPage((prevPage) => prevPage + 1);
-      }, 500);
     }
     setIsLoading(false);
-  }, [GetFeedDroplets,hasMore,setPage,page]);
+  }, [GetFeedDroplets, hasMore, setPage, page]);
 
   const handleRefresh = async () => {
     setPage(0); // Reset pagination
@@ -86,24 +88,27 @@ export default function ReactHomePage() {
     fetchFeedData();
   }, [setDropletDataType, fetchFeedData]);
 
-  const handleInfiniteScroll = useCallback(async () => {
-    const element = feedRef.current;
-    if (element) {
-      const { scrollTop, scrollHeight, clientHeight } = element;
-    //   console.log("scrollTop", scrollTop);
-    //   console.log("scrollHeight", scrollHeight);
-    //   console.log("clientHeight", clientHeight);
+  const handleInfiniteScroll = useCallback(
+    debounce(async () => {
+      const element = feedRef.current;
+      if (element) {
+        const { scrollTop, scrollHeight, clientHeight } = element;
+        //   console.log("scrollTop", scrollTop);
+        //   console.log("scrollHeight", scrollHeight);
+        //   console.log("clientHeight", clientHeight);
 
-      if (
-        hasMore &&
-        clientHeight + 100 < scrollHeight &&
-        scrollTop + clientHeight >= scrollHeight - 100
-      ) {
-        console.log("Fetch more data!", page);
-        if (page > 1 && !isLoading) await fetchFeedData();
+        if (
+          hasMore &&
+          clientHeight + 100 < scrollHeight &&
+          scrollTop + clientHeight >= scrollHeight - 100
+        ) {
+          console.log("Fetch more data!", page);
+          if (page > 1 && !isLoading) await fetchFeedData();
+        }
       }
-    }
-  }, [feedRef.current, fetchFeedData, hasMore,]);
+    }, 300),
+    [feedRef.current, fetchFeedData, hasMore, isLoading]
+  );
 
   useEffect(() => {
     const element = feedRef.current;
@@ -115,7 +120,7 @@ export default function ReactHomePage() {
         element.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [handleInfiniteScroll, feedRef.current]);
+  }, [handleInfiniteScroll]);
 
   if (!isFeedDropletsFetched) return <UILoader />;
   return (
