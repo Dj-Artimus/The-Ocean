@@ -27,7 +27,7 @@ export const UserStore =
                 // Fetch Profile Data
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
-                    if (error || !data.user) throw new Error('User not authenticated');
+                    if (error || !data.user) return console.log('User not authenticated');
 
                     try {
                         const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();

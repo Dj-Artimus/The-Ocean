@@ -51,19 +51,24 @@ export default function ReactHomePage() {
 
   const fetchFeedData = useCallback(async () => {
     if (isLoading || !hasMore) return;
+
     setIsLoading(true);
-    const newDroplets = await GetFeedDroplets(page, 5);
-    console.log("newDroplets", newDroplets);
-    if (newDroplets?.length > 0) {
-      if (newDroplets?.length < 5 || newDroplets === "end") {
-        setHasMore(false); // Stop fetching if fewer than limit
+    try {
+      const newDroplets = await GetFeedDroplets(page, 5);
+      console.log("Fetched Droplets:", newDroplets);
+
+      if (newDroplets?.length > 0) {
+        if (newDroplets.length < 5) setHasMore(false); // Stop fetching
+        else setPage((prev) => prev + 1); // Increment only if fetch is valid
+      } else {
+        setHasMore(false);
       }
-      setPage((prevPage) => prevPage + 1);
-    } else {
-      setHasMore(false); // Stop fetching if fewer than limit
+    } catch (error) {
+      console.error("Error fetching droplets:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }, [GetFeedDroplets, hasMore, setPage, page]);
+  }, [GetFeedDroplets, hasMore, page, setFeedDroplets]);
 
   const handleRefresh = async () => {
     setPage(0); // Reset pagination
@@ -85,8 +90,9 @@ export default function ReactHomePage() {
 
   useEffect(() => {
     setDropletDataType("feedDroplets");
-    fetchFeedData();
-  }, [setDropletDataType, fetchFeedData]);
+    fetchFeedData(); // Explicit initial fetch call
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Ensure this runs only once
 
   const handleInfiniteScroll = useCallback(
     debounce(async () => {
@@ -112,12 +118,15 @@ export default function ReactHomePage() {
 
   useEffect(() => {
     const element = feedRef.current;
+    const debouncedScroll = debounce(handleInfiniteScroll, 300);
+
     if (element) {
-      element.addEventListener("scroll", handleInfiniteScroll);
+      element.addEventListener("scroll", debouncedScroll);
     }
+
     return () => {
       if (element) {
-        element.removeEventListener("scroll", handleInfiniteScroll);
+        element.removeEventListener("scroll", debouncedScroll);
       }
     };
   }, [handleInfiniteScroll]);
