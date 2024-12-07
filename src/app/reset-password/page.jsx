@@ -1,81 +1,110 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
-import { GitHub, Google } from "@mui/icons-material";
+import { GitHub, Google, Email, Cyclone } from "@mui/icons-material";
 import Link from "next/link";
+import PasswordMeter from "@/components/PasswordMeter";
+import "../globals.css";
+import { AuthStore } from "@/store/AuthStore";
 
 const ResetPassword = () => {
-  const { Login, OAuthLogin } = AuthStore();
-  const [password, setPassword] = useState("");
+  const { UpdatePassword, InitiatePasswordReset } = AuthStore();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   useEffect(() => {
     setIsLoadingPage(false);
+    InitiatePasswordReset();
   }, []);
+
+  const validatePassword = (pwd) => {
+    if (pwd.length < 8) return "Password must be at least 8 characters long";
+    else if (!/[A-Z]/.test(pwd))
+      return "Password must contain at least one uppercase letter";
+    else if (!/[a-z]/.test(pwd))
+      return "Password must contain at least one lowercase letter";
+    else if (!/[0-9]/.test(pwd))
+      return "Password must contain at least one number";
+    else if (!/[^A-Za-z0-9]/.test(pwd))
+      return "Password must contain at least one special character";
+    return "";
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     setIsSubmitted(true);
+    const error = validatePassword(password.trim());
 
-    if (email && password) {
+    setPasswordError(error);
+
+    if (password.trim() !== confirmPassword.trim() || error ) {
+      console.log('password', password)
+      console.log('confirmPassword', confirmPassword)
+      setConfirmPasswordError("Password did not match with confirm password");
+      return
+    }
+
+    if (!error && password.trim() === confirmPassword.trim()) {
       // Proceed with form submission
-      await Login(email,password)
-      console.log("Form submitted successfully");
+      setIsSubmiting(true);
+      await UpdatePassword(password.trim());
+      e.target.reset();
+      setIsSubmiting(false);
       // Reset the form or redirect the user as necessary
     }
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center bg-gray-100 dark:bg-d_foreground p-4">
+    <div className="w-full min-h-screen flex justify-center items-center bg-gray-100 dark:bg-d_foreground p-8">
       {isLoadingPage ? (
-        <div
-          className="w-full h-full flex justify-center items-center bg-transparent"
-        >
+        <div className="w-full h-full flex justify-center items-center bg-transparent">
           <CircularProgress />
         </div>
       ) : (
-        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
-          <Typography
-            variant="h4"
-            className="text-center font-semibold mb-6 text-gray-800 dark:text-gray-200"
-          >
-            Welcome Back !
-          </Typography>
+        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-xl shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
+          <div className="mb-2">
+            <Typography
+              variant="h4"
+              className="text-center font-semibold text-gray-800 dark:text-gray-200"
+            >
+              Reset Password
+            </Typography>
+          </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Email&nbsp;"
-              type="email"
+              type="hidden"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               slotProps={{
-                input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
-                },
-                inputLabel: {
-                  className: "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.5px]",
-                },
                 htmlInput: {
                   autoComplete: "username", // Set the autocomplete attribute
-                }
+                },
               }}
             />
+
             <TextField
               fullWidth
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+              className="bg-gray-50 dark:bg-d_secondary rounded-2xl"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setConfirmPasswordError('');
+                setIsSubmitted(false);
+              }}
               onFocus={() => setIsPasswordFocused(true)}
               onBlur={() => setIsPasswordFocused(false)}
               error={isSubmitted && !!passwordError}
@@ -83,71 +112,74 @@ const ResetPassword = () => {
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                  className: "text-gray-900 dark:text-gray-100 rounded-2xl",
                 },
                 inputLabel: {
-                  className: "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.5px]",
+                  className:
+                    "text-gray-700 dark:text-gray-300 rounded-2xl pt-[2.5px]",
                 },
                 htmlInput: {
                   autoComplete: "current-password", // Set the autocomplete attribute
-                }
+                },
+              }}
+              sx={{
+                // Customize helper text
+                "& .MuiFormHelperText-root": {
+                  backgroundColor: "#0f172a", // Make helper text background transparent\
+                  width: "101%",
+                  padding: "4px 14px 0", // Adjust padding as needed
+                  margin: "0px 0px 0px -2px", // Remove margin between helper text and input field
+                },
+              }}
+            />
+            {isPasswordFocused && <PasswordMeter password={password} />}
+            <TextField
+              fullWidth
+              label="Confirm Password&nbsp;"
+              type="password"
+              variant="outlined"
+              className="bg-gray-50 dark:bg-d_secondary rounded-2xl"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setConfirmPasswordError('');
+                setIsSubmitted(false);
+              }}
+              error={isSubmitted && !!confirmPasswordError}
+              helperText={isSubmitted && confirmPasswordError}
+              required
+              slotProps={{
+                input: {
+                  className: "text-gray-900 dark:text-gray-100 rounded-2xl",
+                },
+                inputLabel: {
+                  className:
+                    "text-gray-700 dark:text-gray-300 rounded-2xl pt-[2.5px]",
+                },
+                htmlInput: {
+                  autoComplete: "current-password", // Set the autocomplete attribute
+                },
+              }}
+              sx={{
+                // Customize helper text
+                "& .MuiFormHelperText-root": {
+                  backgroundColor: "#0f172a", // Make helper text background transparent\
+                  width: "101%",
+                  padding: "4px 14px 0", // Adjust padding as needed
+                  margin: "0px 0px 0px -2px", // Remove margin between helper text and input field
+                },
               }}
             />
             <Button
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
+              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-xl py-3 text-md"
               onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
             >
-              Login
+              {isSubmiting ? <Cyclone className="animate-spin" /> : "Reset"}
             </Button>
           </form>
-
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-            <Typography
-              variant="body2"
-              className="mx-4 text-gray-500 dark:text-gray-400"
-            >
-              OR
-            </Typography>
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-          </div>
-
-          <div className="space-y-3">
-            <Button
-              variant="text"
-              fullWidth
-              startIcon={<GitHub />}
-              onClick={ async () => { await OAuthLogin('github') }}
-              className="border-gray-300 text-gray-700 rounded-lg py-[9px] shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
-            >
-              Sign in with GitHub
-            </Button>
-            <Button
-              variant="text"
-              fullWidth
-              startIcon={<Google />}
-              onClick={ async () => { await OAuthLogin('google') }}
-              className="border-gray-300 text-gray-700 rounded-lg py-2 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
-            >
-              Sign in with Google
-            </Button>
-          </div>
-
-          <Typography
-            variant="body2"
-            className="text-center mt-4 text-gray-600 dark:text-gray-400"
-          >
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="text-blue-600 hover:underline dark:text-blue-400"
-            >
-              Sign Up
-            </Link>
-          </Typography>
         </div>
       )}
     </div>

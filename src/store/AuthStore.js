@@ -9,7 +9,9 @@ const options = {
 };
 
 
-export const AuthStore = create((set) => ({
+export const AuthStore = create((set, get) => ({
+
+    signUpEmail: '',
 
     SignUpUser: async (email, password) => {
         try {
@@ -26,7 +28,26 @@ export const AuthStore = create((set) => ({
                 return;
             }
             successToast('Success! Email sent for verification');
+            set({ signUpEmail: email })
             redirect('/verify-email');
+        } catch (err) {
+            console.log('Sign-up failed:', err);
+        }
+    },
+
+    VerifyUser: async (otp) => {
+        try {
+            const { data, error } = await supabase.auth.verifyOtp({ email: get().signUpEmail, token: otp, type: 'email' })
+
+            if (error) {
+                errorToast("Error signing up");
+                console.log('Error signing up:', error.message);
+                // Display an error message to the user
+                return;
+            }
+            successToast('Success! Email sent for verification');
+            set({ signUpEmail: '' })
+            redirect('/select-username');
         } catch (err) {
             console.log('Sign-up failed:', err);
         }
@@ -50,6 +71,59 @@ export const AuthStore = create((set) => ({
             redirect('/');
         } catch (err) {
             console.log('Sign-in failed:', err);
+        }
+    },
+
+    ForgotPassword: async (email) => {
+
+        try {
+            const { data, error } = await supabase.auth.resetPasswordForEmail(
+                email, {
+                redirectTo: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/reset-password`
+            }
+            );
+
+            if (error) {
+                errorToast("Error ! Please try again");
+                console.log('Error login up:', error.message);
+                // Display an error message to the user
+                return false;
+            }
+            successToast('Email Sent Successfully');
+            return true;
+        } catch (err) {
+            console.log('Sign-in failed:', err);
+        }
+    },
+
+    isPasswordResetInitiated: false,
+
+    InitiatePasswordReset: async () => {
+
+        try {
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (event == "PASSWORD_RECOVERY") {
+                    set({ isPasswordResetInitiated: true });
+                }
+            })
+        } catch (err) {
+            console.log('Reset failed:', err);
+        }
+    },
+
+    UpdatePassword: async (newPassword) => {
+        try {
+
+            if (!get().isPasswordResetInitiated) { errorToast('Unauthorized password reset!') }
+            if (get().isPasswordResetInitiated) {
+                const { data, error } = await supabase.auth
+                    .updateUser({ password: newPassword })
+
+                if (data) successToast("Password reset successfully!")
+                if (error) errorToast("There was an error reseting your password.")
+            }
+        } catch (err) {
+            console.log('Reset failed:', err);
         }
     },
 
