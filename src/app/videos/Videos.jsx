@@ -17,7 +17,7 @@ import { UIStore } from "@/store/UIStore";
 import VideoReactions from "@/components/VideoReactions";
 import Image from "next/image";
 
-const VideosPage = () => {
+const ReactVideosPage = () => {
   const router = useRouter();
   const { GetFeedVideos, feedVideos, setDropletDataType } = DropletStore();
   const { setIsMsgsOpen, setIsOCardOpen } = UIStore();
@@ -229,4 +229,4 @@ const VideosPage = () => {
   );
 };
 
-export default VideosPage;
+export default ReactVideosPage;

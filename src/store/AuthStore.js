@@ -22,14 +22,14 @@ export const AuthStore = create((set, get) => ({
             });
 
             if (error) {
-                errorToast("Error signing up");
+                errorToast("Error signing up:", error.message);
                 console.log('Error signing up:', error.message);
                 // Display an error message to the user
-                return;
+                return false;
             }
             successToast('Success! Email sent for verification');
             set({ signUpEmail: email })
-            redirect('/verify-email');
+            return true;
         } catch (err) {
             console.log('Sign-up failed:', err);
         }
@@ -40,14 +40,14 @@ export const AuthStore = create((set, get) => ({
             const { data, error } = await supabase.auth.verifyOtp({ email: get().signUpEmail, token: otp, type: 'email' })
 
             if (error) {
-                errorToast("Error signing up");
+                errorToast("Error in Verifying", error.message);
                 console.log('Error signing up:', error.message);
                 // Display an error message to the user
-                return;
+                return false;
             }
             successToast('Success! Email sent for verification');
             set({ signUpEmail: '' })
-            redirect('/select-username');
+            return true;
         } catch (err) {
             console.log('Sign-up failed:', err);
         }
@@ -62,13 +62,14 @@ export const AuthStore = create((set, get) => ({
             })
 
             if (error) {
-                errorToast("Error login up");
+                errorToast("Login Error:", error.message);
+
                 console.log('Error login up:', error.message);
                 // Display an error message to the user
-                return;
+                return false;
             }
             successToast('Login Successfully');
-            redirect('/');
+            return true;
         } catch (err) {
             console.log('Sign-in failed:', err);
         }
@@ -84,7 +85,7 @@ export const AuthStore = create((set, get) => ({
             );
 
             if (error) {
-                errorToast("Error ! Please try again");
+                errorToast("Forgot Password Error", error.message);
                 console.log('Error login up:', error.message);
                 // Display an error message to the user
                 return false;
@@ -119,8 +120,8 @@ export const AuthStore = create((set, get) => ({
                 const { data, error } = await supabase.auth
                     .updateUser({ password: newPassword })
 
-                if (data) successToast("Password reset successfully!")
-                if (error) errorToast("There was an error reseting your password.")
+                if (error) {errorToast("There was an error reseting your password."); return false}
+                if (data) {successToast("Password reset successfully!"); return true;}
             }
         } catch (err) {
             console.log('Reset failed:', err);

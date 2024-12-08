@@ -195,7 +195,7 @@ export const UserStore =
 
                         if (error) {
                             console.log('Something Went Wrong : ', error);
-                            return null;
+                            return false;
                         } else {
                             console.log('Username is Updated');
                             return true;
