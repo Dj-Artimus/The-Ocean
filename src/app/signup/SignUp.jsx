@@ -79,21 +79,22 @@ const SignUp = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-2xl"
+              className="bg-gray-50 dark:bg-d_secondary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-2xl",
+                  className: "text-gray-900 dark:text-gray-100",
                 },
                 inputLabel: {
                   className:
-                    "text-gray-700 dark:text-gray-300 rounded-2xl pt-[2.5px]",
+                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
                 },
                 htmlInput: {
                   autoComplete: "username", // Set the autocomplete attribute
                 },
+                
               }}
             />
             <TextField
@@ -114,11 +115,11 @@ const SignUp = () => {
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-2xl",
+                  className: "text-gray-900 dark:text-gray-100",
                 },
                 inputLabel: {
                   className:
-                    "text-gray-700 dark:text-gray-300 rounded-2xl pt-[2.5px]",
+                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
                 },
                 htmlInput: {
                   autoComplete: "current-password", // Set the autocomplete attribute

@@ -54,14 +54,16 @@ const UsernameSelectionPage = () => {
         </div>
       ) : (
         <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
-          <Typography
-            variant="h5"
-            className="text-center font-semibold mb-6 text-gray-800 dark:text-gray-200"
-          >
-            Choose Your Username
-          </Typography>
+          <div className="mb-6">
+            <Typography
+              variant="h5"
+              className="text-center font-semibold text-gray-800 dark:text-gray-200"
+            >
+              Choose Your Username
+            </Typography>
+          </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <TextField
               fullWidth
               label="Username"
@@ -99,7 +101,7 @@ const UsernameSelectionPage = () => {
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
+              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 text-md"
               onMouseDown={(e) => e.preventDefault()}
               disabled={usernameStatus !== "success"}
             >
