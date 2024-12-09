@@ -25,7 +25,7 @@ export default function ChatPage() {
     setIsMsgsOpen,
     isOCardOpen,
     expectedVersion,
-    setIsUILoading,
+    setIsPageLoading,
     setContentToEdit,
     setContentEditId,
     setIsMoreOptionsModalOpen,
@@ -105,7 +105,7 @@ export default function ChatPage() {
       {isMsgsOpen && (
         <Navbar
           navStyle={
-            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.4%] sm:rounded-t-2xl z-20 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[1%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
+            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.2%] sm:rounded-t-2xl z-20 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[1%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
           }
         />
       )}
@@ -142,7 +142,7 @@ export default function ChatPage() {
                 <div className="flex items-center w-full  px-3 pt-1  justify-between">
                   <div className="flex gap-2 w-full">
                     <div className="flex-shrink-0">
-<img
+                      <img
                         src={
                           communicatorDetails[communicatorId]?.avatar.split(
                             "<|>"
@@ -157,6 +157,7 @@ export default function ChatPage() {
                         setOceaniteProfileData(
                           communicatorDetails[communicatorId]
                         );
+                        setIsPageLoading(true);
                         router.push("/oceanite-profile");
                       }}
                       className="mx-1 leading-snug mt-[9px] w-full cursor-pointer hidden xs:block"
@@ -184,7 +185,7 @@ export default function ChatPage() {
                         setIsMsgsOpen(true);
                         setCommunicatorId("");
                       }}
-                      className="mb-1 lg:hidden cursor-pointer"
+                      className="mb-1 me-1 lg:hidden cursor-pointer"
                     >
                       <ArrowBack
                         title="VideoChat"

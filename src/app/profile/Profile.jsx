@@ -80,6 +80,7 @@ export default function Profile() {
               user_id={profileData?.id}
               name={profileData?.name}
               username={profileData?.username}
+              email={profileData?.email}
               gender={profileData?.gender}
               age={
                 profileData?.dob

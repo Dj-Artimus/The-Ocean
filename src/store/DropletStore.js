@@ -42,6 +42,8 @@ export const DropletStore = create(
 
         notificationsData: [],
 
+        sharedDropletData: {},
+
         DropDroplet: async (dropletData) => {
             const user = UserStore.getState().profileData;
             const user_id = user.id;
@@ -574,7 +576,7 @@ export const DropletStore = create(
                     .eq("id", droplet_id)
                     .single();
                 if (error) return console.log("error to fetch single droplet", error)
-                if (data) return data;
+                if (data) return set({ sharedDropletData: data });
             } catch (error) {
                 console.log('error from get single droplet', error)
             }
@@ -1022,8 +1024,10 @@ export const DropletStore = create(
 
                             return { dropletsData: [...updatedDroplets] };
                         });
-                        console.log('get().dropletDataType', get().dropletDataType)
+
+
                         dropletsUpdateFunction(payload, get().dropletDataType)
+                        if (get().sharedDropletData?.id === droplet_id) { set({ sharedDropletData: payload.new }) }
 
                     }
                 )

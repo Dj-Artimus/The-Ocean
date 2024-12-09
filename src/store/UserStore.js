@@ -15,6 +15,8 @@ export const UserStore =
                 profileData: {},
                 setProfileData: (data) => { set({ profileData: data }) },
 
+                oceanitesData: [],
+
                 oceaniteProfileData: {},
                 setOceaniteProfileData: (data) => { set({ oceaniteProfileData: data }) },
 
@@ -28,7 +30,7 @@ export const UserStore =
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
                     if (error || !data.user) return console.log('User not authenticated');
-
+                    set({ isProfileDataFetched: false });
                     try {
                         const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();
 
@@ -70,6 +72,8 @@ export const UserStore =
 
                     } catch (error) {
                         return console.log(error);
+                    } finally {
+                        set({ isProfileDataFetched: true });
                     }
                 },
 
@@ -90,16 +94,12 @@ export const UserStore =
 
                 // Subscribe to Profile Real-Time Updates
                 subscribeToProfileChanges: (profileDataType) => {
-                    
+
                     const getUserId = (type) => {
                         switch (type) {
                             case 'oceanite-profile':
                                 return get().oceaniteProfileData.user_id;
                             case 'user-profile':
-                                // const { data, error } = await supabase.auth.getUser();
-                                // console.log('setupSubscriptionsForProfileData', data?.user?.id);
-                                // if (error || !data.user) return;
-                                // return data.user.id;
                                 return get().profileData.user_id;
                         }
                     }
@@ -120,7 +120,7 @@ export const UserStore =
                                     set((state) => ({
                                         oceaniteProfileData: { ...state.oceaniteProfileData, ...payload.new },
                                     }));
-                                }else{
+                                } else {
                                     set((state) => ({
                                         profileData: { ...state.profileData, ...payload.new },
                                     }));
@@ -133,14 +133,11 @@ export const UserStore =
                 },
 
                 setupSubscriptionsForProfileData: async (profileDataType) => {
-                    set({ isProfileDataFetched: false });
-
                     const fetchProfile = async () => {
                         return await get().fetchProfileData(); // Fetch initial data
                     }
                     await fetchProfile();
-                    set({ isProfileDataFetched: true });
-                    const profileChannel = get().subscribeToProfileChanges( profileDataType); // Subscribe to user's profile changes
+                    const profileChannel = get().subscribeToProfileChanges(profileDataType); // Subscribe to user's profile changes
 
                     return () => {
                         if (profileChannel) profileChannel.unsubscribe(); // Cleanup subscription on unmount
@@ -189,9 +186,10 @@ export const UserStore =
                     }
                 },
 
-                UpdateUsername: async (username, user_id) => {
+                UpdateUsername: async (username) => {
+                    const user = get().profileData
                     try {
-                        const { error } = await supabase.schema("Ocean").from('Profile').update({ username }).eq('user_id', user_id)
+                        const { error } = await supabase.schema("Ocean").from('Profile').update({ username }).eq('id', user.id)
 
                         if (error) {
                             console.log('Something Went Wrong : ', error);
@@ -206,8 +204,8 @@ export const UserStore =
                 },
 
                 CreateProfile: async (profileData) => {
-                    const {data, error} = await supabase.auth.getUser();
-                    if(error) return console.log('error to get the user', error)
+                    const { data, error } = await supabase.auth.getUser();
+                    if (error) return console.log('error to get the user', error)
                     const user_id = data.user.id;
                     try {
                         const { error } = await supabase.schema("Ocean").from('Profile').update({ ...profileData, user_id }).eq('user_id', user_id)
@@ -258,6 +256,17 @@ export const UserStore =
                     }
                 },
 
+                GetInitialOceanites: async () => {
+                    try {
+                        const { data, error } = await supabase.schema('Ocean').from('Profile').select('*').range(0, 9);
+                        if (error) return console.log('error to search user', error)
+                        set({ oceanitesData: [...data] });
+                        return data;
+                    } catch (error) {
+                        console.log('error to fetch the oceanites', error);
+                    }
+                },
+
                 SearchOceanites: async (keywords) => {
                     try {
                         const { data, error } = await supabase.schema('Ocean').from('Profile').select('*')
@@ -266,6 +275,7 @@ export const UserStore =
                             .range(0, 9);
 
                         if (error) return console.log('error to search user', error)
+                        set({ oceanitesData: [...data] });
                         return data;
                     } catch (error) {
                         console.log('error to fetch the oceanites', error);
@@ -277,7 +287,9 @@ export const UserStore =
                     const { data, error } = await supabase.schema('Ocean').from('Oceanites').insert({ 'anchor_id': user.id, anchoring_id }).select('*,anchoring_id(*)').single();
                     if (error) { console.log('Something went wrong to anchor the Oceanite', error); }
 
-                    set({ anchoringsdata: [...get().anchoringsData, data], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id] })
+                    const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
+
+                    set({ anchoringsdata: [...get().anchoringsData, data], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
                     return true;
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
@@ -285,10 +297,14 @@ export const UserStore =
                     const { error } = await supabase.schema('Ocean').from('Oceanites').delete().eq('anchor_id', user.id).eq('anchoring_id', anchoring_id);
                     if (error) { console.log('Something went wrong to anchor the Oceanite', error); }
 
+
                     const updatedAnchoringsData = get().anchoringsData.filter((anchoringData) => anchoringData.anchoring_id !== anchoring_id);
+
                     const updatedAnchoringsIds = get().anchoringsIds.filter((anchoringId) => anchoringId !== anchoring_id);
 
-                    set({ anchoringsdata: updatedAnchoringsData, anchoringsIds: updatedAnchoringsIds });
+                    const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite })
+
+                    set({ anchoringsdata: updatedAnchoringsData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
                     return true;
                 },
 

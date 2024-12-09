@@ -2,26 +2,36 @@
 import Button from "@/components/Button";
 import { DropletStore } from "@/store/DropletStore";
 import Droplet from "@/components/Droplet";
-import { ConnectWithoutContactRounded, Diversity1, Explore, Surfing } from "@mui/icons-material";
+import {
+  ConnectWithoutContactRounded,
+  Diversity1,
+  Explore,
+  Surfing,
+} from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { UIStore } from "@/store/UIStore";
 
 const SharedDropletPage = ({ id }) => {
   const router = useRouter();
-  const { GetSingleDroplet } = DropletStore();
-  const [droplet, setDroplet] = useState();
-  console.log('id from react share', id)
+  const { GetSingleDroplet, sharedDropletData } = DropletStore();
+  const { setIsShareOptionsModalOpen } = UIStore();
+  console.log("id from react share", id);
 
   useEffect(() => {
-    GetSingleDroplet(id).then((data) => { setDroplet(data) });
-    console.log('droplet', droplet)
-  }, [GetSingleDroplet])
-  
+    setIsShareOptionsModalOpen(false);
+    const fetchDroplet = async () => {
+      await GetSingleDroplet(id);
+    };
+    fetchDroplet();
+  }, [GetSingleDroplet]);
 
-  if (!droplet?.id)
-    return ( <div className=" w-full h-screen flex justify-center items-center text-3xl">
-      <h1>No Droplet Found!</h1>
-    </div> ) ;
+  if (!sharedDropletData?.id)
+    return (
+      <div className=" w-full h-screen flex justify-center items-center text-3xl">
+        <h1>No Droplet Found!</h1>
+      </div>
+    );
   return (
     <div className="">
       <div className="w-screen h-screen flex relative overflow-x-hidden overflow-y-auto">
@@ -60,7 +70,7 @@ const SharedDropletPage = ({ id }) => {
               </div>
               <Button
                 onClick={() => {
-                  redirect("/");
+                  router.push("/");
                 }}
                 className="bg-blue-500 text-d_text_clr px-2 rounded-full h-8"
               >
@@ -73,22 +83,22 @@ const SharedDropletPage = ({ id }) => {
           {/* DROPLETS START HERE */}
           <div>
             <Droplet
-              key={droplet?.id}
-              droplet_id={droplet?.id}
-              author_id={droplet?.user_id?.id}
-              avatar_url={droplet?.user_id?.avatar}
-              authorData={droplet?.user_id}
-              name={droplet?.user_id?.name}
-              username={droplet?.user_id?.username}
-              wave={droplet?.user_id?.wave}
-              platform={droplet?.platform}
-              time={droplet?.created_at}
-              content={droplet?.content}
-              images={droplet?.images}
-              videos={droplet?.videos}
-              stars={droplet?.stars}
-              ripples={droplet?.ripples}
-              redrops={droplet?.redrops}
+              key={sharedDropletData?.id}
+              droplet_id={sharedDropletData?.id}
+              author_id={sharedDropletData?.user_id?.id}
+              avatar_url={sharedDropletData?.user_id?.avatar}
+              authorData={sharedDropletData?.user_id}
+              name={sharedDropletData?.user_id?.name}
+              username={sharedDropletData?.user_id?.username}
+              wave={sharedDropletData?.user_id?.wave}
+              platform={sharedDropletData?.platform}
+              time={sharedDropletData?.created_at}
+              content={sharedDropletData?.content}
+              images={sharedDropletData?.images}
+              videos={sharedDropletData?.videos}
+              stars={sharedDropletData?.stars}
+              ripples={sharedDropletData?.ripples}
+              redrops={sharedDropletData?.redrops}
             />
           </div>
           {/* DROPLETS ENDS HERE */}
@@ -98,6 +108,6 @@ const SharedDropletPage = ({ id }) => {
       </div>
     </div>
   );
-}
+};
 
 export default SharedDropletPage;

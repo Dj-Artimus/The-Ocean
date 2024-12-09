@@ -15,6 +15,7 @@ const ProfilePanel = ({
   poster_url,
   avatar_url,
   name,
+  email,
   username,
   gender,
   age,
@@ -119,6 +120,11 @@ const ProfilePanel = ({
             <div className="flex justify-center flex-col">
               <h1 className="font-semibold text-2xl">{name}</h1>
               <p className="text-[14px] md:w-full">{wave}</p>
+              {user_id === profileData.id && (
+                <p className="text-text_clr2 dark:text-d_text_clr2 text-[14px] md:w-full">
+                  @ {email}
+                </p>
+              )}
               <div className="text-text_clr2 gap-3 items-center dark:text-d_text_clr2 font-semibold text-[15px] mt-1 xs:hidden xs1:flex">
                 <h1>
                   <CycloneIcon /> {username}

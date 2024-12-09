@@ -19,6 +19,11 @@ export const UIStore = create(
         set({ isUILoading: state })
     },
 
+    isPageLoading: false,
+    setIsPageLoading: (state) => {
+        set({ isPageLoading: state })
+    },
+
     isMediaFileUploading: false,
     setIsMediaFileUploading: (state) => {
         set({ isMediaFileUploading: state })

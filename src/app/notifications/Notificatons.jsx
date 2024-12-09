@@ -8,12 +8,16 @@ import { useRouter } from "next/navigation";
 import LeftSideBar from "@/components/LeftSideBar";
 import { UIStore } from "@/store/UIStore";
 import { DropletStore } from "@/store/DropletStore";
+import { useEffect } from "react";
 
 const Notifications = () => {
-  const { isMsgsOpen, setIsMsgsOpen, isOCardOpen, setNotificationsCount } = UIStore();
+  const { isMsgsOpen, setIsMsgsOpen, isOCardOpen, setNotificationsCount } =
+    UIStore();
   const { notificationsData } = DropletStore();
 
-  setNotificationsCount(0);
+  useEffect(() => {
+    setNotificationsCount(0);
+  }, [setNotificationsCount])
 
   const router = useRouter();
 
@@ -52,15 +56,18 @@ const Notifications = () => {
           {notificationsData?.length > 0 ? (
             notificationsData.map((notification) => {
               <NotificationMsg
-                avatar_url={notification?.user_id?.avatar.split('<|>')[0]}
+                avatar_url={notification?.user_id?.avatar.split("<|>")[0]}
                 name={notification?.user_id?.name}
                 platform={notification?.platform}
-                notificationMsg={ notification?.content }
-                timeOfNotification={ notification?.created_at }
+                notificationMsg={notification?.content}
+                timeOfNotification={notification?.created_at}
               />;
             })
           ) : (
-            <div className="w-full h-[80%] overflow-hidden flex justify-center items-center text-2xl" > <h1>No notifications found!</h1> </div>
+            <div className="w-full h-[80%] overflow-hidden flex justify-center items-center text-2xl">
+              {" "}
+              <h1>No notifications found!</h1>{" "}
+            </div>
           )}
           {/* NOTIFICATION MESSAGES ENDS HERE */}
 

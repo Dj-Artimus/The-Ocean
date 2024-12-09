@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { UserStore } from "@/store/UserStore";
 
 const UsernameSelectionPage = () => {
-  const { CheckTakenUsernames, UpdateUsername, GetUserId } = UserStore();
+  const { CheckTakenUsernames, UpdateUsername } = UserStore();
   const [username, setUsername] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
@@ -22,8 +22,7 @@ const UsernameSelectionPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-    const userId = await GetUserId();
-    const isUsernameUpdated = await UpdateUsername(username, userId);
+    const isUsernameUpdated = await UpdateUsername(username);
     console.log("Username submitted:", username);
     if(isUsernameUpdated){
       redirect.push('create-profile');

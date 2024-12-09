@@ -36,6 +36,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     <div
       onClick={() => {
         setTimeout(() => {
+          setCommunicatorId(profile_id);
           setIsMsgsOpen(false);
         }, 500);
         redirect("/chat");
@@ -44,7 +45,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     >
       <div
         onClick={() => {
-          setCommunicatorId(profile_id);
+          
           console.log("profile_id clicked from the usermsgprofile", profile_id);
         }}
         className="flex gap-2 items-center cursor-pointer"

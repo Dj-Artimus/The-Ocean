@@ -79,7 +79,7 @@ const SignUp = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary"
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -102,7 +102,7 @@ const SignUp = () => {
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-2xl"
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);

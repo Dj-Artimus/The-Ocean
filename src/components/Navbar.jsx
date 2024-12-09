@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { redirect } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import {
   AddBox,
   BadgeRounded,
@@ -13,32 +12,52 @@ import ProfileMenu from "./ProfileMenu";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import Image from "next/image";
+// import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
+
 
 const Navbar = ({ navStyle }) => {
   const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen } =
     UIStore();
   const { profileData } = UserStore();
+
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const getActiveClass = (path) =>
+    pathname === path ? "text-blue-500" : "text-inherit";
+
+  useEffect(() => {
+    console.log('router?.pathname', pathname)
+  }, [router])
+  
+
   return (
     <div className={`${navStyle} bg-primary dark:bg-d_primary`}>
       {/* HOME NAVIGATION STARTS HERE */}
       <div
         onClick={() => {
-          redirect("/");
+          router?.push("/");
         }}
-        className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
+        className={`dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
+          "/"
+        )} `}
       >
-        <Houseboat className="size-9 xl:size-11" />
+        <Houseboat className="size-11" />
       </div>
       {/* HOME NAVIGATION ENDS HERE */}
 
       {/* VIDEOS NAVIGATION STARTS HERE */}
       <div
         onClick={() => {
-          redirect("/videos");
+          router?.push("/videos");
         }}
-        className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
+        className={`dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
+          "/videos"
+        )} `}
       >
-        <OndemandVideo className="size-8 xl:size-10" />
+        <OndemandVideo className="size-10" />
       </div>
       {/* VIDEOS NAVIGATION ENDS HERE */}
 
@@ -49,44 +68,50 @@ const Navbar = ({ navStyle }) => {
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
       >
-        <AddBox className="size-8 xl:size-10" />
+        <AddBox className="size-10" />
       </div>
       {/* CREATE DROPLET ENDS HERE */}
 
       {/* MESSAGES NAVIGATION STARTS HERE */}
       <div
-        className=" lg:hidden dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
+        className={` lg:hidden dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
+          "/chat"
+        )}`}
         onClick={() => {
           try {
             setIsMsgsOpen(true);
             setIsOCardOpen(false);
           } catch (error) {}
-          redirect("/chat");
+          router?.push("/chat");
         }}
       >
-        <ForumRounded className="size-8 xl:size-10" />
+        <ForumRounded className="size-10" />
       </div>
       {/* MESSAGES NAVIGATION ENDS HERE */}
 
       {/* OCEANITES NAVIGATION STARTS HERE */}
       <div
-        className=" hidden lg:flex dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer items-center hover:text-blue-500 justify-center w-full "
+        className={` hidden lg:flex dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
+          "/oceanites"
+        )}`}
         onClick={() => {
-          redirect("/oceanites");
+          router?.push("/oceanites");
         }}
       >
-        <Diversity1 className="size-8 xl:size-10" />
+        <Diversity1 className="size-10" />
       </div>
       {/* OCEANITES NAVIGATION ENDS HERE */}
 
       {/* NOTIFICATION NAVIGATION STARTS HERE */}
       <div
-        className=" hidden lg:flex dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer items-center hover:text-blue-500 justify-center w-full "
+        className={` hidden lg:flex dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
+          "/notifications"
+        )} `}
         onClick={() => {
-          redirect("/notifications");
+          router?.push("/notifications");
         }}
       >
-        <Notifications className="size-8 xl:size-10" />
+        <Notifications className="size-10" />
       </div>
       {/* NOTIFICATION NAVIGATION ENDS HERE */}
 
@@ -97,7 +122,7 @@ const Navbar = ({ navStyle }) => {
             setIsMsgsOpen(false);
             setIsOCardOpen(false);
           } catch (error) {}
-          redirect("/profile");
+          router?.push("/profile");
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl mt-[2px] -mb-[1px] lg:mt-[4px] lg:-mb-[2px] cursor-pointer w-full flex justify-center items-center"
       >
@@ -114,7 +139,7 @@ const Navbar = ({ navStyle }) => {
                 e.target.src = "/images/jellyfishFallback.png";
               }}
               alt="profile"
-              className="size-8 xl:size-10 rounded-xl border-2 border-slate-400 hover:border-blue-500 hover:border-4"
+              className={`size-10 rounded-xl border-2 hover:border-blue-500 hover:border-4 ${pathname === '/profile' ? 'border-blue-600' : 'border-slate-400'}`}
             />
           </ProfileMenu>
         </div>
@@ -125,3 +150,4 @@ const Navbar = ({ navStyle }) => {
 };
 
 export default Navbar;
+

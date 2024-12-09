@@ -23,7 +23,7 @@ export default function OceaniteProfile() {
     oceaniteProfileData,
     isProfileDataFetched,
     setupSubscriptionsForProfileData,
-    subscribeToProfileChanges,
+    subscribeToProfileChanges,setIsPageLoading
   } = UserStore();
   const {
     isProfileEditModalOpen,
@@ -40,6 +40,7 @@ export default function OceaniteProfile() {
   useEffect(() => {
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
+    setIsPageLoading(false);
     if (!oceaniteProfileData?.id) router.push("/");
   }, [setIsMsgsOpen,setIsOCardOpen,oceaniteProfileData?.id,router]);
 
@@ -103,6 +104,7 @@ export default function OceaniteProfile() {
                 user_id={oceaniteProfileData?.id}
                 name={oceaniteProfileData?.name}
                 username={oceaniteProfileData?.username}
+                email={oceaniteProfileData?.email}
                 gender={oceaniteProfileData?.gender}
                 age={
                   oceaniteProfileData?.dob

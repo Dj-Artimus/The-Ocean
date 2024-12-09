@@ -14,16 +14,21 @@ import InputTextarea from "@/components/InputTextArea";
 import { useState } from "react";
 
 const OceaniteAtolls = () => {
-  const { profileData, SearchOceanites } = UserStore();
+  const { SearchOceanites, oceanitesData, GetInitialOceanites } = UserStore();
   const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [oceanitesData, setOceanitesData] = useState([]);
 
   const handleSubmit = async () => {
-    const oceanites = await SearchOceanites(searchKeyword);
-    console.log('oceanites:', oceanites)
-    setOceanitesData(oceanites);
+    await SearchOceanites(searchKeyword);
   } 
+
+  useEffect(() => {
+    const getOceanites = async () => {
+      await GetInitialOceanites();
+    }
+    getOceanites();
+  }, [GetInitialOceanites])
+  
 
   const router = useRouter();
 
@@ -60,10 +65,6 @@ const OceaniteAtolls = () => {
           {/* OCEANITES STARTS HERE */}
 
           <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
-            {/* <MsgInputTextarea
-              placeholder={"Search your Oceanite..."}
-              submitBtn={"search"}
-            /> */}
             <InputTextarea placeholder={"Search Oceanite..."} input={searchKeyword} setInput={setSearchKeyword} handleSubmit={handleSubmit} type={'search'} submitBtn={<Search className="absolute right-3 bottom-[18px] size-7"  />} />
           </div>
           <div className=" max-w-2xl m-auto ">

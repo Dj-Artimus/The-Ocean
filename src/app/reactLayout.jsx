@@ -16,9 +16,10 @@ import { initializeTheme } from "@/utils/ThemeToggle";
 import { errorToast } from "@/components/ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
+import PageLoader from "@/components/PageLoader";
 
 const ReactLayout = ({ children }) => {
-  const { toggleDarkMode, isUILoading, setIsUILoading } = UIStore();
+  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading } = UIStore();
   const {
     fetchProfileData,
     subscribeToProfileChanges,
@@ -70,8 +71,6 @@ const ReactLayout = ({ children }) => {
   ]);
 
   useEffect(() => {
-    // Call this function at regular intervals
-    // setInterval(() => updateOnlineStatus(true), 30000); // Every 30 seconds
     updateOnlineStatus(true);
     // Update to offline when user disconnects
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
@@ -92,6 +91,7 @@ const ReactLayout = ({ children }) => {
           <RippleDrawer />
           <MoreOptionsModal />
           <ShareOptionsModal />
+          { isPageLoading && <PageLoader />}
         </>
       )}
     </ErrorBoundary>

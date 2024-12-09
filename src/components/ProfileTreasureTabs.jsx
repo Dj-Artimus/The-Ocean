@@ -109,11 +109,8 @@ export default function ProfileTreasureTabs({oceanite_id}) {
                 <Droplet
                   key={index}
                   droplet_id={droplet?.id}
-                  dropletDataType={
-                    dropletDataTypes[profileTreasureTabIndex].type
-                  }
-                  tabIndex={profileTreasureTabIndex}
                   author_id={droplet?.user_id?.id}
+                  authorData={droplet?.user_id}
                   avatar_url={droplet?.user_id?.avatar}
                   name={droplet?.user_id?.name}
                   username={droplet?.user_id?.username}

@@ -19,9 +19,8 @@ import { DropletStore } from "@/store/DropletStore";
 import UILoader from "@/components/UILoader";
 import { UIStore } from "@/store/UIStore";
 import Button from "@/components/Button";
-import InfiniteScroll from "react-infinite-scroll-component";
-import DropletLoader from "@/components/DropletLoader";
 import { debounce } from "@mui/material";
+
 
 export default function ReactHomePage() {
   const router = useRouter();
@@ -136,7 +135,7 @@ export default function ReactHomePage() {
     <div className="">
       <div
         ref={feedRef}
-        className="w-screen h-screen flex relative overflow-x-hidden overflow-y-auto"
+        className="w-screen h-screen flex relative overflow-x-hidden overflow-y-scroll"
       >
         {(isMsgsOpen || isOCardOpen) && (
           <Button
@@ -153,7 +152,7 @@ export default function ReactHomePage() {
         {/* NAVIGATION BAR STARTS HERE */}
         <Navbar
           navStyle={
-            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.4%] sm:rounded-t-2xl z-30 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[1%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
+            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.2%] sm:rounded-t-2xl z-30 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[1%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
           }
         />
         {/* NAVIGATION BAR ENDS HERE */}
@@ -244,7 +243,7 @@ export default function ReactHomePage() {
             </div>
           )}
           {!hasMore && (
-            <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center gap-1">
+            <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
               <CrisisAlertRounded className="size-6 animate-spin" />
               Increase Anchorings to See more...
             </div>
