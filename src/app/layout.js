@@ -28,6 +28,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background dark:bg-d_background text-text_clr dark:text-d_text_clr customScrollbar `}
       >

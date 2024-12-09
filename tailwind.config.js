@@ -12,10 +12,10 @@ module.exports = {
     extend: {
       colors: {
         background: colors.white,
-        foreground: colors.sky[100],
-        primary: colors.cyan[200],
+        foreground: colors.sky[50],
+        primary: colors.cyan[100],
         secondary: colors.blue[300],
-        ternary: colors.purple[300],
+        ternary: colors.purple[200],
         text_clr: colors.black,
         text_clr2: colors.slate[600],
 

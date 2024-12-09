@@ -54,7 +54,7 @@ const ReactVideosPage = () => {
 
   const videoCount = feedVideos?.length;
 
-  const SWIPE_THRESHOLD = 50; // Minimum distance in pixels to trigger a swipe
+  const SWIPE_THRESHOLD = 80; // Minimum distance in pixels to trigger a swipe
 
   const handlers = useSwipeable({
     onSwipedUp: (eventData) => {
