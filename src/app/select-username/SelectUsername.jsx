@@ -5,6 +5,7 @@ import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserStore } from "@/store/UserStore";
+import { Cyclone } from "@mui/icons-material";
 
 const UsernameSelectionPage = () => {
   const { CheckTakenUsernames, UpdateUsername } = UserStore();
