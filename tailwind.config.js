@@ -12,8 +12,8 @@ module.exports = {
     extend: {
       colors: {
         background: colors.white,
-        foreground: colors.blue[100],
-        primary: colors.blue[200],
+        foreground: colors.sky[100],
+        primary: colors.cyan[200],
         secondary: colors.blue[300],
         ternary: colors.purple[300],
         text_clr: colors.black,

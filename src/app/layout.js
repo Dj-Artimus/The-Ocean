@@ -14,6 +14,17 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+export const metadata = {
+  title: "The Ocean - A Unified Social Platform",
+  description: "Connect, share, and explore on The Ocean, your unified social experience.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+};
+
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
