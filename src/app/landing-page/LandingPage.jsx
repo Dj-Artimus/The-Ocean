@@ -96,29 +96,29 @@ const ReactLandingPage = () => {
           <h2 className="text-3xl font-bold mb-4">Tech Stack</h2>
           <p className="text-lg mb-6">
             Built with modern web technologies to deliver a seamless experience.
-            Here&apos;s the stack that powers **The Ocean**:
+            Here&apos;s the stack that powers <strong>The Ocean:</strong>
           </p>
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {/* Next.js */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-blue-600">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-blue-600">
               <span className="text-4xl ">📦</span>
               <p className="text-lg font-medium ">Next.js</p>
               <small className="text-sm text-gray-500">React Framework</small>
             </li>
             {/* Supabase */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-green-600">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-green-600">
               <span className="text-4xl ">⚡</span>
               <p className="text-lg font-medium ">Supabase</p>
               <small className="text-sm text-gray-500">Database & Auth</small>
             </li>
             {/* Tailwind CSS */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-blue-400">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-blue-400">
               <span className="text-4xl ">🎨</span>
               <p className="text-lg font-medium ">Tailwind CSS</p>
               <small className="text-sm text-gray-500">Utility-First CSS</small>
             </li>
             {/* PostgreSQL */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-slate-800">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-slate-800">
               <span className="text-4xl ">🐘</span>
               <p className="text-lg font-medium">PostgreSQL</p>
               <small className="text-sm text-gray-500">
@@ -126,25 +126,25 @@ const ReactLandingPage = () => {
               </small>
             </li>
             {/* Zustand */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-amber-600">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-amber-600">
               <span className="text-4xl ">📚</span>
               <p className="text-lg font-medium ">Zustand</p>
               <small className="text-sm text-gray-500">State Management</small>
             </li>
             {/* Material UI */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-indigo-500">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-indigo-500">
               <span className="text-4xl ">⚙️</span>
               <p className="text-lg font-medium ">Material UI</p>
               <small className="text-sm text-gray-500">UI Components</small>
             </li>
             {/* Framer Motion */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-pink-600">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-pink-600">
               <span className="text-4xl ">💨</span>
               <p className="text-lg font-medium ">Framer Motion</p>
               <small className="text-sm text-gray-500">Animation Library</small>
             </li>
             {/* React Hot Toast */}
-            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-600 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-orange-500">
+            <li className="flex flex-col items-center bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-100 transition ease-in-out duration-300 hover:text-orange-500">
               <span className="text-4xl ">🔥</span>
               <p className="text-lg font-medium ">React Hot Toast</p>
               <small className="text-sm text-gray-500">Notifications</small>

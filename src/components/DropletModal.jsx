@@ -154,7 +154,6 @@ const DropletModal = () => {
     });
 
     if (isDropletDropped) {
-      successToast("Droplet Successfully Dropped in the Ocean");
       setDropletContent("");
       revokeURLs();
       setDropletImages([]);
@@ -178,7 +177,7 @@ const DropletModal = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`w-[80%] max-w-[600px] m-auto h-[80%] border border-slate-700 shadow-md dark:shadow-sm shadow-d_ternary dark:shadow-ternary bg-primary dark:bg-d_primary text-xl relative p-5 text-text_clr dark:text-d_text_clr rounded-2xl transform transition-all duration-500 ease-out ${
+            className={`w-[80%] max-w-[600px] m-auto h-[72%] border border-slate-700 shadow-md dark:shadow-sm shadow-d_ternary dark:shadow-ternary bg-primary dark:bg-d_primary text-xl relative p-5 text-text_clr dark:text-d_text_clr rounded-2xl transform transition-all duration-500 ease-out ${
               isClosing || !isVisible
                 ? "opacity-0 scale-90"
                 : "opacity-100 scale-100"

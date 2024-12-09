@@ -76,7 +76,7 @@ export default function OceanSpeedDial() {
   return (
     <div
       ref={speedDialRef}
-      className="fixed flex lg:hidden flex-col items-end bottom-[45px] right-[1px] sm:right-2 z-30"
+      className="fixed flex lg:hidden flex-col items-end bottom-[51px] right-[2px] sm:right-2 z-30"
     >
       {/* Speed Dial Actions with Smooth Transition */}
       <div

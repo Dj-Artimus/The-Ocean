@@ -130,7 +130,7 @@ export default function ReactHomePage() {
     };
   }, [handleInfiniteScroll]);
 
-  if (!isFeedDropletsFetched) return <UILoader />;
+  // if (!isFeedDropletsFetched) return <UILoader />;
   return (
     <div className="">
       <div

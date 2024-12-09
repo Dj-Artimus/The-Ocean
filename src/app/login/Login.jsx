@@ -59,17 +59,17 @@ const Login = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-lg"
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-lg text-gray-900 dark:text-gray-100"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100",
+                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
                 },
                 inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
+                  className: 
+                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
                 },
                 htmlInput: {
                   autoComplete: "username", // Set the autocomplete attribute
@@ -81,7 +81,7 @@ const Login = () => {
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 "
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={isSubmitted && !!passwordError}
@@ -89,11 +89,11 @@ const Login = () => {
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100",
+                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
                 },
                 inputLabel: {
                   className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
+                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
                 },
                 htmlInput: {
                   autoComplete: "current-password", // Set the autocomplete attribute

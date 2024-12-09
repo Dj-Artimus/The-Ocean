@@ -23,7 +23,7 @@ export const UserStore =
                 isProfileDataFetched: false,
                 setIsProfileDataFetched: (state) => { set({ isProfileDataFetched: state }) },
 
-                anchoringsData: [],
+                harborMatesData: [],
                 anchoringsIds: [],
 
                 // Fetch Profile Data
@@ -38,33 +38,40 @@ export const UserStore =
 
                         if (profileError) return console.log('Error to fetch Profile', profileError.message);
 
-                        const { data: anchorings, error: anchoringsError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*)').eq('anchor_id', profile.id);
+                        const { data: harborMates, error: harborMatesError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
 
                         // console.log('fetched anchorings data', anchorings)
 
-                        if (anchoringsError) return console.log('Error to fetch Profile', anchoringsError.message);
+                        if (harborMatesError) return console.log('Error to fetch Profile', harborMatesError.message);
 
-                        const anchoringDetails = CommunicationStore.getState().communicatorDetails || {};
+                        const harborMatesDetails = CommunicationStore.getState().communicatorDetails || {};
 
-                        const ids = anchorings?.map((anchoringData) => {
-                            const id = anchoringData.anchoring_id.id;
-                            if (anchoringDetails[id]) {
-                                anchoringDetails[id] = {
-                                    ...anchoringDetails[id], ...anchoringData.anchoring_id
+                        const anchoringsIds = harborMates?.map((harborMateData) => {
+
+                            const data = profile.id === harborMateData.anchor_id.id ? harborMateData.anchoring_id : harborMateData.anchor_id
+                            const id = data?.id;
+
+                            if (harborMatesDetails[id]) {
+                                harborMatesDetails[id] = {
+                                    ...harborMatesDetails[id], ...data
                                 }
-                            } else {
-                                anchoringDetails[id] = anchoringData.anchoring_id;
+                            } else if (id !== profile.id) {
+                                harborMatesDetails[id] = data;
                             }
-                            return id;
+
+                            return harborMateData.anchoring_id.id;
                         })
 
-                        set({
-                            profileData: profile, anchoringsData: anchorings, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
-                        });
+                        const ids = anchoringsIds.filter((id) => id !== profile.id);
 
                         const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
+                        updateCommunicatorDetails(harborMatesDetails);
 
-                        updateCommunicatorDetails(anchoringDetails);
+                        set({
+                            profileData: profile, harborMatesData: harborMates, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
+                        });
+
+
 
                         // console.log('communicator details', anchoringDetails)
 
@@ -287,7 +294,7 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
 
-                    set({ anchoringsdata: [...get().anchoringsData, data], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
+                    set({ harborMatesData: [...get().harborMatesData, data], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
                     return true;
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
@@ -296,15 +303,46 @@ export const UserStore =
                     if (error) { console.log('Something went wrong to anchor the Oceanite', error); }
 
 
-                    const updatedAnchoringsData = get().anchoringsData.filter((anchoringData) => anchoringData.anchoring_id !== anchoring_id);
+                    const updatedHarborMatesData = get().harborMatesData.filter((anchoringData) => anchoringData.anchoring_id !== anchoring_id);
 
                     const updatedAnchoringsIds = get().anchoringsIds.filter((anchoringId) => anchoringId !== anchoring_id);
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite })
 
-                    set({ anchoringsdata: updatedAnchoringsData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
+                    set({ harborMatesData: updatedHarborMatesData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
                     return true;
                 },
+
+                SubscribeToAnchors: () => {
+                    const user = get().profileData;
+
+                    const channel = supabase.channel(`realtime:Anchors:user:${user.id}`).on(
+                        'postgres_changes',
+                        { event: '*', schema: 'Ocean', table: 'Oceanites', filter: `anchoring_id=eq.${user.id}` },
+                        async (payload) => {
+
+                            const { eventType } = payload;
+
+                            if (eventType === 'INSERT') {
+
+                                const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').eq('id', payload.new.id).single();
+
+                                if (error) return console.log('error to get the oceanite data', error)
+
+                                set({ harborMatesData: [data, ...get().harborMatesData] })
+                            }
+                            else if (eventType === 'DELETE') {
+
+                                const updatedHarborMatesData = get().harborMatesData.filter((data) => data.id !== payload.old.id);
+
+                                set({ harborMatesData: updatedHarborMatesData });
+                            }
+                        }
+                    ).subscribe();
+
+                    return channel;
+
+                }
 
 
 

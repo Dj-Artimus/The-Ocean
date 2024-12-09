@@ -23,7 +23,7 @@ export default function OceaniteProfile() {
     oceaniteProfileData,
     isProfileDataFetched,
     setupSubscriptionsForProfileData,
-    subscribeToProfileChanges,setIsPageLoading
+    subscribeToProfileChanges,
   } = UserStore();
   const {
     isProfileEditModalOpen,
@@ -32,6 +32,7 @@ export default function OceaniteProfile() {
     isOCardOpen,
     setIsOCardOpen,
     expectedVersion,
+    setIsPageLoading,
   } = UIStore();
   const treasureRef = useRef();
 
@@ -42,7 +43,7 @@ export default function OceaniteProfile() {
     setIsOCardOpen(false);
     setIsPageLoading(false);
     if (!oceaniteProfileData?.id) router.push("/");
-  }, [setIsMsgsOpen,setIsOCardOpen,oceaniteProfileData?.id,router]);
+  }, [setIsMsgsOpen, setIsOCardOpen, oceaniteProfileData?.id, router]);
 
   useEffect(() => {
     // Set up real-time subscription for updates
@@ -52,7 +53,7 @@ export default function OceaniteProfile() {
     return () => {
       if (channel) channel.unsubscribe();
     };
-  }, [oceaniteProfileData,subscribeToProfileChanges]);
+  }, [oceaniteProfileData, subscribeToProfileChanges]);
 
   if (!isProfileDataFetched) return <UILoader />;
 
@@ -126,7 +127,9 @@ export default function OceaniteProfile() {
                   {/* PROFILE DETAILS ENDS HERE */}
                   <hr className="m-2 border-slate-700" />
                   {/* CONNECTING SOCIAL PLATFORM STREAMS STARTS HERE */}
-                  <StreamConnectionsPanel avatar={oceaniteProfileData?.avatar?.split("<|>")[0]} />
+                  <StreamConnectionsPanel
+                    avatar={oceaniteProfileData?.avatar?.split("<|>")[0]}
+                  />
                   {/* CONNECTING SOCIAL PLATFORM STREAMS ENDS HERE */}
                   {/* OCEAN BOARD FOR SMALL DEVICES STARTS HERE */}
                   <div className="lg:hidden">

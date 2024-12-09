@@ -12,6 +12,7 @@ const UsernameSelectionPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [usernameStatus, setUsernameStatus] = useState("");
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const redirect = useRouter()
 
@@ -22,9 +23,11 @@ const UsernameSelectionPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
+    setIsSubmiting(true);
     const isUsernameUpdated = await UpdateUsername(username);
     console.log("Username submitted:", username);
     if(isUsernameUpdated){
+      setIsSubmiting(false);
       redirect.push('create-profile');
     }
   };
@@ -68,7 +71,7 @@ const UsernameSelectionPage = () => {
               label="Username"
               type="text"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0"
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0 text-gray-900 dark:text-gray-100"
               value={username}
               onChange={(e) => checkUsername(e.target.value)}
               required
@@ -104,7 +107,7 @@ const UsernameSelectionPage = () => {
               onMouseDown={(e) => e.preventDefault()}
               disabled={usernameStatus !== "success"}
             >
-              Continue
+              {isSubmiting ? <Cyclone className="animate-spin" /> : "Continue"}
             </Button>
           </form>
         </div>

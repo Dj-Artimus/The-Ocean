@@ -5,12 +5,9 @@ import { Menu as BaseMenu } from "@mui/base/Menu";
 import { MenuButton as BaseMenuButton } from "@mui/base/MenuButton";
 import { MenuItem as BaseMenuItem } from "@mui/base/MenuItem";
 import { Dropdown } from "@mui/base/Dropdown";
-import { useTheme } from "@mui/system";
 import { redirect } from "next/navigation";
-import next from "next";
 import { Switch } from "@mui/joy";
 import { toggleTheme } from "@/utils/ThemeToggle";
-import { successToast } from "./ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { AuthStore } from "@/store/AuthStore";
 
@@ -41,7 +38,7 @@ export default function ProfileMenu({ children }) {
       {/* <div className={`dark`}> */}
       <Dropdown>
         <MenuButton>{children}</MenuButton>
-        <Menu>
+        <Menu >
           <MenuItem onClick={createHandleMenuClick("Profile")}>
             View Profile
           </MenuItem>
@@ -95,7 +92,7 @@ const Menu = forwardRef((props, ref) => {
           return {
             ...resolvedSlotProps,
             className: clsx(
-              "text-sm box-border font-sans p-1.5 my-3 mx-0 rounded-xl overflow-auto outline-0 bg-white dark:bg-slate-900 border border-solid border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-300 min-w-listbox shadow-md dark:shadow-slate-900",
+              "text-sm box-border font-sans p-1.5 my-3 me-1 mx-0 rounded-xl overflow-auto outline-0 bg-white dark:bg-slate-900 border border-solid border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-300 min-w-listbox shadow-md dark:shadow-slate-900",
               resolvedSlotProps?.className
             ),
           };

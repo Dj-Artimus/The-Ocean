@@ -44,13 +44,16 @@ const ProfileEditModal = ({ profileData }) => {
     setIsProfileEditModalOpen,
     setIsMediaFileUploading,
   } = UIStore();
-  const { CreateProfile, GetUserId, FileUploader } = UserStore();
+  const { CreateProfile, FileUploader } = UserStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const router = useRouter();
 
   const [name, setName] = useState(profileData?.name);
+  const [username, setUsername] = useState(profileData?.username);
+
   const [posterData, setPosterData] = useState({
     currentSource: profileData?.poster?.split("<|>")[0],
     newSource: null,
@@ -114,6 +117,7 @@ const ProfileEditModal = ({ profileData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmiting(true);
 
     setIsMediaFileUploading(true);
 
@@ -125,6 +129,8 @@ const ProfileEditModal = ({ profileData }) => {
       (await FileUploader(avatarData.storageBucket, avatarData.file));
 
     setIsMediaFileUploading(false);
+
+
 
     const dob = new Date(Date.UTC(year, month - 1, day));
 
@@ -139,6 +145,7 @@ const ProfileEditModal = ({ profileData }) => {
 
     if (isProfileUpdated) {
       setIsProfileEditModalOpen(false);
+      setIsSubmiting(false);
       successToast("Profile Updated Successfully.");
     }
   };
@@ -395,7 +402,7 @@ const ProfileEditModal = ({ profileData }) => {
                   fullWidth
                   className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
                 >
-                  Save Profile
+              {isSubmiting ? <Cyclone className="animate-spin" /> : "Save Profile"}
                 </Button>
               </form>
             </div>

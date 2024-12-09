@@ -11,7 +11,7 @@ import MsgInputTextarea from "@/components/InputTextArea";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import InputTextarea from "@/components/InputTextArea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const OceaniteAtolls = () => {
   const { SearchOceanites, oceanitesData, GetInitialOceanites } = UserStore();

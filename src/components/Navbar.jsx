@@ -57,7 +57,7 @@ const Navbar = ({ navStyle }) => {
           "/videos"
         )} `}
       >
-        <OndemandVideo className="size-10" />
+        <OndemandVideo className="w-8 h-8 lg:w-10 lg:h-10" />
       </div>
       {/* VIDEOS NAVIGATION ENDS HERE */}
 
@@ -68,7 +68,7 @@ const Navbar = ({ navStyle }) => {
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
       >
-        <AddBox className="size-10" />
+        <AddBox className="w-8 h-8 lg:w-10 lg:h-10" />
       </div>
       {/* CREATE DROPLET ENDS HERE */}
 
@@ -85,7 +85,7 @@ const Navbar = ({ navStyle }) => {
           router?.push("/chat");
         }}
       >
-        <ForumRounded className="size-10" />
+        <ForumRounded className="w-8 h-8 lg:w-10 lg:h-10" />
       </div>
       {/* MESSAGES NAVIGATION ENDS HERE */}
 
@@ -98,7 +98,7 @@ const Navbar = ({ navStyle }) => {
           router?.push("/oceanites");
         }}
       >
-        <Diversity1 className="size-10" />
+        <Diversity1 className="w-8 h-8 lg:w-10 lg:h-10" />
       </div>
       {/* OCEANITES NAVIGATION ENDS HERE */}
 
@@ -111,7 +111,7 @@ const Navbar = ({ navStyle }) => {
           router?.push("/notifications");
         }}
       >
-        <Notifications className="size-10" />
+        <Notifications className="w-8 h-8 lg:w-10 lg:h-10" />
       </div>
       {/* NOTIFICATION NAVIGATION ENDS HERE */}
 
@@ -139,7 +139,7 @@ const Navbar = ({ navStyle }) => {
                 e.target.src = "/images/jellyfishFallback.png";
               }}
               alt="profile"
-              className={`size-10 rounded-xl border-2 hover:border-blue-500 hover:border-4 ${pathname === '/profile' ? 'border-blue-600' : 'border-slate-400'}`}
+              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl border-2 hover:border-blue-500 hover:border-4 ${pathname === '/profile' ? 'border-blue-600' : 'border-slate-400'}`}
             />
           </ProfileMenu>
         </div>
