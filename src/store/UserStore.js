@@ -204,11 +204,9 @@ export const UserStore =
                 },
 
                 CreateProfile: async (profileData) => {
-                    const { data, error } = await supabase.auth.getUser();
-                    if (error) return console.log('error to get the user', error)
-                    const user_id = data.user.id;
+                    const user = get().profileData;
                     try {
-                        const { error } = await supabase.schema("Ocean").from('Profile').update({ ...profileData, user_id }).eq('user_id', user_id)
+                        const { error } = await supabase.schema("Ocean").from('Profile').update({ ...profileData }).eq('id', user.id)
 
                         if (error) {
                             console.log('Something Went Wrong : ', error);

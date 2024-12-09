@@ -45,7 +45,7 @@ export const AuthStore = create((set, get) => ({
                 // Display an error message to the user
                 return false;
             }
-            successToast('Success! Email sent for verification');
+            successToast('User verification done successfully!');
             set({ signUpEmail: '' })
             return true;
         } catch (err) {

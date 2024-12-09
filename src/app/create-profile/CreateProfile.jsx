@@ -47,7 +47,7 @@ const countries = [
 const CreateProfile = () => {
   const redirect = useRouter();
 
-  const { CreateProfile, GetUserId } = UserStore();
+  const { CreateProfile } = UserStore();
 
   const [name, setName] = useState("");
   const [day, setDay] = useState("");
@@ -86,10 +86,8 @@ const CreateProfile = () => {
     e.preventDefault();
     const dob = new Date(Date.UTC(year, month - 1, day));
 
-    const userId = await GetUserId();
     const isProfileCreated = await CreateProfile(
-      { name, dob, gender, wave },
-      userId
+      { name, dob, gender, wave }
     );
 
     console.log("Profile created:", {
@@ -112,12 +110,14 @@ const CreateProfile = () => {
         </div>
       ) : (
         <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
-          <Typography
-            variant="h4"
-            className="text-center font-semibold mb-6 text-gray-800 dark:text-gray-200"
-          >
-            Create Your Profile
-          </Typography>
+          <div className="mb-6">
+            <Typography
+              variant="h4"
+              className="text-center font-semibold text-gray-800 dark:text-gray-200"
+            >
+              Create Your Profile
+            </Typography>
+          </div>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <TextField
               fullWidth
