@@ -96,7 +96,7 @@ const ReactLandingPage = () => {
           <h2 className="text-3xl font-bold mb-4">Tech Stack</h2>
           <p className="text-lg mb-6">
             Built with modern web technologies to deliver a seamless experience.
-            Here's the stack that powers **The Ocean**:
+            Here&apos;s the stack that powers **The Ocean**:
           </p>
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {/* Next.js */}
@@ -161,7 +161,7 @@ const ReactLandingPage = () => {
             The Ocean started with a dream to unify all social media platforms
             into one seamless space. Although certain integrations were
             unattainable, the project reflects the ambition to innovate and
-            deliver a unique experience. It's a testament to pushing boundaries
+            deliver a unique experience. It&apos;s a testament to pushing boundaries
             and learning through challenges.
           </p>
           <p className="text-lg mt-4">

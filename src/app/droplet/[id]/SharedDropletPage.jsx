@@ -24,7 +24,7 @@ const SharedDropletPage = ({ id }) => {
       await GetSingleDroplet(id);
     };
     fetchDroplet();
-  }, [GetSingleDroplet]);
+  }, [GetSingleDroplet, id, setIsShareOptionsModalOpen]);
 
   if (!sharedDropletData?.id)
     return (
