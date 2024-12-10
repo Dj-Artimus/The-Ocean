@@ -127,7 +127,7 @@ export const UserStore =
                                     }
 
                                     // Track unique IDs
-                                    uniqueAnchoringsIds.add(id);
+                                    uniqueAnchoringsIds.add(harborMateData.anchoring_id.id);
                                 }
                             });
 
@@ -141,10 +141,27 @@ export const UserStore =
                             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                             updateCommunicatorDetails(harborMatesDetails);
 
+                            const filterHarborMates = () => {
+                                const uniqueHarborMates = []
+                                harborMates?.forEach(harborMate => {
+                                    uniqueHarborMates?.forEach(uniqueHarborMate => {
+                                        if (harborMate?.anchoring_id?.id === profile.id) {
+                                            if (uniqueHarborMate?.id !== harborMate?.anchor_id.id) uniqueHarborMates.push(harborMate.anchor_id)
+                                        } else {
+                                            if (uniqueHarborMate?.id !== harborMate?.anchoring_id.id) uniqueHarborMates.push(harborMate.anchor_id)
+                                        }
+                                    });
+                                });
+
+                                return uniqueHarborMates;
+                            }
+
+                            const filteredHarborMates = filterHarborMates()
                             // Update state
+                            console.log('filteredHarborMates', filteredHarborMates)
                             set({
                                 profileData: profile,
-                                harborMatesData: harborMates,
+                                harborMatesData: filteredHarborMates,
                                 anchoringsIds: ids
                             });
 
@@ -194,9 +211,6 @@ export const UserStore =
                                 'postgres_changes',
                                 { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `user_id=eq.${user_id}` },
                                 (payload) => {
-                                    console.log('profileDataType from subscribe to profile', profileDataType)
-                                    console.log('Profile updated:', payload);
-
                                     if (profileDataType === 'oceanite-profile') {
                                         set((state) => ({
                                             oceaniteProfileData: { ...state.oceaniteProfileData, ...payload.new },
@@ -240,7 +254,6 @@ export const UserStore =
                                 'postgres_changes',
                                 { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `id=eq.${user_id}` },
                                 (payload) => {
-                                    console.log('Profile updated:', payload);
                                     if (payload?.new?.is_online !== undefined) {
                                         setIsOnline(payload.new.is_online);
                                     }

@@ -140,7 +140,7 @@ export default function ProfileTreasureTabs({ oceanite_id }) {
               }
             )
           ) : (
-            <div className="w-full pt-28 text-center text-3xl" > No Data Found ! </div>
+            <div className="w-full pt-8 text-center text-3xl text-text_clr dark:text-d_text_clr " > No Data Found ! </div>
           )}
         </div>
       </CustomprofileTreasureTabIndexPanel>

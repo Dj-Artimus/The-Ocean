@@ -362,18 +362,20 @@ const Droplet = ({
           {/* Image Gallery or Slider */}
           <div className="relative">
             {/* Slider image display */}
-            <img
-              src={
-                images[currentImage]?.split("<|>")[0]
-              }
-              alt={`Image ${currentImage + 1}`}
-              onClick={() => {
-                setImgViewerIndex(currentImage);
-                setImgViewerSources(images);
-              }}
-              {...swipeHandlersForImages}
-              className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
-            />
+            {images?.length > 0 && (
+              <img
+                src={
+                  images[currentImage]?.split("<|>")[0]
+                }
+                alt={`Image ${currentImage + 1}`}
+                onClick={() => {
+                  setImgViewerIndex(currentImage);
+                  setImgViewerSources(images);
+                }}
+                {...swipeHandlersForImages}
+                className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
+              />
+            )}
             {/* Dot navigation */}
             {images?.length > 1 && (
               <div className="flex justify-center mt-2 space-x-2">

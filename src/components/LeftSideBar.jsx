@@ -5,13 +5,14 @@ import "../app/globals.css";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import { Insights } from "@mui/icons-material";
+import { CommunicationStore } from "@/store/CommunicationStore";
 
 const LeftSideBar = ({ styles }) => {
   const { isMsgsOpen, isOCardOpen } = UIStore();
   const { harborMatesData, profileData, SubscribeToAnchors } = UserStore();
 
   useEffect(() => {
-    console.log('harborMatesData', harborMatesData)
+    console.log("harborMatesData", harborMatesData);
     const anchorsChannel = SubscribeToAnchors();
     return () => {
       if (anchorsChannel) anchorsChannel.unsubscribe();
@@ -37,26 +38,15 @@ const LeftSideBar = ({ styles }) => {
         </h1>
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
           {/* USERS PROFILE IN anchors STARTS HERE */}
-          {harborMatesData?.map((data) => {
-            if ( data.anchor_id.id === profileData.id ) return (
-              <UserMsgProfile
-                key={data.anchoring_id.id}
-                avatar_url={data?.anchoring_id?.avatar.split("<|>")[0]}
-                name={data?.anchoring_id.name}
-                wave={data?.anchoring_id?.wave}
-                profile_id={data?.anchoring_id?.id}
-              />
-            );
-            else if ( data.anchoring_id.id === profileData.id ) return (
-              <UserMsgProfile
-                key={data.anchor_id.id}
-                avatar_url={data?.anchor_id?.avatar.split("<|>")[0]}
-                name={data?.anchor_id.name}
-                wave={data?.anchor_id?.wave}
-                profile_id={data?.anchor_id?.id}
-              />
-            );
-          })}
+          {harborMatesData?.map((data) => (
+            <UserMsgProfile
+              key={datd?.id}
+              avatar_url={data?.avatar.split("<|>")[0]}
+              name={data.name}
+              wave={data?.wave}
+              profile_id={data?.id}
+            />
+          ))}
 
           {/* USERS PROFILE IN anchors ENDS HERE */}
         </div>
