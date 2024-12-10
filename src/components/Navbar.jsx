@@ -15,12 +15,10 @@ import Image from "next/image";
 // import { useRouter } from "next/router";
 import { usePathname, useRouter } from "next/navigation";
 
-
 const Navbar = ({ navStyle }) => {
   const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen } =
     UIStore();
   const { profileData } = UserStore();
-
 
   const router = useRouter();
   const pathname = usePathname();
@@ -39,7 +37,12 @@ const Navbar = ({ navStyle }) => {
           "/"
         )} `}
       >
-        <Houseboat sx={{width:'44px', height: '44px'}} className="size-11" />
+        <Houseboat
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* HOME NAVIGATION ENDS HERE */}
 
@@ -52,7 +55,12 @@ const Navbar = ({ navStyle }) => {
           "/videos"
         )} `}
       >
-        <OndemandVideo className="w-8 h-8 lg:w-10 lg:h-10" />
+        <OndemandVideo
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* VIDEOS NAVIGATION ENDS HERE */}
 
@@ -63,7 +71,12 @@ const Navbar = ({ navStyle }) => {
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
       >
-        <AddBox className="w-8 h-8 lg:w-10 lg:h-10" />
+        <AddBox
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* CREATE DROPLET ENDS HERE */}
 
@@ -80,7 +93,12 @@ const Navbar = ({ navStyle }) => {
           router?.push("/chat");
         }}
       >
-        <ForumRounded className="w-8 h-8 lg:w-10 lg:h-10" />
+        <ForumRounded
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* MESSAGES NAVIGATION ENDS HERE */}
 
@@ -93,7 +111,12 @@ const Navbar = ({ navStyle }) => {
           router?.push("/oceanites");
         }}
       >
-        <Diversity1 className="w-8 h-8 lg:w-10 lg:h-10" />
+        <Diversity1
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* OCEANITES NAVIGATION ENDS HERE */}
 
@@ -106,7 +129,12 @@ const Navbar = ({ navStyle }) => {
           router?.push("/notifications");
         }}
       >
-        <Notifications className="w-8 h-8 lg:w-10 lg:h-10" />
+        <Notifications
+          sx={{
+            width: { xs: "32px", lg: "40px" },
+            height: { xs: "32px", lg: "40px" },
+          }}
+        />
       </div>
       {/* NOTIFICATION NAVIGATION ENDS HERE */}
 
@@ -134,7 +162,9 @@ const Navbar = ({ navStyle }) => {
                 e.target.src = "/images/jellyfishFallback.png";
               }}
               alt="profile"
-              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl border-2 hover:border-blue-500 hover:border-4 ${pathname === '/profile' ? 'border-blue-600' : 'border-slate-400'}`}
+              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl border-2 hover:border-blue-500 hover:border-4 ${
+                pathname === "/profile" ? "border-blue-600" : "border-slate-400"
+              }`}
             />
           </ProfileMenu>
         </div>
@@ -145,4 +175,3 @@ const Navbar = ({ navStyle }) => {
 };
 
 export default Navbar;
-

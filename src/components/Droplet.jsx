@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { useSwipeable } from "react-swipeable";
 import AnchorIcon from "@mui/icons-material/Anchor";
@@ -358,16 +358,16 @@ const Droplet = ({
           {images?.length > 1 ? (
             <div className="relative">
               {/* Slider image display */}
-                <img
-                  src={images[currentImage]?.split("<|>")[0] || "/fallback.jpg"}
-                  alt={`Image ${currentImage + 1}`}
-                  onClick={() => {
-                    setImgViewerIndex(currentImage);
-                    setImgViewerSources(images);
-                  }}
-                  {...swipeHandlersForImages}
-                  className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
-                />
+              <img
+                src={images[currentImage]?.split("<|>")[0] || "/fallback.jpg"}
+                alt={`Image ${currentImage + 1}`}
+                onClick={() => {
+                  setImgViewerIndex(currentImage);
+                  setImgViewerSources(images);
+                }}
+                {...swipeHandlersForImages}
+                className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
+              />
 
               {/* Dot navigation */}
               <div className="flex justify-center mt-2 space-x-2">
@@ -385,14 +385,14 @@ const Droplet = ({
           ) : (
             // Single image display
             images[0] && (
-                <img
-                  src={images[0]?.split("<|>")[0]}
-                  alt="Image"
-                  onClick={() => {
-                    setImgViewerSources([images[0]]);
-                  }}
-                  className="rounded-xl shadow shadow-slate-500 p-[2px] xl:max-h-96 xs4:max-h-[80vh] mb-3 m-auto"
-                />
+              <img
+                src={images[0]?.split("<|>")[0]}
+                alt="Image"
+                onClick={() => {
+                  setImgViewerSources([images[0]]);
+                }}
+                className="rounded-xl shadow shadow-slate-500 p-[2px] xl:max-h-96 xs4:max-h-[80vh] mb-3 m-auto"
+              />
             )
           )}
           {/* Video Gallery or Slider */}
@@ -434,9 +434,21 @@ const Droplet = ({
               title="like"
             >
               {stared ? (
-                <StarRoundedIcon className="size-[33px] text-amber-400 stroke-amber-500 translate-x-2" />
+                <StarRoundedIcon
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                  }}
+                  className="size-[33px] text-amber-400 stroke-amber-500 translate-x-2"
+                />
               ) : (
-                <StarOutlineRoundedIcon className="size-[33px] translate-x-2" />
+                <StarOutlineRoundedIcon
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                  }}
+                  className="size-[33px] translate-x-2"
+                />
               )}
             </Button>
             <h1>{stars}</h1>
@@ -446,6 +458,10 @@ const Droplet = ({
             <div className="flex items-center gap-1">
               <Button>
                 <RepeatRoundedIcon
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                  }}
                   className="size-7 cursor-pointer"
                   title="Repost"
                 />
@@ -465,11 +481,22 @@ const Droplet = ({
             >
               {rippled ? (
                 <AssistantIcon
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                  }}
                   className="size-7 text-sky-500 stroke-sky-700 dark:stroke-none "
                   title="Comment"
                 />
               ) : (
-                <AssistantOutlinedIcon className="size-7" title="Comment" />
+                <AssistantOutlinedIcon
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                  }}
+                  className="size-7"
+                  title="Comment"
+                />
               )}
             </Button>
             <h1> {ripples} </h1>
@@ -484,6 +511,10 @@ const Droplet = ({
             className="flex items-center cursor-pointer"
           >
             <IosShareRoundedIcon
+              sx={{
+                width: "32px",
+                height: "32px",
+              }}
               className="w-[26px] h-[26px] cursor-pointer mb-[2px]"
               title="Share"
             />
@@ -495,11 +526,22 @@ const Droplet = ({
           >
             {gemmed ? (
               <BookmarkRoundedIcon
+                sx={{
+                  width: "32px",
+                  height: "32px",
+                }}
                 className="size-7 text-emerald-500 stroke-emerald-600 "
                 title="Save"
               />
             ) : (
-              <BookmarkBorderRoundedIcon className="size-7" title="Save" />
+              <BookmarkBorderRoundedIcon
+                sx={{
+                  width: "32px",
+                  height: "32px",
+                }}
+                className="size-7"
+                title="Save"
+              />
             )}
           </Button>
         </div>
