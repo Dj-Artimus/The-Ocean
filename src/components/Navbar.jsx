@@ -44,7 +44,7 @@ const Navbar = ({ navStyle }) => {
           "/"
         )} `}
       >
-        <Houseboat className="size-11" />
+        <Houseboat sx={{width:'44px'}} className="size-11" />
       </div>
       {/* HOME NAVIGATION ENDS HERE */}
 
