@@ -39,8 +39,8 @@ const Navbar = ({ navStyle }) => {
       >
         <Houseboat
           sx={{
-            width: { xs: "32px", lg: "40px" },
-            height: { xs: "32px", lg: "40px" },
+            width: { xs: "35px", lg: "43px" },
+            height: { xs: "35px", lg: "43px" },
           }}
         />
       </div>

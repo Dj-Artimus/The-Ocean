@@ -1,4 +1,5 @@
 import { getPlatformIcon } from "@/utils/PlatformIconGetter";
+import { getTime } from "@/utils/TimeAndCountFormater";
 import Image from "next/image";
 import React from "react";
 
@@ -27,7 +28,7 @@ const NotificationMsg = ({
             <div className="flex items-center">
               <span className="mx-1 text-slate-500 xs:hidden xs1:block">•</span>
               {getPlatformIcon(platform)}
-              <h1 className="mx-2"> {timeOfNotification} </h1>
+              <h1 className="mx-2"> {getTime(timeOfNotification)} </h1>
             </div>
           </div>
           <p className="text-[15px] line-clamp-2 leading-5 text-text_clr2 dark:text-d_text_clr2">

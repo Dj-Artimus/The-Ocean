@@ -17,9 +17,11 @@ import { errorToast } from "@/components/ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
+import { CssBaseline } from "@mui/material";
 
 const ReactLayout = ({ children }) => {
-  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading } = UIStore();
+  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading } =
+    UIStore();
   const {
     fetchProfileData,
     subscribeToProfileChanges,
@@ -71,17 +73,20 @@ const ReactLayout = ({ children }) => {
   ]);
 
   useEffect(() => {
-    updateOnlineStatus(true);
+    setInterval(() => {
+      updateOnlineStatus(true);
+    }, 1500);
     // Update to offline when user disconnects
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
   }, [updateOnlineStatus]);
 
   return (
     <ErrorBoundary>
-      {/* {!isProfileDataFetched ? (
+      {!isProfileDataFetched ? (
         <UILoader />
-      ) : ( */}
+      ) : (
         <>
+          <CssBaseline />
           <ToasterProvider />
           <DropletModal />
           <ImageViewer />
@@ -91,9 +96,9 @@ const ReactLayout = ({ children }) => {
           <RippleDrawer />
           <MoreOptionsModal />
           <ShareOptionsModal />
-          { isPageLoading && <PageLoader />}
+          {isPageLoading && <PageLoader />}
         </>
-      {/* )} */}
+      )}
     </ErrorBoundary>
   );
 };

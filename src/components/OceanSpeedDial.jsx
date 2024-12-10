@@ -13,11 +13,41 @@ import { Badge } from "@mui/material";
 
 const actions = [
   {
-    icon: <Notifications className="size-7 text-white" />,
+    icon: (
+      <Notifications
+        sx={{
+          width: "28px",
+          height: "28px",
+        }}
+        className="size-7 text-white"
+      />
+    ),
     name: "notifications",
   },
-  { icon: <Diversity1 className="size-7" />, name: "oceanites" },
-  { icon: <BadgeRounded className="size-7" />, name: "o-card" },
+  {
+    icon: (
+      <Diversity1
+        sx={{
+          width: "30px",
+          height: "30px",
+        }}
+        className="size-7"
+      />
+    ),
+    name: "oceanites",
+  },
+  {
+    icon: (
+      <BadgeRounded
+        sx={{
+          width: "30px",
+          height: "30px",
+        }}
+        className="size-7"
+      />
+    ),
+    name: "o-card",
+  },
 ];
 
 export default function OceanSpeedDial() {
@@ -121,6 +151,10 @@ export default function OceanSpeedDial() {
             className={`bg-blue-600 text-white rounded-xl rounded-br-none flex items-center justify-center shadow-lg transition-transform transform hover:scale-110 focus:outline-none p-1`}
           >
             <Cyclone
+              sx={{
+                width: "25px",
+                height: "25px",
+              }}
               className={`size-6 transition-all ${isOpen ? "rotate-45" : ""}`}
             />
           </Button>

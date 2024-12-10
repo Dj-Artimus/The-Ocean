@@ -27,59 +27,136 @@ export const UserStore =
                 anchoringsIds: [],
 
                 // Fetch Profile Data
+                // fetchProfileData: async () => {
+                //     const { data, error } = await supabase.auth.getUser();
+                //     set({ isProfileDataFetched: false });
+                //     try {
+                //         if (data?.user?.id) {
+                //             const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();
+
+                //             console.log('fetchProfileData', profile)
+
+                //             if (profileError) return console.log('Error to fetch Profile', profileError.message);
+
+                //             const { data: harborMates, error: harborMatesError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
+
+                //             // console.log('fetched anchorings data', anchorings)
+
+                //             if (harborMatesError) return console.log('Error to fetch Profile', harborMatesError.message);
+
+                //             const harborMatesDetails = CommunicationStore.getState().communicatorDetails || {};
+
+                //             const anchoringsIds = harborMates?.map((harborMateData) => {
+
+                //                 const data = profile.id === harborMateData.anchor_id.id ? harborMateData.anchoring_id : harborMateData.anchor_id
+                //                 const id = data?.id;
+
+                //                 if (harborMatesDetails[id]) {
+                //                     harborMatesDetails[id] = {
+                //                         ...harborMatesDetails[id], ...data
+                //                     }
+                //                 } else if (id !== profile.id) {
+                //                     harborMatesDetails[id] = data;
+                //                 }
+
+                //                 return harborMateData.anchoring_id.id;
+                //             })
+
+                //             const ids = anchoringsIds.filter((id) => id !== profile.id);
+
+                //             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
+                //             updateCommunicatorDetails(harborMatesDetails);
+
+                //             set({
+                //                 profileData: profile, harborMatesData: harborMates, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
+                //             });
+
+                //             return profile;
+                //         }
+
+                //     } catch (error) {
+                //         return console.log(error);
+                //     } finally {
+                //         set({ isProfileDataFetched: true });
+                //     }
+                // },
+
+                // Fetch Profile Data
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
                     set({ isProfileDataFetched: false });
+
                     try {
                         if (data?.user?.id) {
-                            const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();
+                            const { data: profile, error: profileError } = await supabase
+                                .schema("Ocean")
+                                .from("Profile")
+                                .select()
+                                .eq('user_id', data.user.id)
+                                .single();
 
-                            console.log('fetchProfileData', profile)
+                            console.log('fetchProfileData', profile);
 
                             if (profileError) return console.log('Error to fetch Profile', profileError.message);
 
-                            const { data: harborMates, error: harborMatesError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
+                            const { data: harborMates, error: harborMatesError } = await supabase
+                                .schema('Ocean')
+                                .from('Oceanites')
+                                .select('*,anchoring_id(*),anchor_id(*)')
+                                .or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
 
-                            // console.log('fetched anchorings data', anchorings)
-
-                            if (harborMatesError) return console.log('Error to fetch Profile', harborMatesError.message);
+                            if (harborMatesError) return console.log('Error to fetch HarborMates', harborMatesError.message);
 
                             const harborMatesDetails = CommunicationStore.getState().communicatorDetails || {};
 
-                            const anchoringsIds = harborMates?.map((harborMateData) => {
+                            // Use a Set to track unique anchor IDs
+                            const uniqueAnchoringsIds = new Set();
 
-                                const data = profile.id === harborMateData.anchor_id.id ? harborMateData.anchoring_id : harborMateData.anchor_id
+                            harborMates.forEach((harborMateData) => {
+                                const data = profile.id === harborMateData.anchor_id.id
+                                    ? harborMateData.anchoring_id
+                                    : harborMateData.anchor_id;
                                 const id = data?.id;
 
-                                if (harborMatesDetails[id]) {
-                                    harborMatesDetails[id] = {
-                                        ...harborMatesDetails[id], ...data
+                                // Add to harborMatesDetails only if it's not already present
+                                if (id && id !== profile.id) {
+                                    if (harborMatesDetails[id]) {
+                                        harborMatesDetails[id] = { ...harborMatesDetails[id], ...data };
+                                    } else {
+                                        harborMatesDetails[id] = data;
                                     }
-                                } else if (id !== profile.id) {
-                                    harborMatesDetails[id] = data;
+
+                                    // Track unique IDs
+                                    uniqueAnchoringsIds.add(id);
                                 }
+                            });
 
-                                return harborMateData.anchoring_id.id;
-                            })
+                            // Convert Set back to array and include the profile ID if not already present
+                            const ids = [...uniqueAnchoringsIds];
+                            if (!ids.includes(profile.id)) {
+                                ids.unshift(profile.id);
+                            }
 
-                            const ids = anchoringsIds.filter((id) => id !== profile.id);
-
+                            // Update communicator details
                             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                             updateCommunicatorDetails(harborMatesDetails);
 
+                            // Update state
                             set({
-                                profileData: profile, harborMatesData: harborMates, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
+                                profileData: profile,
+                                harborMatesData: harborMates,
+                                anchoringsIds: ids
                             });
 
                             return profile;
                         }
-
                     } catch (error) {
-                        return console.log(error);
+                        console.log('Error in fetchProfileData:', error);
                     } finally {
                         set({ isProfileDataFetched: true });
                     }
                 },
+
 
                 updateOnlineStatus: async (isOnline) => {
                     const user = UserStore.getState().profileData;
@@ -140,7 +217,7 @@ export const UserStore =
                 setupSubscriptionsForProfileData: async (profileDataType) => {
                     const { data, error } = await supabase.auth.getUser();
 
-                    if (data?.user?.id && !error ) {
+                    if (data?.user?.id && !error) {
                         const fetchProfile = async () => {
                             return await get().fetchProfileData(); // Fetch initial data
                         }
