@@ -28,11 +28,6 @@ const Navbar = ({ navStyle }) => {
   const getActiveClass = (path) =>
     pathname === path ? "text-blue-500" : "text-inherit";
 
-  useEffect(() => {
-    console.log('router?.pathname', pathname)
-  }, [router])
-  
-
   return (
     <div className={`${navStyle} bg-primary dark:bg-d_primary`}>
       {/* HOME NAVIGATION STARTS HERE */}
@@ -44,7 +39,7 @@ const Navbar = ({ navStyle }) => {
           "/"
         )} `}
       >
-        <Houseboat sx={{width:'44px'}} className="size-11" />
+        <Houseboat sx={{width:'44px', height: '44px'}} className="size-11" />
       </div>
       {/* HOME NAVIGATION ENDS HERE */}
 

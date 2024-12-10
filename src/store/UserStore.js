@@ -29,53 +29,50 @@ export const UserStore =
                 // Fetch Profile Data
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
-                    if (error || !data.user) return console.log('User not authenticated');
                     set({ isProfileDataFetched: false });
                     try {
-                        const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();
+                        if (data?.user?.id) {
+                            const { data: profile, error: profileError } = await supabase.schema("Ocean").from("Profile").select().eq('user_id', data.user.id).single();
 
-                        console.log('fetchProfileData', profile)
+                            console.log('fetchProfileData', profile)
 
-                        if (profileError) return console.log('Error to fetch Profile', profileError.message);
+                            if (profileError) return console.log('Error to fetch Profile', profileError.message);
 
-                        const { data: harborMates, error: harborMatesError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
+                            const { data: harborMates, error: harborMatesError } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').or(`anchor_id.eq.${profile.id},anchoring_id.eq.${profile.id}`);
 
-                        // console.log('fetched anchorings data', anchorings)
+                            // console.log('fetched anchorings data', anchorings)
 
-                        if (harborMatesError) return console.log('Error to fetch Profile', harborMatesError.message);
+                            if (harborMatesError) return console.log('Error to fetch Profile', harborMatesError.message);
 
-                        const harborMatesDetails = CommunicationStore.getState().communicatorDetails || {};
+                            const harborMatesDetails = CommunicationStore.getState().communicatorDetails || {};
 
-                        const anchoringsIds = harborMates?.map((harborMateData) => {
+                            const anchoringsIds = harborMates?.map((harborMateData) => {
 
-                            const data = profile.id === harborMateData.anchor_id.id ? harborMateData.anchoring_id : harborMateData.anchor_id
-                            const id = data?.id;
+                                const data = profile.id === harborMateData.anchor_id.id ? harborMateData.anchoring_id : harborMateData.anchor_id
+                                const id = data?.id;
 
-                            if (harborMatesDetails[id]) {
-                                harborMatesDetails[id] = {
-                                    ...harborMatesDetails[id], ...data
+                                if (harborMatesDetails[id]) {
+                                    harborMatesDetails[id] = {
+                                        ...harborMatesDetails[id], ...data
+                                    }
+                                } else if (id !== profile.id) {
+                                    harborMatesDetails[id] = data;
                                 }
-                            } else if (id !== profile.id) {
-                                harborMatesDetails[id] = data;
-                            }
 
-                            return harborMateData.anchoring_id.id;
-                        })
+                                return harborMateData.anchoring_id.id;
+                            })
 
-                        const ids = anchoringsIds.filter((id) => id !== profile.id);
+                            const ids = anchoringsIds.filter((id) => id !== profile.id);
 
-                        const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
-                        updateCommunicatorDetails(harborMatesDetails);
+                            const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
+                            updateCommunicatorDetails(harborMatesDetails);
 
-                        set({
-                            profileData: profile, harborMatesData: harborMates, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
-                        });
+                            set({
+                                profileData: profile, harborMatesData: harborMates, anchoringsIds: ids.includes(profile.id) ? ids : [profile.id, ...ids]
+                            });
 
-
-
-                        // console.log('communicator details', anchoringDetails)
-
-                        return profile;
+                            return profile;
+                        }
 
                     } catch (error) {
                         return console.log(error);
@@ -86,8 +83,7 @@ export const UserStore =
 
                 updateOnlineStatus: async (isOnline) => {
                     const user = UserStore.getState().profileData;
-
-                    if (user) {
+                    if (user?.id) {
                         await supabase
                             .schema('Ocean')
                             .from('Profile')
@@ -114,62 +110,70 @@ export const UserStore =
                     // const user_id = await getUserId(profileDataType);
                     const user_id = getUserId(profileDataType);
 
-                    const channel = supabase
-                        .channel(`realtime:Profile:user:${user_id}`) // Unique channel for the user
-                        .on(
-                            'postgres_changes',
-                            { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `user_id=eq.${user_id}` },
-                            (payload) => {
-                                console.log('profileDataType from subscribe to profile', profileDataType)
-                                console.log('Profile updated:', payload);
+                    if (user_id) {
+                        const channel = supabase
+                            .channel(`realtime:Profile:user:${user_id}`) // Unique channel for the user
+                            .on(
+                                'postgres_changes',
+                                { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `user_id=eq.${user_id}` },
+                                (payload) => {
+                                    console.log('profileDataType from subscribe to profile', profileDataType)
+                                    console.log('Profile updated:', payload);
 
-                                if (profileDataType === 'oceanite-profile') {
-                                    set((state) => ({
-                                        oceaniteProfileData: { ...state.oceaniteProfileData, ...payload.new },
-                                    }));
-                                } else {
-                                    set((state) => ({
-                                        profileData: { ...state.profileData, ...payload.new },
-                                    }));
+                                    if (profileDataType === 'oceanite-profile') {
+                                        set((state) => ({
+                                            oceaniteProfileData: { ...state.oceaniteProfileData, ...payload.new },
+                                        }));
+                                    } else {
+                                        set((state) => ({
+                                            profileData: { ...state.profileData, ...payload.new },
+                                        }));
+                                    }
                                 }
-                            }
-                        )
-                        .subscribe();
+                            )
+                            .subscribe();
 
-                    return channel;
+                        return channel;
+                    }
                 },
 
                 setupSubscriptionsForProfileData: async (profileDataType) => {
-                    const fetchProfile = async () => {
-                        return await get().fetchProfileData(); // Fetch initial data
-                    }
-                    await fetchProfile();
-                    const profileChannel = get().subscribeToProfileChanges(profileDataType); // Subscribe to user's profile changes
+                    const { data, error } = await supabase.auth.getUser();
 
-                    return () => {
-                        if (profileChannel) profileChannel.unsubscribe(); // Cleanup subscription on unmount
-                    };
+                    if (data?.user?.id && !error ) {
+                        const fetchProfile = async () => {
+                            return await get().fetchProfileData(); // Fetch initial data
+                        }
+                        await fetchProfile();
+                        const profileChannel = get().subscribeToProfileChanges(profileDataType); // Subscribe to user's profile changes
+
+                        return () => {
+                            if (profileChannel) profileChannel.unsubscribe(); // Cleanup subscription on unmount
+                        };
+                    }
                 },
 
                 subscribeToOnlineStatus: (user_id, setIsOnline) => {
                     if (!user_id) return; // Ensure a valid user ID is provided
                     const user = get().profileData;
-                    const channel = supabase
-                        .channel(`realtime:Profile:user:${user.id}:to:${user_id}`) // Unique channel for the user
-                        .on(
-                            'postgres_changes',
-                            { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `id=eq.${user_id}` },
-                            (payload) => {
-                                console.log('Profile updated:', payload);
-                                if (payload?.new?.is_online !== undefined) {
-                                    setIsOnline(payload.new.is_online);
+                    if (user.id) {
+                        const channel = supabase
+                            .channel(`realtime:Profile:user:${user.id}:to:${user_id}`) // Unique channel for the user
+                            .on(
+                                'postgres_changes',
+                                { event: 'UPDATE', schema: 'Ocean', table: 'Profile', filter: `id=eq.${user_id}` },
+                                (payload) => {
+                                    console.log('Profile updated:', payload);
+                                    if (payload?.new?.is_online !== undefined) {
+                                        setIsOnline(payload.new.is_online);
+                                    }
                                 }
-                            }
-                        )
-                        .subscribe();
+                            )
+                            .subscribe();
 
-                    return () => {
-                        if (channel) channel.unsubscribe()
+                        return () => {
+                            if (channel) channel.unsubscribe()
+                        }
                     }
                 },
 

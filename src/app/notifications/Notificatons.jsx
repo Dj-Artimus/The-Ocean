@@ -17,8 +17,8 @@ const Notifications = () => {
 
   useEffect(() => {
     setNotificationsCount(0);
-    console.log('notificationsData', notificationsData)
-  }, [setNotificationsCount])
+    console.log("notificationsData", notificationsData);
+  }, [setNotificationsCount]);
 
   const router = useRouter();
 
@@ -55,15 +55,15 @@ const Notifications = () => {
           {/* NOTIFICATION MESSAGES STARTS HERE */}
 
           {notificationsData?.length > 0 ? (
-            notificationsData.map((notification) => {
+            notificationsData.map((notification) => (
               <NotificationMsg
                 avatar_url={notification?.user_id?.avatar.split("<|>")[0]}
                 name={notification?.user_id?.name}
                 platform={notification?.platform}
                 notificationMsg={notification?.content}
                 timeOfNotification={notification?.created_at}
-              />;
-            })
+              />
+            ))
           ) : (
             <div className="w-full h-[80%] overflow-hidden flex justify-center items-center text-2xl">
               {" "}

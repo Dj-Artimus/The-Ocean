@@ -12,9 +12,9 @@ module.exports = {
     extend: {
       colors: {
         background: colors.white,
-        foreground: colors.blue[100],
-        primary: colors.sky[100],
-        secondary: colors.blue[50],
+        foreground: colors.sky[100],
+        primary: colors.blue[100],
+        secondary: colors.cyan[50],
         ternary: colors.purple[200],
         text_clr: colors.black,
         text_clr2: colors.slate[600],

@@ -78,9 +78,9 @@ const ReactLayout = ({ children }) => {
 
   return (
     <ErrorBoundary>
-      {!isProfileDataFetched ? (
+      {/* {!isProfileDataFetched ? (
         <UILoader />
-      ) : (
+      ) : ( */}
         <>
           <ToasterProvider />
           <DropletModal />
@@ -93,7 +93,7 @@ const ReactLayout = ({ children }) => {
           <ShareOptionsModal />
           { isPageLoading && <PageLoader />}
         </>
-      )}
+      {/* )} */}
     </ErrorBoundary>
   );
 };
