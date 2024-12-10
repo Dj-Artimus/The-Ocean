@@ -159,6 +159,8 @@ export const UserStore =
                             const filteredHarborMates = filterHarborMates()
                             // Update state
                             console.log('filteredHarborMates', filteredHarborMates)
+                            console.log("harborMatesData", harborMates);
+
                             set({
                                 profileData: profile,
                                 harborMatesData: filteredHarborMates,

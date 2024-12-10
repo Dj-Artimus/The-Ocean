@@ -58,7 +58,7 @@ const Notifications = () => {
             notificationsData.map((notification, index) => (
               <NotificationMsg
                 key={index}
-                avatar_url={notification?.user_id?.avatar.split("<|>")[0]}
+                avatar_url={notification?.user_id?.avatar?.split("<|>")[0]}
                 name={notification?.user_id?.name}
                 platform={notification?.platform}
                 notificationMsg={notification?.content}

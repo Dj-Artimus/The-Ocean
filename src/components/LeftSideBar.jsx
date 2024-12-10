@@ -12,7 +12,6 @@ const LeftSideBar = ({ styles }) => {
   const { harborMatesData, profileData, SubscribeToAnchors } = UserStore();
 
   useEffect(() => {
-    console.log("harborMatesData", harborMatesData);
     const anchorsChannel = SubscribeToAnchors();
     return () => {
       if (anchorsChannel) anchorsChannel.unsubscribe();
@@ -41,7 +40,7 @@ const LeftSideBar = ({ styles }) => {
           {harborMatesData?.map((data) => (
             <UserMsgProfile
               key={datd?.id}
-              avatar_url={data?.avatar.split("<|>")[0]}
+              avatar_url={data?.avatar?.split("<|>")[0]}
               name={data.name}
               wave={data?.wave}
               profile_id={data?.id}

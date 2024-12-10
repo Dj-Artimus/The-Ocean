@@ -144,7 +144,7 @@ export default function ChatPage() {
                     <div className="flex-shrink-0">
                       <img
                         src={
-                          communicatorDetails[communicatorId]?.avatar.split(
+                          communicatorDetails[communicatorId]?.avatar?.split(
                             "<|>"
                           )[0]
                         }
