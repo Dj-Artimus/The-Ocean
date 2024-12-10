@@ -82,9 +82,6 @@ const ReactLayout = ({ children }) => {
 
   return (
     <ErrorBoundary>
-      {!isProfileDataFetched ? (
-        <UILoader />
-      ) : (
         <>
           <CssBaseline />
           <ToasterProvider />
@@ -98,7 +95,6 @@ const ReactLayout = ({ children }) => {
           <ShareOptionsModal />
           {isPageLoading && <PageLoader />}
         </>
-      )}
     </ErrorBoundary>
   );
 };

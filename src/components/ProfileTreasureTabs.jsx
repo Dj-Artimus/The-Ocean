@@ -17,7 +17,7 @@ function CustomprofileTreasureTabIndexPanel({ children, value, index }) {
 
 const treasureTabs = ["Treasure", "Droplets", "Gems", "Stars", "Ripples"];
 
-export default function ProfileTreasureTabs({oceanite_id}) {
+export default function ProfileTreasureTabs({ oceanite_id }) {
   const {
     GetTreasureDroplets,
     GetUserDroplets,
@@ -44,33 +44,44 @@ export default function ProfileTreasureTabs({oceanite_id}) {
     { type: "userRippledDroplets", data: userRippledDroplets },
   ];
 
-  const getDropletData = useCallback(async (index = profileTreasureTabIndex) => {
-    switch (index) {
-      case 0:
-        return await GetTreasureDroplets(oceanite_id && oceanite_id );
-      case 1:
-        return await GetUserDroplets(oceanite_id && oceanite_id );
-      case 2:
-        return await GetUserGemmedDroplets(oceanite_id && oceanite_id );
-      case 3:
-        return await GetUserStaredDroplets(oceanite_id && oceanite_id );
-      case 4:
-        return await GetUserRippledDroplets(oceanite_id && oceanite_id );
-    }
-  },[GetTreasureDroplets,GetUserDroplets,GetUserGemmedDroplets,GetUserStaredDroplets,GetUserRippledDroplets,oceanite_id]);
+  const getDropletData = useCallback(
+    async (index = profileTreasureTabIndex) => {
+      switch (index) {
+        case 0:
+          return await GetTreasureDroplets(oceanite_id && oceanite_id);
+        case 1:
+          return await GetUserDroplets(oceanite_id && oceanite_id);
+        case 2:
+          return await GetUserGemmedDroplets(oceanite_id && oceanite_id);
+        case 3:
+          return await GetUserStaredDroplets(oceanite_id && oceanite_id);
+        case 4:
+          return await GetUserRippledDroplets(oceanite_id && oceanite_id);
+      }
+    },
+    [
+      GetTreasureDroplets,
+      GetUserDroplets,
+      GetUserGemmedDroplets,
+      GetUserStaredDroplets,
+      GetUserRippledDroplets,
+      oceanite_id,
+    ]
+  );
 
   useEffect(() => {
     setDropletDataType(dropletDataTypes[profileTreasureTabIndex].type);
     getDropletData();
-  }, [setDropletDataType,getDropletData]);
+  }, [setDropletDataType, getDropletData]);
 
-  const handleChange = useCallback((index) => {
-    setProfileTreasureTabIndex(index);
-    getDropletData(index);
-    setDropletDataType(dropletDataTypes[index].type);
-  },[setProfileTreasureTabIndex,getDropletData,setDropletDataType]);
-
-  
+  const handleChange = useCallback(
+    (index) => {
+      setProfileTreasureTabIndex(index);
+      getDropletData(index);
+      setDropletDataType(dropletDataTypes[index].type);
+    },
+    [setProfileTreasureTabIndex, getDropletData, setDropletDataType]
+  );
 
   return (
     <div className="w-full">
@@ -101,31 +112,35 @@ export default function ProfileTreasureTabs({oceanite_id}) {
         index={profileTreasureTabIndex}
       >
         <div>
-
           {/* {dropletsData.map((droplet, index) => { */}
 
-          {dropletDataTypes[profileTreasureTabIndex]?.data?.map((droplet, index) => {
-              return (
-                <Droplet
-                  key={index}
-                  droplet_id={droplet?.id}
-                  author_id={droplet?.user_id?.id}
-                  authorData={droplet?.user_id}
-                  avatar_url={droplet?.user_id?.avatar}
-                  name={droplet?.user_id?.name}
-                  username={droplet?.user_id?.username}
-                  wave={droplet?.user_id?.wave}
-                  platform={droplet?.platform}
-                  time={droplet?.created_at}
-                  content={droplet?.content}
-                  images={droplet?.images}
-                  videos={droplet?.videos}
-                  stars={droplet?.stars}
-                  ripples={droplet?.ripples}
-                  redrops={droplet?.redrops}
-                />
-              );
-            }
+          {dropletDataTypes[profileTreasureTabIndex]?.data?.length !== 0 ? (
+            dropletDataTypes[profileTreasureTabIndex]?.data?.map(
+              (droplet, index) => {
+                return (
+                  <Droplet
+                    key={index}
+                    droplet_id={droplet?.id}
+                    author_id={droplet?.user_id?.id}
+                    authorData={droplet?.user_id}
+                    avatar_url={droplet?.user_id?.avatar}
+                    name={droplet?.user_id?.name}
+                    username={droplet?.user_id?.username}
+                    wave={droplet?.user_id?.wave}
+                    platform={droplet?.platform}
+                    time={droplet?.created_at}
+                    content={droplet?.content}
+                    images={droplet?.images}
+                    videos={droplet?.videos}
+                    stars={droplet?.stars}
+                    ripples={droplet?.ripples}
+                    redrops={droplet?.redrops}
+                  />
+                );
+              }
+            )
+          ) : (
+            <div className="w-full pt-28 text-center text-3xl" > No Data Found ! </div>
           )}
         </div>
       </CustomprofileTreasureTabIndexPanel>

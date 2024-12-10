@@ -11,6 +11,7 @@ const LeftSideBar = ({ styles }) => {
   const { harborMatesData, profileData, SubscribeToAnchors } = UserStore();
 
   useEffect(() => {
+    console.log('harborMatesData', harborMatesData)
     const anchorsChannel = SubscribeToAnchors();
     return () => {
       if (anchorsChannel) anchorsChannel.unsubscribe();

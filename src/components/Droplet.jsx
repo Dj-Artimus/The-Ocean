@@ -364,8 +364,7 @@ const Droplet = ({
             {/* Slider image display */}
             <img
               src={
-                images[currentImage]?.split("<|>")[0] ||
-                "images/defaultPoster.jpg"
+                images[currentImage]?.split("<|>")[0]
               }
               alt={`Image ${currentImage + 1}`}
               onClick={() => {
