@@ -9,8 +9,7 @@ import { CommunicationStore } from "@/store/CommunicationStore";
 
 const LeftSideBar = ({ styles }) => {
   const { isMsgsOpen, isOCardOpen } = UIStore();
-  const { harborMatesData, profileData, SubscribeToAnchors } = UserStore();
-  const { communicatorDetails } = CommunicationStore();
+  const { harborMatesData, SubscribeToAnchors } = UserStore();
 
   useEffect(() => {
     const anchorsChannel = SubscribeToAnchors();
@@ -38,7 +37,6 @@ const LeftSideBar = ({ styles }) => {
         </h1>
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
           {/* USERS PROFILE IN anchors STARTS HERE */}
-          {/* {Array.from(communicatorDetails.values())?.map((data) => ( */}
           {harborMatesData?.map((data) => (
             <UserMsgProfile
               key={data?.id}

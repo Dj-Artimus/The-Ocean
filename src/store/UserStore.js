@@ -141,33 +141,7 @@ export const UserStore =
                             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                             updateCommunicatorDetails(harborMatesDetails);
 
-                            // const filterHarborMates = () => {
-                            //     const uniqueHarborMates = new Map();
-                            //     const  obj = {}
-                            //     obj.
-                            //     harborMatesDetails?.forEach((harborMate) => {
-                            //         // Determine the "other" user
-                            //         // const otherUser = profile.id === harborMate.anchor_id.id
-                            //         //     ? harborMate.anchoring_id
-                            //         //     : harborMate.anchor_id;
-
-                            //         // if (otherUser?.id && otherUser.id !== profile.id) {
-                            //         //     // Add user to the Map if not already present
-                            //         //     if (!uniqueHarborMates.has(otherUser.id)) {
-                            //         uniqueHarborMates.set(harborMate.id, harborMate);
-                            //         // }
-                            //         // }
-                            //     });
-
-                            //     // Convert the Map values to an array
-                            //     return Array.from(uniqueHarborMates.values());
-                            // };
-
-
-
-                            console.log("harborMatesData", harborMates);
                             const filteredHarborMates = Object.values(harborMatesDetails);
-                            console.log('filteredHarborMates:', filteredHarborMates);
 
                             set({
                                 profileData: profile,
@@ -398,7 +372,7 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
 
-                    set({ harborMatesData: [...get().harborMatesData, data], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
+                    set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
                     return true;
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
@@ -407,7 +381,7 @@ export const UserStore =
                     if (error) { console.log('Something went wrong to anchor the Oceanite', error); }
 
 
-                    const updatedHarborMatesData = get().harborMatesData.filter((anchoringData) => anchoringData.anchoring_id !== anchoring_id);
+                    const updatedHarborMatesData = get().harborMatesData.filter((data) => data.id !== anchoring_id);
 
                     const updatedAnchoringsIds = get().anchoringsIds.filter((anchoringId) => anchoringId !== anchoring_id);
 

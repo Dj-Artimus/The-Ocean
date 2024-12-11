@@ -62,7 +62,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
             />
             {/* Ripple Effect */}
             {isOnline && (
-              <div className="relative bottom-2">
+              <div className="relative">
                 <span className="absolute -bottom-[2px] -right-[2px] size-[14px] bg-green-500 rounded-full border-2"></span>
                 <span className="absolute -bottom-[2px] -right-[2px] size-[14px] bg-green-500 rounded-full opacity-75 animate-ping"></span>
               </div>

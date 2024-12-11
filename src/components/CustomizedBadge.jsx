@@ -15,16 +15,18 @@ const StyledBadge = styled(Badge)(() => ({
 export default function CustomizedBadges({ children, count }) {
 
   return (
-    <IconButton aria-label="cart">
-      {count === 0 ? (
-        <StyledBadge badgeContent={0} color="primary">
-          {children}
-        </StyledBadge>
-      ) : (
-        <StyledBadge badgeContent={count} color="primary">
-          {children}
-        </StyledBadge>
-      )}
-    </IconButton>
+    <div className="mt-3">
+      <IconButton aria-label="cart">
+        {count === 0 ? (
+          <StyledBadge badgeContent={0} color="primary">
+            {children}
+          </StyledBadge>
+        ) : (
+          <StyledBadge badgeContent={count} color="primary">
+            {children}
+          </StyledBadge>
+        )}
+      </IconButton>
+    </div>
   );
 }
