@@ -82,13 +82,13 @@ export default function ChatPage() {
     FetchCommunicationMessages,
   ]); // Add all relevant dependencies
 
-  const handleMoreOptionsClick = () => {
+  const handleMoreOptionsClick = (msg) => {
     console.log("openig model..");
     setContentEditId(msg.id);
     setContentToEdit(msg.content);
     setContentToEditType("Message");
     setIsMoreOptionsModalOpen(true);
-  }
+  };
 
   useEffect(() => {
     const messagesChannel = subscribeToMessages();
@@ -261,11 +261,20 @@ export default function ChatPage() {
                 ) : (
                   communicatorDetails[communicatorId]?.messages?.map((msg) =>
                     msg.sender_id === profileData.id ? (
-
-                        <MessageSent content={msg.content} key={msg.id} created_at={msg.created_at} isRead={msg.isRead} handleMoreOptionsClick={handleMoreOptionsClick}  />
-
+                      <MessageSent
+                        content={msg.content}
+                        key={msg.id}
+                        created_at={msg.created_at}
+                        isRead={msg.is_read}
+                        handleMoreOptionsClick={handleMoreOptionsClick(msg)}
+                      />
                     ) : (
-                      <MessageReceived key={msg.id} content={msg.content}  created_at={msg.created_at} isRead={msg.isRead} />
+                      <MessageReceived
+                        key={msg.id}
+                        content={msg.content}
+                        created_at={msg.created_at}
+                        isRead={msg.is_read}
+                      />
                     )
                   )
                 )}

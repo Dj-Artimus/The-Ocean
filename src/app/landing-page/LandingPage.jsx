@@ -43,6 +43,10 @@ const ReactLandingPage = () => {
             finds a place and connects seamlessly.
           </p>
         </div>
+        <div className="mt-4 w-full">
+          <MessageReceived content={"message of the content"} created_at={''} isRead={true} />
+          <MessageSent content={"message of the content"} created_at={''} isRead={true} handleMoreOptionsClick={() => { alert('hello') }} />
+        </div>
       </section>
 
       {/* Features Section */}
