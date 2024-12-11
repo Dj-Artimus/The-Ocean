@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserStore } from "./UserStore";
+import toast from "react-hot-toast";
 
 const supabase = createClient();
 
@@ -86,7 +87,8 @@ export const CommunicationStore = create(
             const communicatorIds = Object.keys(get().communicatorDetails);
             console.log('array of communicator ids:', communicatorIds)
             const user = UserStore.getState().profileData;
-
+            communicatorIds.unshift(user.id);
+            console.log('array of communicator ids after adding user and in local string:', communicatorIds.toLocaleString())
             // if (!communicatorId || !user) return;
 
             console.log('starting the real time for messages');
@@ -99,7 +101,8 @@ export const CommunicationStore = create(
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${user.id},${communicatorId})`
+                        // filter: `sender_id=in.(${user.id},${communicatorId})`
+                        filter: `sender_id=in.(${communicatorIds.toLocaleString()})`
                     },
                     (payload) => {
                         console.log('Realtime event:', payload);
@@ -116,6 +119,9 @@ export const CommunicationStore = create(
                                     newMessage,
                                 ],
                             };
+
+                            toast.caller(newMessage.content)
+                            toast.custom(newMessage.content)
                             
                         }
                         else if (eventType === 'UPDATE') {
