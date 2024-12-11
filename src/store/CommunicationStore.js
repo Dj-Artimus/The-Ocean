@@ -82,7 +82,7 @@ export const CommunicationStore = create(
 
         subscribeToMessages: () => {
 
-            const communicatorId = Object.keys(get().communicatorId);
+            const communicatorId = get().communicatorId;
             const communicatorIds = Object.keys(get().communicatorDetails);
             const user = UserStore.getState().profileData;
 
