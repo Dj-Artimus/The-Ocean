@@ -463,48 +463,6 @@ export const DropletStore = create(
             }
         },
 
-        // GetFeedVideos: async () => {
-        //     try {
-        //         const { data: videoData, error } = await supabase.schema("Ocean").rpc('get_feed_videos').not('id', 'is', null);
-        //         if (error || !videoData) {
-        //             console.log('No Videos found', error);
-        //             return null;
-        //         }
-        //         // get().setDropletsData(data)
-        //         const organizedData = videoData?.map((data) => {
-        //             return data?.videos?.map((url) => {
-        //                 return {
-        //                     url: url?.split("<|>")[0],
-        //                     author_name: data?.user_id?.name,
-        //                     username: data?.user_id?.username,
-        //                     avatar: data?.user_id?.avatar?.split("<|>")[0],
-        //                     author_id: data?.user_id?.id,
-        //                     droplet_id: data?.id,
-        //                     content: data?.content,
-        //                     stars: data?.stars,
-        //                     ripples: data?.ripples,
-        //                     redrops: data?.redrops,
-        //                 };
-        //             });
-        //         })?.flat();
-
-        //         // Fisher-Yates Shuffle Algorithm
-        //         const shuffleVideos = (array) => {
-        //             for (let i = array?.length - 1; i > 0; i--) {
-        //                 const j = Math.floor(Math.random() * (i + 1)); // Random index
-        //                 [array[i], array[j]] = [array[j], array[i]]; // Swap
-        //             }
-        //             return array;
-        //         };
-        //         // Shuffle the organizedData array
-        //         const shuffledVideos = shuffleVideos(organizedData);
-        //         set({ feedVideos: shuffledVideos, dropletsData: videoData });
-        //         return console.log('feed videos fetched successfully', videoData)
-        //     } catch (error) {
-        //         return console.log(error);
-        //     }
-        // },
-
         GetFeedVideos: async (page = 1, limit = 5) => {
             try {
 

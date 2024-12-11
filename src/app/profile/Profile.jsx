@@ -35,7 +35,7 @@ export default function Profile() {
   useEffect(() => {
     setIsMsgsOpen(false);
     setIsOCardOpen(false);
-  }, [setIsMsgsOpen,setIsMsgsOpen]);
+  }, [setIsMsgsOpen, setIsMsgsOpen]);
 
   if (!isProfileDataFetched) return <UILoader />;
 
@@ -60,7 +60,13 @@ export default function Profile() {
           }}
           className="fixed lg:hidden top-[1px] left-[1px] z-30 text-white bg-blue-700 bg-opacity-80 rounded-tl-none rounded-xl p-[2px] cursor-pointer"
         >
-          <ArrowBack className="size-7" />
+          <ArrowBack
+            sx={{
+              width: "30px",
+              height: "30px",
+            }}
+            className="size-7"
+          />
         </div>
       )}
 
@@ -102,7 +108,9 @@ export default function Profile() {
                 {/* PROFILE DETAILS ENDS HERE */}
                 <hr className="m-2 border-slate-700" />
                 {/* CONNECTING SOCIAL PLATFORM STREAMS STARTS HERE */}
-                <StreamConnectionsPanel avatar={profileData?.avatar?.split("<|>")[0]} />
+                <StreamConnectionsPanel
+                  avatar={profileData?.avatar?.split("<|>")[0]}
+                />
                 {/* CONNECTING SOCIAL PLATFORM STREAMS ENDS HERE */}
                 {/* OCEAN BOARD FOR SMALL DEVICES STARTS HERE */}
                 <div className="lg:hidden">

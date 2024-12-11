@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import MessageReceived from "@/components/MessageReceived";
+import MessageSent from "@/components/MessageSent";
 
 const ReactLandingPage = () => {
   return (
@@ -161,8 +163,8 @@ const ReactLandingPage = () => {
             The Ocean started with a dream to unify all social media platforms
             into one seamless space. Although certain integrations were
             unattainable, the project reflects the ambition to innovate and
-            deliver a unique experience. It&apos;s a testament to pushing boundaries
-            and learning through challenges.
+            deliver a unique experience. It&apos;s a testament to pushing
+            boundaries and learning through challenges.
           </p>
           <p className="text-lg mt-4">
             Some features, like Unified Feed, calling, video calling, are still

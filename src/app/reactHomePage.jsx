@@ -21,7 +21,6 @@ import { UIStore } from "@/store/UIStore";
 import Button from "@/components/Button";
 import { debounce } from "@mui/material";
 
-
 export default function ReactHomePage() {
   const router = useRouter();
   const {
@@ -145,7 +144,13 @@ export default function ReactHomePage() {
             }}
             className="fixed top-[1px] left-[1px] z-30 bg-blue-500 dark:bg-blue-700 bg-opacity-50 backdrop-blur-sm rounded-tl-none rounded-xl p-[2px] cursor-pointer"
           >
-            <ArrowBack className="size-7" />
+            <ArrowBack
+              sx={{
+                width: "30px",
+                height: "30px",
+              }}
+              className="size-7"
+            />
           </Button>
         )}
         <OceanSpeedDial />

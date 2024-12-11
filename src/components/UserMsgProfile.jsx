@@ -5,13 +5,12 @@ import { redirect } from "next/navigation";
 import { UIStore } from "@/store/UIStore";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
-import { Badge } from "@mui/material";
 import CustomizedBadges from "./CustomizedBadge";
 import Image from "next/image";
 
 const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
   const { setIsMsgsOpen, expectedVersion } = UIStore();
-  const { setCommunicatorId, FetchUnreadMessagesCount } = CommunicationStore();
+  const { setCommunicatorId, FetchUnreadMessagesCount, subscribeToMessages } = CommunicationStore();
   const { subscribeToOnlineStatus } = UserStore();
   const [isOnline, setIsOnline] = useState(false);
   const [unreadMsgCount, setUnreadMsgCount] = useState(0);
@@ -30,7 +29,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     FetchUnreadMessagesCount(profile_id).then((count) => {
       setUnreadMsgCount(count);
     });
-  }, [FetchUnreadMessagesCount, setUnreadMsgCount, profile_id]);
+  }, [FetchUnreadMessagesCount, setUnreadMsgCount, profile_id, subscribeToMessages]);
 
   return (
     <div
@@ -38,6 +37,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
         setTimeout(() => {
           setCommunicatorId(profile_id);
           setIsMsgsOpen(false);
+          setUnreadMsgCount(0);
         }, 500);
         redirect("/chat");
       }}

@@ -82,12 +82,20 @@ export default function ChatPage() {
     FetchCommunicationMessages,
   ]); // Add all relevant dependencies
 
+  const handleMoreOptionsClick = () => {
+    console.log("openig model..");
+    setContentEditId(msg.id);
+    setContentToEdit(msg.content);
+    setContentToEditType("Message");
+    setIsMoreOptionsModalOpen(true);
+  }
+
   useEffect(() => {
     const messagesChannel = subscribeToMessages();
     return () => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
-  }, [communicatorId, subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
+  }, [communicatorDetails, subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -119,7 +127,13 @@ export default function ChatPage() {
           }}
           className="fixed top-[1px] left-[1px] z-30 bg-blue-500 dark:bg-blue-700 bg-opacity-50 backdrop-blur-sm rounded-tl-none rounded-xl p-[2px] cursor-pointer lg:hidden"
         >
-          <ArrowBack className="size-7" />
+          <ArrowBack
+            sx={{
+              width: "30px",
+              height: "30px",
+            }}
+            className="size-7"
+          />
         </div>
       )}
 
@@ -182,25 +196,33 @@ export default function ChatPage() {
                   <div className="xs1:flex gap-2 sm:gap-3 lg:gap-4 translate-x-1 items-center rounded-xl font-semibold hidden ">
                     <div
                       onClick={() => {
-                        setIsMsgsOpen(true);
                         setCommunicatorId("");
+                        setIsMsgsOpen(true);
                       }}
                       className="mb-1 me-1 lg:hidden cursor-pointer"
                     >
                       <ArrowBack
-                        title="VideoChat"
+                        title="Back"
+                        sx={{
+                          width: "30px",
+                          height: "30px",
+                        }}
                         className="size-7 hover:text-blue-500 "
                       />
                     </div>
                     <div
                       onClick={() => {
-                        router.push("/");
                         setCommunicatorId("");
+                        router.push("/");
                       }}
                       className="mb-1 hidden lg:block cursor-pointer"
                     >
                       <ArrowBack
-                        title="VideoChat"
+                        sx={{
+                          width: "30px",
+                          height: "30px",
+                        }}
+                        title="Back"
                         className="size-7 hover:text-blue-500 "
                       />
                     </div>
@@ -239,20 +261,11 @@ export default function ChatPage() {
                 ) : (
                   communicatorDetails[communicatorId]?.messages?.map((msg) =>
                     msg.sender_id === profileData.id ? (
-                      <div
-                        key={msg.id}
-                        onClick={() => {
-                          console.log("openig model..");
-                          setContentEditId(msg.id);
-                          setContentToEdit(msg.content);
-                          setContentToEditType("Message");
-                          setIsMoreOptionsModalOpen(true);
-                        }}
-                      >
-                        <MessageSent content={msg.content} />
-                      </div>
+
+                        <MessageSent content={msg.content} key={msg.id} created_at={msg.created_at} isRead={msg.isRead} handleMoreOptionsClick={handleMoreOptionsClick}  />
+
                     ) : (
-                      <MessageReceived key={msg.id} content={msg.content} />
+                      <MessageReceived key={msg.id} content={msg.content}  created_at={msg.created_at} isRead={msg.isRead} />
                     )
                   )
                 )}

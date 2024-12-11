@@ -57,52 +57,6 @@ export const CommunicationStore = create(
         },
 
 
-        // FetchCommunicationMessages: async () => {
-        //     try {
-        //         const communicatorId = get().communicatorId;
-        //         if (communicatorId) {
-        //             const user = UserStore.getState().profileData;
-
-        //             const { data, error } = await supabase
-        //                 .from('Message')
-        //                 .select('*')
-        //                 .or(
-        //                     `and(sender_id.eq.${user.id},receiver_id.eq.${communicatorId}),
-        //                      and(sender_id.eq.${communicatorId},receiver_id.eq.${user.id})`
-        //                 )
-        //                 .order('created_at', { ascending: false });
-
-        //             if (error) {
-        //                 console.error('Error fetching messages:', error);
-        //                 return;
-        //             }
-
-        //             if (data) {
-        //                 const updateCommunicatorData = get().communicatorDetails || {};
-
-        //                 const existingMessages = updateCommunicatorData[communicatorId]?.messages || [];
-
-        //                 // Merge existing messages with the new ones
-        //                 updateCommunicatorData[communicatorId] = {
-        //                     ...updateCommunicatorData[communicatorId],
-        //                     messages: [...data, ...existingMessages],
-        //                 };
-
-        //                 set({ communicatorDetails: updateCommunicatorData });
-
-        //                 console.log('Fetched messages:', data);
-
-        //                 return data;
-        //             } else {
-        //                 console.warn('No messages found');
-        //             }
-        //         }
-        //     } catch (error) {
-        //         console.error('Error in FetchCommunicationMessages:', error);
-        //     }
-        // },
-
-
         SendMessage: async (content) => {
             try {
                 const communicatorId = get().communicatorId;
@@ -128,7 +82,7 @@ export const CommunicationStore = create(
 
         subscribeToMessages: () => {
 
-            const communicatorId = get().communicatorId;
+            const communicatorIds = Object.keys(get().communicatorDetails);
             const user = UserStore.getState().profileData;
 
             // if (!communicatorId || !user) return;
@@ -136,14 +90,14 @@ export const CommunicationStore = create(
             console.log('starting the real time for messages');
 
             const channel = supabase
-                .channel(`realtime-messages:user${user.id}:to:${communicatorId}:time:${new Date().getTime()}`)
+                .channel(`realtime-messages:user${user.id}:to:${communicatorIds.toLocaleString()}:time:${new Date().getTime()}`)
                 .on(
                     'postgres_changes',
                     {
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${user.id},${communicatorId})`
+                        filter: `sender_id=in.(${user.id},${communicatorIds.toLocaleString()})`
                     },
                     (payload) => {
                         console.log('Realtime event:', payload);
@@ -153,13 +107,14 @@ export const CommunicationStore = create(
                         const currentCommunicatorDetails = { ...get().communicatorDetails };
 
                         if (eventType === 'INSERT') {
-                            currentCommunicatorDetails[communicatorId] = {
-                                ...currentCommunicatorDetails[communicatorId],
+                            currentCommunicatorDetails[newMessage.sender_id] = {
+                                ...currentCommunicatorDetails[newMessage.sender_id],
                                 messages: [
-                                    ...(currentCommunicatorDetails[communicatorId]?.messages || []),
+                                    ...(currentCommunicatorDetails[newMessage.sender_id]?.messages || []),
                                     newMessage,
                                 ],
                             };
+                            
                         }
                         else if (eventType === 'UPDATE') {
 
