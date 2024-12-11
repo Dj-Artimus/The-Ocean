@@ -141,31 +141,32 @@ export const UserStore =
                             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                             updateCommunicatorDetails(harborMatesDetails);
 
-                            const filterHarborMates = () => {
-                                const uniqueHarborMates = new Map();
+                            // const filterHarborMates = () => {
+                            //     const uniqueHarborMates = new Map();
+                            //     const  obj = {}
+                            //     obj.
+                            //     harborMatesDetails?.forEach((harborMate) => {
+                            //         // Determine the "other" user
+                            //         // const otherUser = profile.id === harborMate.anchor_id.id
+                            //         //     ? harborMate.anchoring_id
+                            //         //     : harborMate.anchor_id;
 
-                                harborMates?.forEach((harborMate) => {
-                                    // Determine the "other" user
-                                    const otherUser = profile.id === harborMate.anchor_id.id
-                                        ? harborMate.anchoring_id
-                                        : harborMate.anchor_id;
+                            //         // if (otherUser?.id && otherUser.id !== profile.id) {
+                            //         //     // Add user to the Map if not already present
+                            //         //     if (!uniqueHarborMates.has(otherUser.id)) {
+                            //         uniqueHarborMates.set(harborMate.id, harborMate);
+                            //         // }
+                            //         // }
+                            //     });
 
-                                    if (otherUser?.id && otherUser.id !== profile.id) {
-                                        // Add user to the Map if not already present
-                                        if (!uniqueHarborMates.has(otherUser.id)) {
-                                            uniqueHarborMates.set(otherUser.id, otherUser);
-                                        }
-                                    }
-                                });
-
-                                // Convert the Map values to an array
-                                return Array.from(uniqueHarborMates.values());
-                            };
+                            //     // Convert the Map values to an array
+                            //     return Array.from(uniqueHarborMates.values());
+                            // };
 
 
 
                             console.log("harborMatesData", harborMates);
-                            const filteredHarborMates = filterHarborMates();
+                            const filteredHarborMates = Object.values(harborMatesDetails);
                             console.log('filteredHarborMates:', filteredHarborMates);
 
                             set({

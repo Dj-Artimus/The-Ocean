@@ -38,8 +38,8 @@ const LeftSideBar = ({ styles }) => {
         </h1>
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
           {/* USERS PROFILE IN anchors STARTS HERE */}
-          {/* {harborMatesData?.map((data) => ( */}
-          {Array.from(communicatorDetails.values())?.map((data) => (
+          {/* {Array.from(communicatorDetails.values())?.map((data) => ( */}
+          {harborMatesData?.map((data) => (
             <UserMsgProfile
               key={data?.id}
               avatar_url={data?.avatar?.split("<|>")[0]}
