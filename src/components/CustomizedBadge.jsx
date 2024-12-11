@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 const StyledBadge = styled(Badge)(() => ({
   "& .MuiBadge-badge": {
     right: -3,
-    top: 13,
+    top: 19,
     border: `1.5px solid`,
     padding: "0 4px",
   },
