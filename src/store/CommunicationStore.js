@@ -120,8 +120,7 @@ export const CommunicationStore = create(
                                 ],
                             };
 
-                            toast.caller(newMessage.content)
-                            toast.custom(newMessage.content)
+                            toast.success(newMessage.content)
                             
                         }
                         else if (eventType === 'UPDATE') {

@@ -29,7 +29,7 @@ const MessageReceived = ({ content, created_at, isRead }) => {
             )}
           </div>
         </div>
-        <p className="float-end">{content} </p>
+        <p className="">{content} </p>
       </div>
     </div>
   );
