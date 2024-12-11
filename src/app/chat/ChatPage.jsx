@@ -362,22 +362,6 @@ export default function ChatPage() {
                     )}
                   </div>
                 )}
-                <div className="flex flex-col">
-                  <MessageReceived
-                    // key={msg.id}
-                    content={"msg.content lorehjk hhk khlkjfj jhgkjg"}
-                    // created_at={msg.created_at}
-                    isRead={false}
-                  />
-                  <MessageSent
-                    // key={msg.id}
-                    content={
-                      "msg.content lorehjk hhk khlkjfj jhgkjg ixed top-[1px] left-[1px] z-30 bg-blue-500 dark:bg-blue-700 bg-opacity-50 backdrop-blur-sm rounded-tl-none rounded-xl p-[2px] cursor-pointe"
-                    }
-                    // created_at={msg.created_at}
-                    isRead={false}
-                  />
-                </div>
                 {/* MESSAGES END HERE  */}
 
                 <div
