@@ -117,10 +117,10 @@ export const CommunicationStore = create(
                         const currentCommunicatorDetails = { ...get().communicatorDetails };
 
                         if (eventType === 'INSERT') {
-                            currentCommunicatorDetails[communicatorId] = {
-                                ...currentCommunicatorDetails[communicatorId],
+                            currentCommunicatorDetails[newMessage.receiver_id] = {
+                                ...currentCommunicatorDetails[newMessage.receiver_id],
                                 messages: [
-                                    ...(currentCommunicatorDetails[communicatorId]?.messages || []),
+                                    ...(currentCommunicatorDetails[newMessage.receiver_id]?.messages || []),
                                     newMessage,
                                 ],
                             };
@@ -132,9 +132,9 @@ export const CommunicationStore = create(
 
                             const updatedMessage = payload.new;
 
-                            currentCommunicatorDetails[communicatorId] = {
-                                ...currentCommunicatorDetails[communicatorId],
-                                messages: currentCommunicatorDetails[communicatorId]?.messages?.map((msg) =>
+                            currentCommunicatorDetails[updatedMessage.receiver_id] = {
+                                ...currentCommunicatorDetails[updatedMessage.receiver_id],
+                                messages: currentCommunicatorDetails[updatedMessage.receiver_id]?.messages?.map((msg) =>
                                     msg.id === updatedMessage.id ? updatedMessage : msg
                                 ),
                             };

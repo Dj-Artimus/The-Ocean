@@ -223,7 +223,7 @@ export default function ChatPage() {
       {/* MAIN CONTENT STARTS HERE */}
 
       <div className="h-full relative overflow-x-hidden bg-background dark:bg-d_background lg:bg-transparent flex flex-col w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 pt-0 lg:pt-[6px] ">
-        {communicatorId ? (
+        {!communicatorId ? (
           <div className="my-3 border flex flex-col min-h-[50%] h-full bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar"></div>
         ) : (
           <>
