@@ -68,13 +68,6 @@ export default function ReactHomePage() {
     }
   }, [GetFeedDroplets, hasMore, page, setFeedDroplets]);
 
-  const handleRefresh = async () => {
-    setPage(0); // Reset pagination
-    setHasMore(true); // Allow fetching more
-    setFeedDroplets([]);
-    await GetFeedDroplets(0, 6); // Fetch initial data again
-  };
-
   useEffect(() => {
     console.log("Has More:", hasMore);
     console.log("Current Page:", page);

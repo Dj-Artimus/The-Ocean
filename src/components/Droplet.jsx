@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useSwipeable } from "react-swipeable";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import AssistantIcon from "@mui/icons-material/Assistant";
@@ -11,10 +10,7 @@ import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded
 import AssistantOutlinedIcon from "@mui/icons-material/AssistantOutlined";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { getPlatformIcon } from "@/utils/PlatformIconGetter";
-import VideoElement from "./VideoElement";
-import DropletContentElement from "./DropletContentElement";
-import { Router } from "next/router";
-import { CycloneRounded, MoreVert, Sailing } from "@mui/icons-material";
+import { MoreVert, Sailing } from "@mui/icons-material";
 import { DropletStore } from "@/store/DropletStore";
 import { UserStore } from "@/store/UserStore";
 import UILoader from "./UILoader";
@@ -24,6 +20,7 @@ import DropletLoader from "./DropletLoader";
 import { useRouter } from "next/navigation";
 import { getTime } from "@/utils/TimeAndCountFormater";
 import Image from "next/image";
+import ContentAndMediaElement from "./ContentAndMediaElement";
 
 const Droplet = ({
   droplet_id,
@@ -43,10 +40,10 @@ const Droplet = ({
   redrops,
 }) => {
   const {
-    setImgViewerSources,
+
     rippleDrawerOpen,
     setIsRippleDrawerOpen,
-    setImgViewerIndex,
+
     setRippleDrawerDropletId,
     ripplesRefreshId,
     setContentToEdit,
@@ -83,46 +80,10 @@ const Droplet = ({
   const [isGemming, setIsGemming] = useState(false);
   const [isRippleInitiated, setIsRippleInitiated] = useState(false);
   const [isAnchoring, setIsAnchoring] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0); // For image slider navigation
-  const [currentVideo, setCurrentVideo] = useState(0); // For video slider navigation
 
   const [isDropletLoading, setIsDropletLoading] = useState(true);
 
   const redirect = useRouter();
-
-  // Handles image slider navigation
-  const handleImageChange = useCallback(
-    (index) => {
-      setCurrentImage(index);
-    },
-    [setCurrentImage]
-  );
-
-  // Handles video slider navigation
-  const handleVideoChange = useCallback(
-    (index) => {
-      setCurrentVideo(index);
-    },
-    [setCurrentVideo]
-  );
-
-  // Swipe handlers
-  const swipeHandlersForImages = useSwipeable({
-    onSwipedLeft: () => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    },
-    onSwipedRight: () => {
-      setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-    },
-  });
-
-  const swipeHandlersForVideos = useSwipeable({
-    onSwipedLeft: () =>
-      setCurrentVideo((prev) => Math.min(videos.length - 1, prev + 1)),
-    onSwipedRight: () => setCurrentVideo((prev) => Math.max(0, prev - 1)),
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
-  });
 
   const handleAnchor = useCallback(
     async (anchoring_id) => {
@@ -355,71 +316,17 @@ const Droplet = ({
           {/* HEADING BAR ENDS HERE */}
         </div>
         <hr className="mx-4 mt-1 border-slate-700" />
+
         <div className="px-4 py-3 pb-4">
-          {/*  DROPLET CONTENT STARTS HERE  */}
-          <DropletContentElement key={Router.asPath} content={content} />
-          {/*  DROPLET CONTENT ENDS HERE  */}
-          {/* Image Gallery or Slider */}
-          <div className="relative">
-            {/* Slider image display */}
-            {images?.length > 0 && (
-              <img
-                src={
-                  images[currentImage]?.split("<|>")[0]
-                }
-                alt={`Image ${currentImage + 1}`}
-                onClick={() => {
-                  setImgViewerIndex(currentImage);
-                  setImgViewerSources(images);
-                }}
-                {...swipeHandlersForImages}
-                className="rounded-xl shadow shadow-slate-500 p-[2px] m-auto"
-              />
-            )}
-            {/* Dot navigation */}
-            {images?.length > 1 && (
-              <div className="flex justify-center mt-2 space-x-2">
-                {images?.map((_, index) => (
-                  <span
-                    key={index}
-                    onClick={() => handleImageChange(index)}
-                    className={`h-2 w-2 rounded-full cursor-pointer ${
-                      index === currentImage ? "bg-blue-600" : "bg-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Video Gallery or Slider */}
-          {videos?.length > 1 ? (
-            <div className="relative mt-2">
-              {/* Slider video display */}
-              <VideoElement
-                videos={videos}
-                currentVideo={currentVideo}
-                swipeHandlers={swipeHandlersForVideos}
-              />
-              {/* Dot navigation for video */}
-              <div className="flex justify-center mt-2 space-x-2">
-                {videos?.map((_, index) => (
-                  <span
-                    key={index}
-                    onClick={() => handleVideoChange(index)}
-                    className={`h-2 w-2 rounded-full cursor-pointer ${
-                      index === currentVideo ? "bg-blue-600" : "bg-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : (
-            // Single video display
-            videos[0] && (
-              <VideoElement videos={videos} currentVideo={currentVideo} />
-            )
-          )}
+          {/*  DROPLET CONTENT AND MEDIA STARTS HERE  */}
+          <ContentAndMediaElement
+            content={content}
+            images={images}
+            videos={videos}
+          />
+          {/*  DROPLET CONTENT AND MEDIA ENDS HERE  */}
         </div>
+
         <hr className="mx-4 mt-1 border-slate-700" />
         <div className="flex w-full justify-between items-center px-5 sm:px-10 py-4">
           <div className="flex items-center gap-2">

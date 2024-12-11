@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const DropletContentElement = ({ content }) => {
+const ContentElement = ({ content }) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const contentRef = useRef(null);
@@ -55,4 +55,4 @@ const DropletContentElement = ({ content }) => {
   );
 };
 
-export default DropletContentElement;
+export default ContentElement;

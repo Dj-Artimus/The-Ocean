@@ -22,7 +22,7 @@ const DropletModal = () => {
     setVidViewerIndex,
     setImgViewerIndex,
   } = UIStore();
-  const { FileUploader } = UserStore();
+  const { UploadMedia } = UserStore();
   const { DropDroplet } = DropletStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -106,28 +106,28 @@ const DropletModal = () => {
     }
   };
 
-  const uploadMedia = async (media, setMedia) => {
-    if (media.length === 0) return;
+  // const uploadMedia = async (media, setMedia) => {
+  //   if (media.length === 0) return;
 
-    const uploadFile = media.map(async (fileData) => {
-      if (!fileData.file) return null; // Skip if no file
+  //   const uploadFile = media.map(async (fileData) => {
+  //     if (!fileData.file) return null; // Skip if no file
 
-      const uploadedFile = await FileUploader(
-        fileData.storageBucket,
-        fileData.file
-      );
+  //     const uploadedFile = await FileUploader(
+  //       fileData.storageBucket,
+  //       fileData.file
+  //     );
 
-      return {
-        ...fileData,
-        path: uploadedFile?.path,
-        url: uploadedFile?.url,
-      };
-    });
+  //     return {
+  //       ...fileData,
+  //       path: uploadedFile?.path,
+  //       url: uploadedFile?.url,
+  //     };
+  //   });
 
-    const uploadedAllFiles = await Promise.all(uploadFile); // Wait for all uploads
-    setMedia(uploadedAllFiles); // Update state with uploaded paths/URLs
-    return uploadedAllFiles;
-  };
+  //   const uploadedAllFiles = await Promise.all(uploadFile); // Wait for all uploads
+  //   setMedia(uploadedAllFiles); // Update state with uploaded paths/URLs
+  //   return uploadedAllFiles;
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -141,8 +141,8 @@ const DropletModal = () => {
 
     setIsMediaFileUploading(true);
 
-    const images = await uploadMedia(dropletImages, setDropletImages);
-    const videos = await uploadMedia(dropletVideos, setDropletImages);
+    const images = await UploadMedia(dropletImages, setDropletImages);
+    const videos = await UploadMedia(dropletVideos, setDropletImages);
 
     setIsMediaFileUploading(false);
 
@@ -204,7 +204,7 @@ const DropletModal = () => {
                 <div className="relative">
                   {dropletImages[0]?.source && (
                     <img
-                      alt='attached img'
+                      alt="attached img"
                       src={dropletImages[0]?.source}
                       onClick={() => {
                         console.log(dropletImages);

@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserStore } from "./UserStore";
 import toast from "react-hot-toast";
+import { errorToast } from "@/components/ToasterProvider";
 
 const supabase = createClient();
 
@@ -58,23 +59,27 @@ export const CommunicationStore = create(
         },
 
 
-        SendMessage: async (content) => {
+        SendMessage: async (msgData) => {
             try {
                 const communicatorId = get().communicatorId;
 
 
-                if (communicatorId && content) {
+                if (communicatorId && msgData) {
                     console.log('communicatorId from the send msg store', communicatorId)
-                    console.log('content from the send msg store', content)
+                    console.log('content from the send msg store', msgData)
 
                     const user = UserStore.getState().profileData;
 
-                    const { data, error } = await supabase.schema("Ocean").from('Message').insert({ content, sender_id: user.id, receiver_id: communicatorId }).select('*');
+                    const { data, error } = await supabase.schema("Ocean").from('Message').insert({ ...msgData, sender_id: user.id, receiver_id: communicatorId }).select('*');
 
-                    if (error) console.log('error from the send msg', error)
+                    if (error) {
+                        console.log('error from the send msg', error);
+                        errorToast(`error to send message: ${error.message} `);
+                        return false;
+                    }
 
                     console.log(' sending the message data', data)
-                    return data;
+                    return true;
                 }
             } catch (error) {
                 console.log(' catch error from send msg', error)
@@ -121,7 +126,7 @@ export const CommunicationStore = create(
                             };
 
                             toast.success(newMessage.content)
-                            
+
                         }
                         else if (eventType === 'UPDATE') {
 

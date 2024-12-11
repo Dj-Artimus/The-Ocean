@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DropletContentElement from "./DropletContentElement";
+import ContentElement from "./ContentElement";
 import RippleContentElement from "./RippleContentElement";
 import Image from "next/image";
 

@@ -11,12 +11,13 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import "../globals.css";
 import MessageSent from "@/components/MessageSent";
 import MessageReceived from "@/components/MessageReceived";
-import { ArrowBack } from "@mui/icons-material";
+import { AddCircle, ArrowBack, ImageRounded, Movie } from "@mui/icons-material";
 import Navbar from "@/components/Navbar";
 import InputTextarea from "@/components/InputTextArea";
 import { UIStore } from "@/store/UIStore";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
+import { errorToast } from "@/components/ToasterProvider";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -30,6 +31,13 @@ export default function ChatPage() {
     setContentEditId,
     setIsMoreOptionsModalOpen,
     setContentToEditType,
+    setIsMediaFileUploading,
+    isProcessing,
+    setIsProcessing,
+    setImgViewerSources,
+    setVidViewerSources,
+    setVidViewerIndex,
+    setImgViewerIndex,
   } = UIStore();
 
   const {
@@ -43,23 +51,86 @@ export default function ChatPage() {
     FetchCommunicationMessages,
   } = CommunicationStore();
 
-  const { profileData, subscribeToOnlineStatus, setOceaniteProfileData } =
-    UserStore();
+  const {
+    profileData,
+    subscribeToOnlineStatus,
+    setOceaniteProfileData,
+    UploadMedia,
+  } = UserStore();
 
-  const [messageInput, setMessageInput] = useState("");
+  const [isMediaAttacherOpen, setIsMediaAttacherOpen] = useState(false);
+
   const [isMsgSending, setIsMsgSending] = useState(false);
+  const [messageInput, setMessageInput] = useState("");
+  const [messageImages, setMessageImages] = useState([]);
+  const [messageVideos, setMessageVideos] = useState([]);
+
   const [isOnline, setIsOnline] = useState(false);
+
   const messagesRef = useRef(null);
+  const selectImages = useRef();
+  const selectVideos = useRef();
 
   const handleClick = () => {
     console.log("communicatorId", communicatorId);
     console.log("communicatorDetails", communicatorDetails);
   };
 
+  const revokeURLs = () => {
+    // Revoke URLs for images
+    messageImages &&
+      messageImages.forEach((image) => {
+        if (image.source) URL.revokeObjectURL(image.source);
+      });
+
+    // Revoke URLs for videos
+    messageVideos &&
+      messageVideos.forEach((video) => {
+        if (video.source) URL.revokeObjectURL(video.source);
+      });
+  };
+
+  const handleFileChange = async (e, type) => {
+    type === "images" ? setMessageImages([]) : setMessageVideos([]);
+    const files = Array.from(e.target.files); // Convert FileList to an array
+    if (!files.length) return;
+
+    const updatedFiles = files.map((file) => ({
+      source: URL.createObjectURL(file), // Temporary URL for preview
+      file,
+      path: null, // Set later
+      storageBucket: type === "images" ? "messages_Images" : "messages_Videos",
+    }));
+
+    if (type === "images") {
+      setMessageImages((prev) => [...prev, ...updatedFiles]);
+    } else if (type === "videos") {
+      setMessageVideos((prev) => [...prev, ...updatedFiles]);
+    }
+  };
+
   const handleSendMessage = async () => {
     setIsMsgSending(true);
-    const send = await SendMessage(messageInput);
-    console.log(" message sent successfully", send);
+
+    setIsMediaFileUploading(true);
+
+    const images = await UploadMedia(messageImages, setMessageImages);
+    const videos = await UploadMedia(messageVideos, setMessageImages);
+
+    setIsMediaFileUploading(false);
+
+    const isSend = await SendMessage({
+      content: messageInput.trim(),
+      images: images?.map((img) => `${img.url}<|>${img.path}`) || [],
+      videos: videos?.map((vid) => `${vid.url}<|>${vid.path}`) || [],
+    });
+    if (isSend) {
+      revokeURLs();
+      setMessageImages([]);
+      setMessageVideos([]);
+    } else {
+      errorToast("Failed to drop the droplet.");
+    }
     setIsMsgSending(false);
     setMessageInput("");
   };
@@ -119,7 +190,7 @@ export default function ChatPage() {
       {isMsgsOpen && (
         <Navbar
           navStyle={
-            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.2%] sm:rounded-t-2xl z-20 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[1%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
+            "fixed -bottom-2 pb-2 px-[2px] sm:me-1 lg:me-0 flex w-full sm:w-[74%] md:w-[79%] lg:w-[65.7%] xl:w-[51%] xl1:w-[51.2%] sm:rounded-t-2xl z-20 bg-primary dark:bg-d_primary border-t border-slate-700 translate-x-1/2 right-1/2 lg:right-[0.3%] lg:translate-x-0 xl:right-auto xl:left-[26.25%] xl1:left-[26.8%] lg:-top-[3px] lg:bottom-auto lg:rounded-b-2xl lg:pb-0 lg:rounded-t-none lg:border-b lg:border-t-0 justify-between overflow-y-hidden"
           }
         />
       )}
@@ -152,7 +223,7 @@ export default function ChatPage() {
       {/* MAIN CONTENT STARTS HERE */}
 
       <div className="h-full relative overflow-x-hidden bg-background dark:bg-d_background lg:bg-transparent flex flex-col w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 pt-0 lg:pt-[6px] ">
-        {!communicatorId ? (
+        {communicatorId ? (
           <div className="my-3 border flex flex-col min-h-[50%] h-full bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar"></div>
         ) : (
           <>
@@ -269,8 +340,10 @@ export default function ChatPage() {
                     {communicatorDetails[communicatorId]?.messages?.map((msg) =>
                       msg.sender_id === profileData.id ? (
                         <MessageSent
-                          content={msg.content}
                           key={msg.id}
+                          content={msg.content}
+                          images={msg.images}
+                          videos={msg.videos}
                           created_at={msg.created_at}
                           isRead={msg.is_read}
                           handleMoreOptionsClick={handleMoreOptionsClick}
@@ -280,6 +353,8 @@ export default function ChatPage() {
                         <MessageReceived
                           key={msg.id}
                           content={msg.content}
+                          images={msg.images}
+                          videos={msg.videos}
                           created_at={msg.created_at}
                           isRead={msg.is_read}
                         />
@@ -287,7 +362,22 @@ export default function ChatPage() {
                     )}
                   </div>
                 )}
-
+                <div className="flex flex-col">
+                  <MessageReceived
+                    // key={msg.id}
+                    content={"msg.content lorehjk hhk khlkjfj jhgkjg"}
+                    // created_at={msg.created_at}
+                    isRead={false}
+                  />
+                  <MessageSent
+                    // key={msg.id}
+                    content={
+                      "msg.content lorehjk hhk khlkjfj jhgkjg ixed top-[1px] left-[1px] z-30 bg-blue-500 dark:bg-blue-700 bg-opacity-50 backdrop-blur-sm rounded-tl-none rounded-xl p-[2px] cursor-pointe"
+                    }
+                    // created_at={msg.created_at}
+                    isRead={false}
+                  />
+                </div>
                 {/* MESSAGES END HERE  */}
 
                 <div
@@ -296,14 +386,109 @@ export default function ChatPage() {
                 ></div>
               </div>
             </div>
-            <div className=" overflow-hidden rounded-xl flex-shrink-0 mb-3">
-              <InputTextarea
-                input={messageInput}
-                setInput={setMessageInput}
-                handleSubmit={handleSendMessage}
-                isProcessing={isMsgSending}
-                placeholder={"Write a Message..."}
-              />
+            <div className=" overflow-hidden rounded-xl flex-shrink-0 mb-3 flex items-center gap-2">
+              <div className="">
+                <div
+                  className={`absolute bottom-0 flex gap-1 xs1:gap-2 xs2:gap-4 text-slate-800 dark:text-slate-200 bg-blue-600 bg-opacity-40 backdrop-blur-md rounded-lg p-2 pt-14 transition-all duration-500 ${
+                    isMediaAttacherOpen
+                      ? "scale-100 -translate-y-24 translate-x-[11px] opacity-100"
+                      : "scale-0 opacity-0 -translate-x-10"
+                  } `}
+                >
+                  <div className="relative">
+                    {messageImages[0]?.source && (
+                      <img
+                        alt="attached img"
+                        src={messageImages[0]?.source}
+                        onClick={() => {
+                          console.log(messageImages);
+                          const images = messageImages.map((img) => {
+                            return img.source;
+                          });
+                          setImgViewerSources(images);
+                          setImgViewerIndex(0);
+                        }}
+                        className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
+                      />
+                    )}
+                    <ImageRounded
+                      sx={{
+                        width: "44px",
+                        height: "44px",
+                      }}
+                      onClick={() => {
+                        selectImages.current.click();
+                      }}
+                    />
+                    <input
+                      ref={selectImages}
+                      type="file"
+                      multiple
+                      name="images"
+                      accept="image/*" // Allow only images
+                      className="hidden"
+                      onChange={(e) => handleFileChange(e, "images")}
+                    />
+                  </div>
+                  <div className="relative">
+                    {messageVideos[0]?.source && (
+                      <video
+                        src={messageVideos[0]?.source}
+                        onClick={() => {
+                          const videos = messageVideos.map((vid) => {
+                            return vid.source;
+                          });
+                          setVidViewerSources(videos);
+                          setVidViewerIndex(0);
+                        }}
+                        controls={false}
+                        className=" absolute rounded-lg h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
+                      />
+                    )}
+                    <Movie
+                      onClick={() => {
+                        selectVideos.current.click();
+                      }}
+                      sx={{
+                        width: "44px",
+                        height: "44px",
+                      }}
+                    />
+                    <input
+                      ref={selectVideos}
+                      type="file"
+                      multiple
+                      name="videos"
+                      accept="video/*" // Allow only images
+                      className="hidden"
+                      onChange={(e) => handleFileChange(e, "videos")}
+                    />
+                  </div>
+                </div>
+                <div
+                  className="text-blue-500"
+                  onClick={() => {
+                    setIsMediaAttacherOpen(!isMediaAttacherOpen);
+                  }}
+                >
+                  <AddCircle
+                    sx={{
+                      width: "36px",
+                      height: "36px",
+                      marginLeft: "2px",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="w-full">
+                <InputTextarea
+                  input={messageInput}
+                  setInput={setMessageInput}
+                  handleSubmit={handleSendMessage}
+                  isProcessing={isMsgSending}
+                  placeholder={"Write a Message..."}
+                />
+              </div>
             </div>
           </>
         )}

@@ -339,6 +339,31 @@ export const UserStore =
                     }
                 },
 
+                UploadMedia: async (media, setMedia) => {
+                    if (media.length === 0) return;
+
+                    const uploadFile = media.map(async (fileData) => {
+                        if (!fileData.file) return null; // Skip if no file
+
+                        const FileUploader = get().FileUploader; 
+
+                        const uploadedFile = await FileUploader(
+                            fileData.storageBucket,
+                            fileData.file
+                        );
+
+                        return {
+                            ...fileData,
+                            path: uploadedFile?.path,
+                            url: uploadedFile?.url,
+                        };
+                    });
+
+                    const uploadedAllFiles = await Promise.all(uploadFile); // Wait for all uploads
+                    setMedia(uploadedAllFiles); // Update state with uploaded paths/URLs
+                    return uploadedAllFiles;
+                },
+
                 GetInitialOceanites: async () => {
                     try {
                         const { data, error } = await supabase.schema('Ocean').from('Profile').select('*').range(0, 9);
