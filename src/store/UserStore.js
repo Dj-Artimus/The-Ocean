@@ -141,29 +141,32 @@ export const UserStore =
                             const updateCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                             updateCommunicatorDetails(harborMatesDetails);
 
-                            const filterHarborMates = () => {
-                                const uniqueHarborMates = []
-                                harborMates?.forEach(harborMate => {
-                                    uniqueHarborMates?.forEach(uniqueHarborMate => {
-                                        if (harborMate?.anchoring_id?.id === profile.id) {
-                                            if (uniqueHarborMate?.id !== harborMate?.anchor_id.id) uniqueHarborMates.push(harborMate.anchor_id)
-                                        } else {
-                                            if (uniqueHarborMate?.id !== harborMate?.anchoring_id.id) uniqueHarborMates.push(harborMate.anchor_id)
-                                        }
-                                    });
-                                });
+                            // const filterHarborMates = () => {
+                            //     const uniqueHarborMates = []
+                            //     harborMates?.forEach(harborMate => {
+                            //         uniqueHarborMates?.forEach(uniqueHarborMate => {
+                            //             if (harborMate?.anchoring_id?.id === profile.id) {
+                            //                 if (uniqueHarborMate?.id !== harborMate?.anchor_id.id) uniqueHarborMates.push(harborMate.anchor_id)
+                            //             } else {
+                            //                 if (uniqueHarborMate?.id !== harborMate?.anchoring_id.id) uniqueHarborMates.push(harborMate.anchor_id)
+                            //             }
+                            //         });
+                            //     });
 
-                                return uniqueHarborMates;
-                            }
+                            //     return uniqueHarborMates;
+                            // }
 
-                            const filteredHarborMates = filterHarborMates()
+                            // const filteredHarborMates = filterHarborMates()
                             // Update state
+                            
+                            
                             console.log('filteredHarborMates', filteredHarborMates)
                             console.log("harborMatesData", harborMates);
+                            console.log("Array.from(harborMatesDetails.values()", Array.from(harborMatesDetails.values()));
 
                             set({
                                 profileData: profile,
-                                harborMatesData: filteredHarborMates,
+                                harborMatesData: Array.from(harborMatesDetails.values()),
                                 anchoringsIds: ids
                             });
 
