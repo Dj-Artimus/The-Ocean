@@ -160,7 +160,6 @@ export const UserStore =
                             // Update state
                             
                             
-                            console.log('filteredHarborMates', filteredHarborMates)
                             console.log("harborMatesData", harborMates);
                             console.log("Array.from(harborMatesDetails.values()", Array.from(harborMatesDetails.values()));
 

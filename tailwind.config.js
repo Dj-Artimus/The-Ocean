@@ -59,4 +59,13 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    "text-gray-900", // Example class for light mode text
+    "text-gray-100", // Example class for dark mode text
+    "bg-gray-50",    // Background color
+    "dark:bg-d_secondary", // Custom dark mode class
+    "dark:text-gray-100",  // Custom dark mode text
+    "hover:bg-blue-500", "rounded-2xl", "py-3" , "text-gray-700", "dark:text-gray-200"  // Hover state for buttons
+    // Add any other classes you used in your components
+  ],
 };
