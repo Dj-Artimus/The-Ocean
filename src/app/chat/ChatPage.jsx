@@ -267,21 +267,23 @@ export default function ChatPage() {
                 ) : (
                   communicatorDetails[communicatorId]?.messages?.map((msg) =>
                     msg.sender_id === profileData.id ? (
-                      <MessageSent
-                        content={msg.content}
-                        key={msg.id}
-                        created_at={msg.created_at}
-                        isRead={msg.is_read}
-                        handleMoreOptionsClick={handleMoreOptionsClick}
-                        msg={msg}
-                      />
+                      <div className="w-full" key={msg.id}>
+                        <MessageSent
+                          content={msg.content}
+                          created_at={msg.created_at}
+                          isRead={msg.is_read}
+                          handleMoreOptionsClick={handleMoreOptionsClick}
+                          msg={msg}
+                        />
+                      </div>
                     ) : (
-                      <MessageReceived
-                        key={msg.id}
-                        content={msg.content}
-                        created_at={msg.created_at}
-                        isRead={msg.is_read}
-                      />
+                      <div className="w-full" key={msg.id}>
+                        <MessageReceived
+                          content={msg.content}
+                          created_at={msg.created_at}
+                          isRead={msg.is_read}
+                        />
+                      </div>
                     )
                   )
                 )}

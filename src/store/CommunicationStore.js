@@ -98,7 +98,7 @@ export const CommunicationStore = create(
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${user.id},${communicatorIds.toLocaleString()})`
+                        filter: `sender_id=in.(${user.id},${communicatorId})`
                     },
                     (payload) => {
                         console.log('Realtime event:', payload);
