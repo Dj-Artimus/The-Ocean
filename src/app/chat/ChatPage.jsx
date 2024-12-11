@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 // import { supabase } from "@/lib/supabase";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import LeftSideBar from "@/components/LeftSideBar";
 import RightSideBar from "@/components/RightSideBar";
@@ -49,6 +49,7 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState("");
   const [isMsgSending, setIsMsgSending] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
+  const messagesRef = useRef(null) 
 
   const handleClick = () => {
     console.log("communicatorId", communicatorId);
@@ -90,12 +91,17 @@ export default function ChatPage() {
     setIsMoreOptionsModalOpen(true);
   };
 
+  const scrollToBottom = useCallback(() => {
+    messagesRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, [messagesRef] )
+
   useEffect(() => {
+    scrollToBottom();
     const messagesChannel = subscribeToMessages();
     return () => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
-  }, [communicatorDetails, subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
+  }, [communicatorDetails, subscribeToMessages, scrollToBottom]); // Add 'subscribeToMessages' as a dependency
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -250,7 +256,7 @@ export default function ChatPage() {
                 </div>
                 <hr className="mx-4 mt-[2px] border-slate-700" />
               </div>
-              <div className="px-4 py-3 h-full overflow-y-auto customScrollbar ">
+              <div ref={messagesRef} className="px-4 py-3 h-full overflow-y-auto customScrollbar ">
                 {/* MESSAGES START HERE  */}
 
                 {communicatorDetails[communicatorId]?.messages?.length ===
@@ -266,7 +272,8 @@ export default function ChatPage() {
                         key={msg.id}
                         created_at={msg.created_at}
                         isRead={msg.is_read}
-                        handleMoreOptionsClick={handleMoreOptionsClick(msg)}
+                        handleMoreOptionsClick={handleMoreOptionsClick}
+                        msg = {msg}
                       />
                     ) : (
                       <MessageReceived
