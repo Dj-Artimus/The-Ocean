@@ -39,7 +39,7 @@ const LeftSideBar = ({ styles }) => {
           {/* USERS PROFILE IN anchors STARTS HERE */}
           {harborMatesData?.map((data) => (
             <UserMsgProfile
-              key={datd?.id}
+              key={data?.id}
               avatar_url={data?.avatar?.split("<|>")[0]}
               name={data.name}
               wave={data?.wave}

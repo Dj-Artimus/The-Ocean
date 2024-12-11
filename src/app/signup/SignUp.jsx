@@ -96,6 +96,22 @@ const SignUp = () => {
                 },
                 
               }}
+              sx={{
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'secondary.main' : '#f8f9fa',
+                borderRadius: '18px',
+                input: {
+                  color: (theme) => theme.palette.mode === 'dark' ? '#fff' : '#000',
+                },
+                '.MuiInputLabel-root': {
+                  color: (theme) => theme.palette.mode === 'dark' ? '#bbb' : '#333',
+                },
+                '.MuiOutlinedInput-notchedOutline': {
+                  borderColor: (theme) => theme.palette.mode === 'dark' ? '#444' : '#ccc',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: (theme) => theme.palette.primary.main,
+                },
+              }}
             />
             <TextField
               fullWidth
