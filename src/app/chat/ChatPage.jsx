@@ -265,27 +265,27 @@ export default function ChatPage() {
                     Say hi 👋 to start the conversation.{" "}
                   </div>
                 ) : (
-                  communicatorDetails[communicatorId]?.messages?.map((msg) =>
-                    msg.sender_id === profileData.id ? (
-                      <div className="w-full" key={msg.id}>
+                  <div className="min-w-full">
+                    {communicatorDetails[communicatorId]?.messages?.map((msg) =>
+                      msg.sender_id === profileData.id ? (
                         <MessageSent
                           content={msg.content}
+                          key={msg.id}
                           created_at={msg.created_at}
                           isRead={msg.is_read}
                           handleMoreOptionsClick={handleMoreOptionsClick}
                           msg={msg}
                         />
-                      </div>
-                    ) : (
-                      <div className="w-full" key={msg.id}>
+                      ) : (
                         <MessageReceived
+                          key={msg.id}
                           content={msg.content}
                           created_at={msg.created_at}
                           isRead={msg.is_read}
                         />
-                      </div>
-                    )
-                  )
+                      )
+                    )}
+                  </div>
                 )}
 
                 {/* MESSAGES END HERE  */}
