@@ -84,6 +84,7 @@ export const CommunicationStore = create(
 
             const communicatorId = get().communicatorId;
             const communicatorIds = Object.keys(get().communicatorDetails);
+            console.log('array of communicator ids:', communicatorIds)
             const user = UserStore.getState().profileData;
 
             // if (!communicatorId || !user) return;

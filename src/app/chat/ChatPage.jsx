@@ -265,7 +265,7 @@ export default function ChatPage() {
                     Say hi 👋 to start the conversation.{" "}
                   </div>
                 ) : (
-                  <div className="min-w-full">
+                  <div className="min-w-full flex flex-col">
                     {communicatorDetails[communicatorId]?.messages?.map((msg) =>
                       msg.sender_id === profileData.id ? (
                         <MessageSent
