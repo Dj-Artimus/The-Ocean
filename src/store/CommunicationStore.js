@@ -82,6 +82,7 @@ export const CommunicationStore = create(
 
         subscribeToMessages: () => {
 
+            const communicatorId = Object.keys(get().communicatorId);
             const communicatorIds = Object.keys(get().communicatorDetails);
             const user = UserStore.getState().profileData;
 
@@ -107,10 +108,10 @@ export const CommunicationStore = create(
                         const currentCommunicatorDetails = { ...get().communicatorDetails };
 
                         if (eventType === 'INSERT') {
-                            currentCommunicatorDetails[newMessage.sender_id] = {
-                                ...currentCommunicatorDetails[newMessage.sender_id],
+                            currentCommunicatorDetails[communicatorId] = {
+                                ...currentCommunicatorDetails[communicatorId],
                                 messages: [
-                                    ...(currentCommunicatorDetails[newMessage.sender_id]?.messages || []),
+                                    ...(currentCommunicatorDetails[communicatorId]?.messages || []),
                                     newMessage,
                                 ],
                             };

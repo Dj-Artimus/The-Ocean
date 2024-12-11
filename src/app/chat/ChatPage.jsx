@@ -49,7 +49,7 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState("");
   const [isMsgSending, setIsMsgSending] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
-  const messagesRef = useRef(null) 
+  const messagesRef = useRef(null);
 
   const handleClick = () => {
     console.log("communicatorId", communicatorId);
@@ -92,8 +92,8 @@ export default function ChatPage() {
   };
 
   const scrollToBottom = useCallback(() => {
-    messagesRef.current?.scrollIntoView({behavior: 'smooth'});
-  }, [messagesRef] )
+    messagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messagesRef]);
 
   useEffect(() => {
     scrollToBottom();
@@ -256,7 +256,7 @@ export default function ChatPage() {
                 </div>
                 <hr className="mx-4 mt-[2px] border-slate-700" />
               </div>
-              <div ref={messagesRef} className="px-4 py-3 h-full overflow-y-auto customScrollbar ">
+              <div className="px-4 py-3 h-full w-full overflow-y-auto customScrollbar ">
                 {/* MESSAGES START HERE  */}
 
                 {communicatorDetails[communicatorId]?.messages?.length ===
@@ -273,7 +273,7 @@ export default function ChatPage() {
                         created_at={msg.created_at}
                         isRead={msg.is_read}
                         handleMoreOptionsClick={handleMoreOptionsClick}
-                        msg = {msg}
+                        msg={msg}
                       />
                     ) : (
                       <MessageReceived
@@ -288,7 +288,10 @@ export default function ChatPage() {
 
                 {/* MESSAGES END HERE  */}
 
-                <div className="h-3 w-full my-4 float-start"></div>
+                <div
+                  ref={messagesRef}
+                  className="h-3 w-full my-4 float-start"
+                ></div>
               </div>
             </div>
             <div className=" overflow-hidden rounded-xl flex-shrink-0 mb-3">
