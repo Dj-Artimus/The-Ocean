@@ -2,21 +2,18 @@
 
 import {
   Close,
-  Delete,
-  EditNoteRounded,
-  EditRounded,
 } from "@mui/icons-material";
 import React, { useState, useEffect } from "react";
-import { errorToast } from "./ToasterProvider";
-import InputTextarea from "./InputTextArea";
+import { errorToast, successToast } from "./ToasterProvider";
 import { UIStore } from "@/store/UIStore";
-import { DropletStore } from "@/store/DropletStore";
+import Button from "./Button";
 
 const ExpectedVersionModal = () => {
   const {
     isExpectedVersionModalOpen,
     setIsExpectedVersionModalOpen,
     setExpectedVersion,
+    expectedVersion,
   } = UIStore();
 
   const [isVisible, setIsVisible] = useState(false); // For opening animation
@@ -27,18 +24,6 @@ const ExpectedVersionModal = () => {
       setIsVisible(true); // Trigger opening animation
     }
   }, [isExpectedVersionModalOpen]);
-
-  const handleEditToggle = () => {
-    if (!isEdit) {
-      setIsEdit(true);
-      setTimeout(() => setIsEditVisible(true), 50); // Slight delay for smooth entry
-    } else {
-      setIsEditVisible(false);
-      setTimeout(() => {
-        setIsEdit(false);
-      }, 180); // Slight delay for smooth entry
-    }
-  };
 
   const handleClose = () => {
     setIsClosing(true); // Trigger closing animation
@@ -73,10 +58,27 @@ const ExpectedVersionModal = () => {
                 className="size-7 cursor-pointer text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
               />
             </div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
-            quam iste provident quod explicabo reiciendis architecto ipsam est
-            qui! At molestias repudiandae qui obcaecati, voluptate voluptatibus,
-            nemo aut vitae soluta et assumenda! Libero, quod.
+            <div className="">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Accusamus, quam iste provident quod explicabo reiciendis
+                architecto ipsam est qui! At molestias repudiandae qui
+                obcaecati, voluptate voluptatibus, nemo aut vitae soluta et
+                assumenda! Libero, quod.
+              </p>
+              <div
+                onClick={() => {
+                  setExpectedVersion(false);
+                  setIsExpectedVersionModalOpen(false);
+                  successToast(`Expected Versioin Activated`)
+                }}
+              >
+                <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl py-3 text-md">
+                  {" "}
+                  {expectedVersion ? "Deactivate" : "Activate"}{" "}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}

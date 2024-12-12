@@ -47,7 +47,7 @@ const ProfileEditModal = ({ profileData }) => {
   const { CreateProfile, FileUploader, CheckTakenUsernames } = UserStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [usernameStatus, setUsernameStatus] = useState("success");
+  const [usernameStatus, setUsernameStatus] = useState("");
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const router = useRouter();
@@ -120,6 +120,8 @@ const ProfileEditModal = ({ profileData }) => {
     setUsername(value);
     // This is a mock check. In reality, you'd make an API call to your backend here.
     if (value.length < 3) {
+      setUsernameStatus("");
+    } else if (value === profileData?.username) {
       setUsernameStatus("");
     } else if (value.length >= 3) {
       const isUserNameTaken = await CheckTakenUsernames(value);
@@ -283,7 +285,7 @@ const ProfileEditModal = ({ profileData }) => {
                 />
                 {usernameStatus && (
                   <p
-                    className={`text-sm ${
+                    className={`text-sm -my-2 ${
                       usernameStatus === "error"
                         ? "text-red-500"
                         : "text-green-500"

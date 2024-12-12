@@ -10,10 +10,16 @@ import { Switch } from "@mui/joy";
 import { toggleTheme } from "@/utils/ThemeToggle";
 import { UIStore } from "@/store/UIStore";
 import { AuthStore } from "@/store/AuthStore";
+import { successToast } from "./ToasterProvider";
 
 export default function ProfileMenu({ children }) {
-  const { darkModeOn, toggleDarkMode, expectedVersion, setExpectedVersion } =
-    UIStore();
+  const {
+    darkModeOn,
+    toggleDarkMode,
+    expectedVersion,
+    setExpectedVersion,
+    setIsExpectedVersionModalOpen,
+  } = UIStore();
   const { Logout } = AuthStore();
 
   const createHandleMenuClick = (menuItem) => {
@@ -28,7 +34,11 @@ export default function ProfileMenu({ children }) {
         await Logout();
         redirect("/landing-page");
       } else if (menuItem === "ExpectedVersion") {
-        setExpectedVersion(!expectedVersion);
+        if (expectedVersion) {
+          successToast("Expected Version Deactivated");
+          return setExpectedVersion(false);
+        }
+        setIsExpectedVersionModalOpen(true);
       }
     };
   };
@@ -38,7 +48,7 @@ export default function ProfileMenu({ children }) {
       {/* <div className={`dark`}> */}
       <Dropdown>
         <MenuButton>{children}</MenuButton>
-        <Menu >
+        <Menu>
           <MenuItem onClick={createHandleMenuClick("Profile")}>
             View Profile
           </MenuItem>
@@ -102,7 +112,7 @@ const Menu = forwardRef((props, ref) => {
   );
 });
 
-Menu.displayName = 'Menu';
+Menu.displayName = "Menu";
 
 Menu.propTypes = {
   /**
@@ -129,7 +139,7 @@ const MenuButton = forwardRef((props, ref) => {
   );
 });
 
-MenuButton.displayName = 'MenuButton'
+MenuButton.displayName = "MenuButton";
 
 MenuButton.propTypes = {
   /**
@@ -152,10 +162,8 @@ const MenuItem = forwardRef((props, ref) => {
   );
 });
 
-MenuItem.displayName = 'MenuItem';
+MenuItem.displayName = "MenuItem";
 
 MenuItem.propTypes = {
   className: PropTypes.string,
 };
-
-

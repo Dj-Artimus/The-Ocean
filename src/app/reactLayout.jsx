@@ -18,6 +18,7 @@ import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
 import { CssBaseline } from "@mui/material";
+import ExpectedVersionModal from "@/components/ExpectedVersionModal";
 
 const ReactLayout = ({ children }) => {
   const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading } =
@@ -91,6 +92,7 @@ const ReactLayout = ({ children }) => {
           <FilesUploadingLoader />
           {children}
           <RippleDrawer />
+          <ExpectedVersionModal />
           <MoreOptionsModal />
           <ShareOptionsModal />
           {isPageLoading && <PageLoader />}
