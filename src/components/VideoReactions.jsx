@@ -22,7 +22,7 @@ const VideoReactions = ({ video }) => {
     setImgViewerIndex,
     setRippleDrawerDropletId,
     ripplesRefreshId,
-    expectedVersion,
+    oceanVision,
     setDropletIdToShare,
     setIsShareOptionsModalOpen,
     setDropletContentToShare,
@@ -176,7 +176,7 @@ const VideoReactions = ({ video }) => {
         </Button>
         <h1> {video?.stars} </h1>
       </div>
-      {expectedVersion && (
+      {oceanVision && (
         <div className="flex items-center gap-1">
           <RepeatRounded
             className="size-7 cursor-pointer hover:scale-110 active:scale-95"

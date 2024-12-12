@@ -26,7 +26,7 @@ export default function Profile() {
     setIsMsgsOpen,
     isOCardOpen,
     setIsOCardOpen,
-    expectedVersion,
+    oceanVision,
   } = UIStore();
   const treasureRef = useRef();
 
@@ -103,7 +103,7 @@ export default function Profile() {
               anchorings={profileData?.anchorings}
             />
 
-            {expectedVersion && (
+            {oceanVision && (
               <>
                 {/* PROFILE DETAILS ENDS HERE */}
                 <hr className="m-2 border-slate-700" />

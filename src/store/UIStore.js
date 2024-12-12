@@ -9,14 +9,14 @@ export const UIStore = create(
         set({ darkModeOn: mode })
     },
 
-    expectedVersion: false,
-    setExpectedVersion: (state) => {
-        set({ expectedVersion: state })
+    oceanVision: false,
+    setOceanVision: (state) => {
+        set({ oceanVision: state })
     },
 
-    isExpectedVersionModalOpen: false,
-    setIsExpectedVersionModalOpen: (state) => {
-        set({ isExpectedVersionModalOpen: state })
+    isOceanVisionModalOpen: false,
+    setIsOceanVisionModalOpen: (state) => {
+        set({ isOceanVisionModalOpen: state })
     },
     
 

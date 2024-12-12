@@ -16,9 +16,9 @@ export default function ProfileMenu({ children }) {
   const {
     darkModeOn,
     toggleDarkMode,
-    expectedVersion,
-    setExpectedVersion,
-    setIsExpectedVersionModalOpen,
+    oceanVision,
+    setOceanVision,
+    setIsOceanVisionModalOpen,
   } = UIStore();
   const { Logout } = AuthStore();
 
@@ -33,12 +33,12 @@ export default function ProfileMenu({ children }) {
       } else if (menuItem === "Logout") {
         await Logout();
         redirect("/landing-page");
-      } else if (menuItem === "ExpectedVersion") {
-        if (expectedVersion) {
-          successToast("Expected Version Deactivated");
-          return setExpectedVersion(false);
+      } else if (menuItem === "OceanVision") {
+        if (oceanVision) {
+          successToast("Ocean Vision Deactivated");
+          return setOceanVision(false);
         }
-        setIsExpectedVersionModalOpen(true);
+        setIsOceanVisionModalOpen(true);
       }
     };
   };
@@ -60,9 +60,9 @@ export default function ProfileMenu({ children }) {
               Dark Mode <Switch checked={darkModeOn} />
             </div>
           </MenuItem>
-          <MenuItem onClick={createHandleMenuClick("ExpectedVersion")}>
+          <MenuItem onClick={createHandleMenuClick("OceanVision")}>
             <div className="flex items-center gap-2">
-              Expected Version <Switch checked={expectedVersion} />
+              Ocean Vision <Switch checked={oceanVision} />
             </div>
           </MenuItem>
           <MenuItem onClick={createHandleMenuClick("Logout")}>

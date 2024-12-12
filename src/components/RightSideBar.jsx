@@ -9,7 +9,7 @@ import { UserStore } from "@/store/UserStore";
 
 const RightSideBar = ({ styles }) => {
   const { profileData } = UserStore();
-  const { isMsgsOpen, isOCardOpen, expectedVersion } = UIStore();
+  const { isMsgsOpen, isOCardOpen, oceanVision } = UIStore();
 
   return (
     <div
@@ -31,7 +31,7 @@ const RightSideBar = ({ styles }) => {
             wave={profileData?.wave}
           />
 
-           { expectedVersion && <OceanBoard username={profileData?.username} />}
+           { oceanVision && <OceanBoard username={profileData?.username} />}
 
           <OceanScore anchors={profileData?.anchors} anchorings={profileData?.anchorings} />
 

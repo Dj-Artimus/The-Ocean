@@ -25,7 +25,7 @@ export default function ChatPage() {
     isMsgsOpen,
     setIsMsgsOpen,
     isOCardOpen,
-    expectedVersion,
+    oceanVision,
     setIsPageLoading,
     setContentToEdit,
     setContentEditId,
@@ -308,7 +308,7 @@ export default function ChatPage() {
                         className="size-7 hover:text-blue-500 "
                       />
                     </div>
-                    {expectedVersion && (
+                    {oceanVision && (
                       <>
                         {" "}
                         <VoiceChatIcon

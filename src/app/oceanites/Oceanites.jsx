@@ -1,13 +1,11 @@
 "use client";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import NotificationMsg from "@/components/NotificationMsg";
 import "../globals.css";
 import { ArrowBack, Search } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import OceaniteCard from "@/components/OceaniteCard";
 import LeftSideBar from "@/components/LeftSideBar";
-import MsgInputTextarea from "@/components/InputTextArea";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import InputTextarea from "@/components/InputTextArea";

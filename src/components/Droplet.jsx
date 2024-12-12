@@ -52,7 +52,7 @@ const Droplet = ({
     setIsShareOptionsModalOpen,
     setDropletIdToShare,
     setContentToEditType,
-    expectedVersion,
+    oceanVision,
     setDropletContentToShare,
   } = UIStore();
   const {
@@ -220,7 +220,7 @@ const Droplet = ({
   return (
     <div className="">
       {isDropletLoading && <DropletLoader />}
-      <div className="my-3 border bg-foreground dark:bg-d_foreground relative shadow-sm shadow-blue-300 dark:shadow-blue-900 rounded-3xl border-slate-700">
+      <div className="my-3 border bg-foreground dark:bg-d_foreground relative shadow-sm shadow-blue-300 dark:shadow-blue-950 rounded-3xl border-slate-700">
         <div className="flex justify-between items-center px-3 pt-1 rounded-2xl">
           {/* HEADING BAR STARTS HERE */}
           <div className="flex items-center w-full justify-between">
@@ -357,7 +357,7 @@ const Droplet = ({
             <h1>{stars}</h1>
           </div>
 
-          {expectedVersion && (
+          {oceanVision && (
             <div className="flex items-center gap-1">
               <Button>
                 <RepeatRoundedIcon

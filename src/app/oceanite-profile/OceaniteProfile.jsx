@@ -31,7 +31,7 @@ export default function OceaniteProfile() {
     setIsMsgsOpen,
     isOCardOpen,
     setIsOCardOpen,
-    expectedVersion,
+    oceanVision,
     setIsPageLoading,
   } = UIStore();
   const treasureRef = useRef();
@@ -128,7 +128,7 @@ export default function OceaniteProfile() {
                 anchorings={oceaniteProfileData?.anchorings}
               />
 
-              {expectedVersion && (
+              {oceanVision && (
                 <>
                   {/* PROFILE DETAILS ENDS HERE */}
                   <hr className="m-2 border-slate-700" />

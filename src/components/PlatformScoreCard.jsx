@@ -14,7 +14,7 @@ const PlatformScoreCard = ({ username, platform, anchors, anchorings }) => {
         •
       </span>
       <div className="text-text_clr dark:text-d_text_clr ">{getPlatformIcon(platform)}</div>
-      <div className="text-text_clr2 w-14 bg-slate -600 dark:text-d_text_clr2">
+      <div className="text-text_clr2 w-16 bg-slate -600 dark:text-d_text_clr2">
         <div className="flex gap-1">
           <AnchorIcon className="size-4" /> <h1 className=" text-text_clr dark:text-d_text_clr" > {anchors} </h1>
         </div>

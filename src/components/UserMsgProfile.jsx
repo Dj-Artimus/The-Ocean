@@ -9,7 +9,7 @@ import CustomizedBadges from "./CustomizedBadge";
 import Image from "next/image";
 
 const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
-  const { setIsMsgsOpen, expectedVersion } = UIStore();
+  const { setIsMsgsOpen, oceanVision } = UIStore();
   const { setCommunicatorId, FetchUnreadMessagesCount, subscribeToMessages, unreadMsgsCountRefresher } = CommunicationStore();
   const { subscribeToOnlineStatus } = UserStore();
   const [isOnline, setIsOnline] = useState(false);
@@ -78,7 +78,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
           </div>
         </div>
       </div>
-      {expectedVersion && (
+      {oceanVision && (
         <div className="xs1:flex gap-1 translate-x-1 items-center p-1 rounded-xl font-semibold hidden ">
           <VoiceChatIcon
             title="VoiceChat"

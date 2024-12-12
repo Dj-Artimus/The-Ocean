@@ -7,7 +7,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
   return (
     <div className="w-full">
       <div
-        className={` bg-ternary shadow-sm shadow-rose-500 dark:shadow-blue-500 dark:bg-d_foreground max-w-[70%] pt-1 px-3 float-start mb-3 rounded-xl rounded-tl-none ${
+        className={` bg-ternary shadow-sm shadow-rose-300 dark:shadow-blue-900 dark:bg-d_foreground max-w-[70%] pt-1 px-3 float-start mb-3 rounded-xl rounded-tl-none ${
           (images.length !== 0 || videos !== 0) && "pb-3"
         } `}
       >

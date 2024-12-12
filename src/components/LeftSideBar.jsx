@@ -6,10 +6,18 @@ import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import { Insights } from "@mui/icons-material";
 import { CommunicationStore } from "@/store/CommunicationStore";
+import InputTextarea from "./InputTextArea";
 
 const LeftSideBar = ({ styles }) => {
   const { isMsgsOpen, isOCardOpen } = UIStore();
   const { harborMatesData, SubscribeToAnchors } = UserStore();
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const handleSearch = async () => {
+    // const arr = [];
+    // arr.filter( data => data.name.includes(searchKeyword) )
+    return;
+  };
 
   useEffect(() => {
     const anchorsChannel = SubscribeToAnchors();
@@ -36,16 +44,40 @@ const LeftSideBar = ({ styles }) => {
           <Insights className="size-4" /> HarborMates
         </h1>
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
-          {/* USERS PROFILE IN anchors STARTS HERE */}
-          {harborMatesData?.map((data) => (
-            <UserMsgProfile
-              key={data?.id}
-              avatar_url={data?.avatar?.split("<|>")[0]}
-              name={data.name}
-              wave={data?.wave}
-              profile_id={data?.id}
+          <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
+            <InputTextarea
+              placeholder={"Search Oceanite..."}
+              input={searchKeyword}
+              setInput={setSearchKeyword}
+              handleSubmit={handleSearch}
+              type={"search"}
+              submitBtn={
+                <Search className="absolute right-3 bottom-[18px] size-7" />
+              }
             />
-          ))}
+          </div>
+          {/* USERS PROFILE IN anchors STARTS HERE */}
+          {searchKeyword
+            ? harborMatesData
+                ?.filter((data) => data.name.includes(searchKeyword))
+                ?.map((data) => (
+                  <UserMsgProfile
+                    key={data?.id}
+                    avatar_url={data?.avatar?.split("<|>")[0]}
+                    name={data.name}
+                    wave={data?.wave}
+                    profile_id={data?.id}
+                  />
+                ))
+            : harborMatesData?.map((data) => (
+                <UserMsgProfile
+                  key={data?.id}
+                  avatar_url={data?.avatar?.split("<|>")[0]}
+                  name={data.name}
+                  wave={data?.wave}
+                  profile_id={data?.id}
+                />
+              ))}
 
           {/* USERS PROFILE IN anchors ENDS HERE */}
         </div>

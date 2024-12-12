@@ -44,6 +44,6 @@ export const formaterDateAndTime = (time) => {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true // Ensure 12-hour format
-    }).format(new Date(created_at));
+    }).format(new Date(time));
     return formater;
 }

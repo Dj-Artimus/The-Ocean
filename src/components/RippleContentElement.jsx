@@ -10,7 +10,7 @@ import {
 import { UIStore } from "@/store/UIStore";
 
 const RippleContentElement = ({ content, echoes }) => {
-  const { expectedVersion } = UIStore();
+  const { oceanVision } = UIStore();
   const [expanded, setExpanded] = useState(false);
   const [isEchoesAvailabel, setIsEchoesAvailabel] = useState(echoes);
   const [showToggle, setShowToggle] = useState(false);
@@ -62,7 +62,7 @@ const RippleContentElement = ({ content, echoes }) => {
       </div>
 
       <div className="flex justify-between items-center -mb-1 ">
-        {expectedVersion && (
+        {oceanVision && (
           <div className="flex items-center justify-between gap-2 ">
             <div className="flex items-end gap-[10px]">
               <div
