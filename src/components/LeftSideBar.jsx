@@ -20,6 +20,10 @@ const LeftSideBar = ({ styles }) => {
     return;
   };
 
+  const handleOpenCloseAnimation = async () => {
+    // return `${isSearchOpen ? }`
+  }
+
   useEffect(() => {
     const anchorsChannel = SubscribeToAnchors();
     return () => {
@@ -68,7 +72,7 @@ const LeftSideBar = ({ styles }) => {
             className={`w-full transition-all p-2 px-2 mx-auto ${
               !isSearchOpen
                 ? " translate-y-0 scale-100 opacity-100 "
-                : "-translate-y-14 scale-x-0 opacity-0"
+                : "-translate-y-14 scale-0 opacity-0"
             }`}
           >
             <InputTextarea

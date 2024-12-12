@@ -26,7 +26,7 @@ const ContentElement = ({ content }) => {
     <div className=" w-full mx-auto">
       <div
         ref={contentRef}
-        className={`overflow-hidden transition-all duration-300 text-lg`}
+        className={`overflow-hidden transition-all duration-300 text-lg -mb-1`}
         style={{
           maxHeight: expanded
             ? `${contentRef.current.scrollHeight}px`

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 const Login = () => {
   const { Login, OAuthLogin } = AuthStore();
+  const { fetchProfileData } = UserStore();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -31,6 +32,7 @@ const Login = () => {
       const login = await Login(email, password);
       console.log("Form submitted successfully");
       setIsSubmiting(false);
+      login && await fetchProfileData();
       login && router.push('/');
       // Reset the form or redirect the user as necessary
     }
