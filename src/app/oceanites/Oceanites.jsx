@@ -14,7 +14,7 @@ import LeftSideBar from "@/components/LeftSideBar";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import InputTextarea from "@/components/InputTextArea";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchDataForInfiniteScroll, setInfiniteScroll, setScrollListener } from "@/utils/InfiniteScrollSetUp";
 
 const OceaniteAtolls = () => {
