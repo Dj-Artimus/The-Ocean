@@ -36,7 +36,7 @@ const RippleDrawer = () => {
     const ripple = await RippleDroplet(rippleInput);
     setRipplesRefreshId(ripple);
     setRippleInput("");
-  },[RippleDroplet,setRipplesRefreshId,setRippleInput,rippleInput]);
+  }, [RippleDroplet, setRipplesRefreshId, setRippleInput, rippleInput]);
 
   useEffect(() => {
     let unsubscribe;
@@ -58,48 +58,69 @@ const RippleDrawer = () => {
     return () => {
       if (unsubscribe) unsubscribe(); // Cleanup on unmount
     };
-  }, [isRippleDrawerOpen,GetRipples,setupSubscriptionsForRipplesData,setDropletRipples]); // Depend only on the drawer state
+  }, [
+    isRippleDrawerOpen,
+    GetRipples,
+    setupSubscriptionsForRipplesData,
+    setDropletRipples,
+  ]); // Depend only on the drawer state
 
   const toggleDrawer = useCallback(() => {
     setIsRippleDrawerOpen(!isRippleDrawerOpen);
     if (isRippleDrawerOpen) setRippleInput("");
     setDrawerHeight("50%");
-  },[setIsRippleDrawerOpen,isRippleDrawerOpen,setRippleInput,setDrawerHeight]);
+  }, [
+    setIsRippleDrawerOpen,
+    isRippleDrawerOpen,
+    setRippleInput,
+    setDrawerHeight,
+  ]);
 
-  const handleDrag = useCallback((event, info) => {
-    const offsetY = info.offset.y;
+  const handleDrag = useCallback(
+    (event, info) => {
+      const offsetY = info.offset.y;
 
-    if (offsetY < 0) {
-      // Expanding the drawer by increasing its height when dragged upwards
-      setDrawerHeight((prevHeight) => {
-        const newHeight = Math.min(
-          parseInt(prevHeight) + Math.abs(offsetY) / 5,
-          90
-        ); // Limit to 90% height
-        return `${newHeight}%`;
-      });
-    } else {
-      setDragOffsetY(offsetY); // Allow dragging down to close
-      //   setDrawerHeight("50%");
-    }
-  },[setDrawerHeight,setDrawerHeight]);
+      if (offsetY < 0) {
+        // Expanding the drawer by increasing its height when dragged upwards
+        setDrawerHeight((prevHeight) => {
+          const newHeight = Math.min(
+            parseInt(prevHeight) + Math.abs(offsetY) / 5,
+            90
+          ); // Limit to 90% height
+          return `${newHeight}%`;
+        });
+      } else {
+        setDragOffsetY(offsetY); // Allow dragging down to close
+        //   setDrawerHeight("50%");
+      }
+    },
+    [setDrawerHeight, setIsRippleInitiated]
+  );
 
-  const handleDragEnd = useCallback((event, info) => {
-    if (info.offset.y > 80) {
-      setIsRippleDrawerOpen(false); // Close drawer if dragged down by 150px or more
-      setDrawerHeight("50%");
-    } else if (info.offset.y > 30) {
-      setDrawerHeight("50%");
-    }
-    setDragOffsetY(0); // Reset position
-  },[setIsRippleDrawerOpen,setDrawerHeight,setDragOffsetY]);
+  const handleDragEnd = useCallback(
+    (event, info) => {
+      if (info.offset.y > 80) {
+        setIsRippleDrawerOpen(false); // Close drawer if dragged down by 150px or more
+        setDrawerHeight("50%");
+      } else if (info.offset.y > 30) {
+        setDrawerHeight("50%");
+      }
+      setDragOffsetY(0); // Reset position
+    },
+    [setIsRippleDrawerOpen, setDrawerHeight, setDragOffsetY]
+  );
 
   const handleOutsideClick = useCallback(() => {
     setIsRippleDrawerOpen(false);
     setRippleInput("");
     setDrawerHeight("50%");
     setDropletRipples([]);
-  },[setIsRippleDrawerOpen,setRippleInput,setDrawerHeight,setDropletRipples]);
+  }, [
+    setIsRippleDrawerOpen,
+    setRippleInput,
+    setDrawerHeight,
+    setDropletRipples,
+  ]);
 
   const handleInfiniteScroll = useCallback(async () => {
     const element = rippleRef.current;
@@ -114,7 +135,7 @@ const RippleDrawer = () => {
         if (page > 1) await GetRipples();
       }
     }
-  },[rippleRef,GetRipples,hasMore,page]);
+  }, [rippleRef, GetRipples, hasMore, page]);
 
   useEffect(() => {
     const element = rippleRef.current;
@@ -126,7 +147,7 @@ const RippleDrawer = () => {
         element.removeEventListener("scroll", handleInfiniteScroll);
       }
     };
-  }, [handleInfiniteScroll,rippleRef]);
+  }, [handleInfiniteScroll, rippleRef]);
 
   return (
     <>

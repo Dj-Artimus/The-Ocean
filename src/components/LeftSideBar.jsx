@@ -4,7 +4,7 @@ import AnchorIcon from "@mui/icons-material/Anchor";
 import "../app/globals.css";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
-import { Insights } from "@mui/icons-material";
+import { Insights, Search } from "@mui/icons-material";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import InputTextarea from "./InputTextArea";
 
