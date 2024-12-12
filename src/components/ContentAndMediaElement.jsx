@@ -49,7 +49,7 @@ const ContentAndMediaElement = ({ content, images, videos }) => {
       <ContentElement key={Router.asPath} content={content} />
       {/*  DROPLET CONTENT ENDS HERE  */}
       {/* Image Gallery or Slider */}
-      <div className="relative">
+      <div className="relative mt-3">
         {/* Slider image display */}
         {images?.length > 0 && (
           <img

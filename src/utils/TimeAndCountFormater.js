@@ -40,8 +40,8 @@ export const formaterDateAndTime = (time) => {
     const formater = new Intl.DateTimeFormat('en-US', {
         year: '2-digit',
         month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
+        day: 'numeric',
+        hour: 'numeric',
         minute: '2-digit',
         hour12: true // Ensure 12-hour format
     }).format(new Date(time));

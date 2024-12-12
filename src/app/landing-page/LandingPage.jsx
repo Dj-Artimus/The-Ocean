@@ -3,12 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import MessageReceived from "@/components/MessageReceived";
-import MessageSent from "@/components/MessageSent";
+import "../globals.css";
 
 const ReactLandingPage = () => {
   return (
-    <div className="bg-background dark:bg-d_background text-text dark:text-d_text">
+    <div className="bg-background dark:bg-d_background text-text dark:text-d_text customScrollbar">
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 py-12">
         <h1 className="text-4xl font-bold mb-4">Welcome to The Ocean 🌊</h1>
@@ -167,10 +166,10 @@ const ReactLandingPage = () => {
             boundaries and learning through challenges.
           </p>
           <p className="text-lg mt-4">
-            Some features, like Unified Feed, calling, video calling, are still
+            Some features, like Unified Feed, Stream Connections, Ocean Board, Calling, Video Calling, are still
             aspirational and can be explored in a future iteration. These parts
             are visible through the{" "}
-            <span className="font-bold">Expected Version Toggle</span>, offering
+            <span className="font-bold">Ocean Vision Toggle</span>, offering
             a glimpse into what could have been.
           </p>
         </div>

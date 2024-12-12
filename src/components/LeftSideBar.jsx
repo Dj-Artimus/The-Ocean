@@ -4,7 +4,7 @@ import AnchorIcon from "@mui/icons-material/Anchor";
 import "../app/globals.css";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
-import { Insights, Search } from "@mui/icons-material";
+import { Close, Insights, Search } from "@mui/icons-material";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import InputTextarea from "./InputTextArea";
 
@@ -12,6 +12,7 @@ const LeftSideBar = ({ styles }) => {
   const { isMsgsOpen, isOCardOpen } = UIStore();
   const { harborMatesData, SubscribeToAnchors } = UserStore();
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleSearch = async () => {
     // const arr = [];
@@ -41,12 +42,37 @@ const LeftSideBar = ({ styles }) => {
       <div className="bg-primary dark:bg-d_primary rounded-xl h-full w-full overflow-y-hidden">
         <h1 className="sticky top-0 bg-primary dark:bg-d_primary py-2 rounded-t-xl z-10 text-lg shadow-sm shadow-blue-700 text-center">
           {" "}
-          <Insights className="size-4" /> HarborMates
+          <Insights sx={{ width: "26px", height: "26px" }} /> HarborMates
+          <div
+            onClick={() => {
+              setIsSearchOpen(!isSearchOpen);
+            }}
+            className="absolute right-2 pt-[1px] w-7 h-7 rounded-lg bottom-2"
+          >
+            <Close
+              sx={{ width: "26px", height: "26px" }}
+              className={` text-text_clr2 transition-all absolute right-0 dark:text-d_text_clr2 ${
+                isSearchOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+              } `}
+            />
+            <Search
+              sx={{ width: "26px", height: "26px" }}
+              className={` text-text_clr2 transition-all absolute right-0 dark:text-d_text_clr2 ${
+                !isSearchOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+              } `}
+            />
+          </div>
         </h1>
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
-          <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
+          <div
+            className={`w-full transition-all p-2 px-2 mx-auto ${
+              !isSearchOpen
+                ? " translate-y-0 scale-100 opacity-100 "
+                : "-translate-y-14 scale-x-0 opacity-0"
+            }`}
+          >
             <InputTextarea
-              placeholder={"Search Oceanite..."}
+              placeholder={"Search HarborMate..."}
               input={searchKeyword}
               setInput={setSearchKeyword}
               handleSubmit={handleSearch}

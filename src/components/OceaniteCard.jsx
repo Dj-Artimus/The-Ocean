@@ -4,6 +4,7 @@ import { getPlatformIcon } from "@/utils/PlatformIconGetter";
 
 import {
   Anchor,
+  Cyclone,
   Facebook,
   Instagram,
   LinkedIn,
@@ -16,6 +17,7 @@ import Button from "./Button";
 import { UserStore } from "@/store/UserStore";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import { UIStore } from "@/store/UIStore";
 
 const OceaniteCard = ({
   oceaniteData,
@@ -36,6 +38,7 @@ const OceaniteCard = ({
     anchoringsIds,
     setOceaniteProfileData,
   } = UserStore();
+  const { oceanVision } = UIStore()
   const [isAnchoring, setIsAnchoring] = useState(false);
 
   const handleAnchor = async (anchoring_id) => {
@@ -146,11 +149,17 @@ const OceaniteCard = ({
             </div>
             <span className="text-slate-600"> • </span>
             <div className="flex justify-center gap-2 items-center w-full">
-              <LinkedIn className="size-7" />
-              <Instagram className="size-7" />
-              <Facebook className="size-7" />
-              <X />
-              <YouTube className="size-7" />
+              <Cyclone sx={{ width: "26px", height: "26px" }} />
+
+              {
+                oceanVision && <>
+                  <LinkedIn sx={{ width: "26px", height: "26px" }} />
+                  <Instagram sx={{ width: "26px", height: "26px" }} />
+                  <Facebook sx={{ width: "26px", height: "26px" }} />
+                  <X />
+                  <YouTube sx={{ width: "26px", height: "26px" }} />
+                </>
+              }
             </div>
           </div>
         </div>
