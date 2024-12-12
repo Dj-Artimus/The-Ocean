@@ -38,7 +38,7 @@ const ReactLandingPage = () => {
           <p className="text-lg">
             Born out of the need for a unified platform,{" "}
             <strong>The Ocean</strong> combines the best of social media into
-            one. It’s inspired by the vastness of the ocean, where everything
+            one. It&apos;s inspired by the vastness of the ocean, where everything
             finds a place and connects seamlessly.
           </p>
         </div>

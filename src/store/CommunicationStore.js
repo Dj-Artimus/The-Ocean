@@ -118,12 +118,13 @@ export const CommunicationStore = create(
                             const { eventType, new: newMessage } = payload;
 
                             const currentCommunicatorDetails = { ...get().communicatorDetails };
+                            const currentCommunicatorId = newMessage.sender_id === user.id ? newMessage.receiver_id : newMessage.sender_id;
 
                             if (eventType === 'INSERT') {
-                                currentCommunicatorDetails[communicatorId] = {
-                                    ...currentCommunicatorDetails[communicatorId],
+                                currentCommunicatorDetails[currentCommunicatorId] = {
+                                    ...currentCommunicatorDetails[currentCommunicatorId],
                                     messages: [
-                                        ...(currentCommunicatorDetails[communicatorId]?.messages || []),
+                                        ...(currentCommunicatorDetails[currentCommunicatorId]?.messages || []),
                                         newMessage,
                                     ],
                                 };
@@ -135,15 +136,23 @@ export const CommunicationStore = create(
 
                                 const updatedMessage = payload.new;
 
-                                currentCommunicatorDetails[communicatorId] = {
-                                    ...currentCommunicatorDetails[communicatorId],
-                                    messages: currentCommunicatorDetails[communicatorId]?.messages?.map((msg) =>
+                                currentCommunicatorDetails[currentCommunicatorId] = {
+                                    ...currentCommunicatorDetails[currentCommunicatorId],
+                                    messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.map((msg) =>
                                         msg.id === updatedMessage.id ? updatedMessage : msg
                                     ),
                                 };
                             }
 
                             set({ communicatorDetails: currentCommunicatorDetails });
+
+                            if (newMessage.sender_id === communicatorId && newMessage.sender_id !== user.id) {
+                                const markRead = get().MarkMessagesAsRead();
+                                const read = async () => {
+                                    return await markRead(newMessage.sender_id);
+                                }
+                                read();
+                            }
 
                         }
                     ).on(

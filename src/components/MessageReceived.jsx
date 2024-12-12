@@ -19,7 +19,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
                 sx={{
                   width: "16px",
                   height: "16px",
-                  margin: "-3px 3px",
+                  margin: "-3px 4px",
                   color: "cyan",
                 }}
               />
@@ -35,7 +35,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
             )}
           </div>
         </div>
-        <div className="clear-both -mb-2">
+        <div className="clear-both pb-[1px]">
           <ContentAndMediaElement
             content={content}
             images={images}

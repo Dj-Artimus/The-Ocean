@@ -30,7 +30,7 @@ const MessageSent = ({
                 sx={{
                   width: "16px",
                   height: "16px",
-                  margin: "-3px 3px",
+                  margin: "-3px 4px",
                   color: "cyan",
                 }}
               />
@@ -59,7 +59,7 @@ const MessageSent = ({
             />
           </div>
         </div>
-        <div className="clear-both">
+        <div className="clear-both pb-[1px]">
           <ContentAndMediaElement
             content={content}
             images={images}

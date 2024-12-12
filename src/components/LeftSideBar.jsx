@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import UserMsgProfile from "./UserMsgProfile";
-import AnchorIcon from "@mui/icons-material/Anchor";
 import "../app/globals.css";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import { Close, Insights, Search } from "@mui/icons-material";
-import { CommunicationStore } from "@/store/CommunicationStore";
 import InputTextarea from "./InputTextArea";
 
 const LeftSideBar = ({ styles }) => {
@@ -15,14 +13,8 @@ const LeftSideBar = ({ styles }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleSearch = async () => {
-    // const arr = [];
-    // arr.filter( data => data.name.includes(searchKeyword) )
     return;
   };
-
-  const handleOpenCloseAnimation = async () => {
-    // return `${isSearchOpen ? }`
-  }
 
   useEffect(() => {
     const anchorsChannel = SubscribeToAnchors();
@@ -56,13 +48,13 @@ const LeftSideBar = ({ styles }) => {
             <Close
               sx={{ width: "26px", height: "26px" }}
               className={` text-text_clr2 transition-all absolute right-0 dark:text-d_text_clr2 ${
-                isSearchOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                isSearchOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
               } `}
             />
             <Search
               sx={{ width: "26px", height: "26px" }}
               className={` text-text_clr2 transition-all absolute right-0 dark:text-d_text_clr2 ${
-                !isSearchOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                isSearchOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
               } `}
             />
           </div>
@@ -70,9 +62,9 @@ const LeftSideBar = ({ styles }) => {
         <div className="flex flex-col divide-y divide-slate-700 pb-16 overflow-y-auto w-full h-full customScrollbar">
           <div
             className={`w-full transition-all p-2 px-2 mx-auto ${
-              !isSearchOpen
+              isSearchOpen
                 ? " translate-y-0 scale-100 opacity-100 "
-                : "-translate-y-14 scale-0 opacity-0"
+                : "-translate-y-14 scale-0 -mt-[69px] opacity-0 "
             }`}
           >
             <InputTextarea
@@ -87,6 +79,14 @@ const LeftSideBar = ({ styles }) => {
             />
           </div>
           {/* USERS PROFILE IN anchors STARTS HERE */}
+          <UserMsgProfile
+            avatar_url={
+              "https://lh3.googleusercontent.com/a/ACg8ocLUD0rfzVVcVysPuGnai3cbs9q3UQRr9ry4FK-RD4UG30B7MQ=s96-c"
+            }
+            name={"name of dj"}
+            wave={"this is th ewafse"}
+            profile_id={"deac3b89-f6c3-4ce3-b79d-eab7243048a1"}
+          />
           {searchKeyword
             ? harborMatesData
                 ?.filter((data) => data.name.includes(searchKeyword))

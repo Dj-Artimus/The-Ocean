@@ -58,7 +58,7 @@ const OceaniteCard = ({
   };
 
   return (
-    <div className="my-3 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-3xl border-slate-700">
+    <div className="my-3 border bg-foreground dark:bg-d_foreground shadow-sm shadow-blue-500 dark:shadow-blue-900 rounded-3xl border-slate-700">
       <div className="flex justify-between items-center px-3 pt-1 rounded-2xl">
         {/* HEADING BAR STARTS HERE */}
         <div className="flex items-center w-full justify-between">
@@ -99,7 +99,7 @@ const OceaniteCard = ({
           </div>
           <div className="">
             {user_id === profileData.id ? (
-              <Button className="xs1:flex text-xs flex-col items-center p-2 rounded-xl text-slate-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary hover:text-blue-400">
+              <Button className="xs1:flex text-lg flex-col items-center p-4 rounded-xl text-slate-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary hover:text-blue-400">
                 You
               </Button>
             ) : (
@@ -132,7 +132,7 @@ const OceaniteCard = ({
       <hr className="mx-4 mt-1 border-slate-700" />
       <div className="flex w-full items-center px-4 sm:px-10 py-4">
         {/* OCEAN SCORE STARTS HERE */}
-        <div className="rounded-xl  shadow-sm shadow-blue-500 overflow-hidden w-full">
+        <div className="rounded-xl  shadow-sm shadow-blue-400 dark:shadow-blue-800 overflow-hidden w-full">
           <div
             className="flex w-full gap-2 divide-slate-600 items-center  bg-foreground dark:bg-d_foreground p-1 overflow-x-auto"
             style={{ scrollbarWidth: "none" }}
