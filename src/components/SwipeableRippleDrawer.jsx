@@ -94,7 +94,7 @@ const RippleDrawer = () => {
         //   setDrawerHeight("50%");
       }
     },
-    [setDrawerHeight, setIsRippleInitiated]
+    [setDrawerHeight]
   );
 
   const handleDragEnd = useCallback(
