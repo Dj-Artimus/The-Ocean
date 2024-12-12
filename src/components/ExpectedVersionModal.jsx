@@ -68,12 +68,12 @@ const ExpectedVersionModal = () => {
               </p>
               <div
                 onClick={() => {
-                  setExpectedVersion(false);
+                  setExpectedVersion(true);
                   setIsExpectedVersionModalOpen(false);
                   successToast(`Expected Versioin Activated`)
                 }}
               >
-                <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl py-3 text-md">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 px-4 text-md">
                   {" "}
                   {expectedVersion ? "Deactivate" : "Activate"}{" "}
                 </Button>

@@ -1,6 +1,7 @@
 import { Done, DoneAll, MoreHoriz } from "@mui/icons-material";
 import React from "react";
 import ContentAndMediaElement from "./ContentAndMediaElement";
+import { formaterDateAndTime } from "@/utils/TimeAndCountFormater";
 
 const MessageSent = ({
   content,
@@ -13,18 +14,23 @@ const MessageSent = ({
 }) => {
   return (
     <div className="w-full">
-      <div className={`bg-primary shadow-sm shadow-red-500 dark:shadow-blue-500 dark:bg-d_primary max-w-[70%] pt-1 px-3 float-end rounded-xl mb-3 rounded-tr-none ${ (images || videos) && 'pb-3' } `}>
+      <div
+        className={`bg-primary shadow-sm shadow-red-500 dark:shadow-blue-500 dark:bg-d_primary max-w-[70%] pt-1 px-3 float-end rounded-xl mb-3 rounded-tr-none ${
+          (images.length !== 0 || videos.length !== 0) && "pb-3"
+        } `}
+      >
         <div className="flex justify-between text-text_clr2 dark:text-d_text_clr2  clear-both">
           <div className="flex">
             <p className="text-[10px]">
-              {new Date(created_at).toLocaleString()}
+              {/* {new Date(created_at).toLocaleString()} */}
+              {formaterDateAndTime(created_at)}
             </p>
             {isRead ? (
               <DoneAll
                 sx={{
                   width: "16px",
                   height: "16px",
-                  margin: "-3px 2px",
+                  margin: "-3px 3px",
                   color: "cyan",
                 }}
               />

@@ -35,3 +35,15 @@ export const getTime = (created_time) => {
     const years = differenceInYears(now, time);
     return `${years}y`;
 };
+
+export const formaterDateAndTime = (time) => {
+    const formater = new Intl.DateTimeFormat('en-US', {
+        year: '2-digit',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true // Ensure 12-hour format
+    }).format(new Date(created_at));
+    return formater;
+}
