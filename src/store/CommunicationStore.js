@@ -15,6 +15,9 @@ export const CommunicationStore = create(
             communicatorDetails: {},
             setCommunicatorDetails: (data) => { set({ communicatorDetails: data }) },
 
+            unreadMsgsCountRefresher: {},
+            setUnreadMsgsCountRefresher: (data) => { set({ unreadMsgsCountRefresher: data }) },
+
             FetchCommunicationMessages: async () => {
                 try {
                     const communicatorId = get().communicatorId;

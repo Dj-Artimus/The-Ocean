@@ -49,6 +49,7 @@ export default function ChatPage() {
     subscribeToMessages,
     SendMessage,
     FetchCommunicationMessages,
+    setUnreadMsgsCountRefresher,
   } = CommunicationStore();
 
   const {
@@ -274,6 +275,7 @@ export default function ChatPage() {
                     <div
                       onClick={() => {
                         setCommunicatorId("");
+                        setUnreadMsgsCountRefresher(new Date().getTime());
                         revokeURLs();
                         setIsMsgsOpen(true);
                       }}
@@ -291,6 +293,7 @@ export default function ChatPage() {
                     <div
                       onClick={() => {
                         setCommunicatorId("");
+                        setUnreadMsgsCountRefresher(new Date().getTime());
                         revokeURLs();
                         router.push("/");
                       }}

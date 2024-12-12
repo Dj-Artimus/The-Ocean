@@ -14,11 +14,13 @@ import { UIStore } from "@/store/UIStore";
 import Image from "next/image";
 // import { useRouter } from "next/router";
 import { usePathname, useRouter } from "next/navigation";
+import { CommunicationStore } from "@/store/CommunicationStore";
 
 const Navbar = ({ navStyle }) => {
   const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen, setIsProfileEditModalOpen } =
     UIStore();
   const { profileData } = UserStore();
+  const { setUnreadMsgsCountRefresher } = CommunicationStore();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -90,6 +92,7 @@ const Navbar = ({ navStyle }) => {
           try {
             setIsMsgsOpen(true);
             setIsOCardOpen(false);
+            setUnreadMsgsCountRefresher(new Date().getTime())
           } catch (error) {}
           router?.push("/chat");
         }}
