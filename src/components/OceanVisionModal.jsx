@@ -57,9 +57,9 @@ const OceanVisionModal = () => {
                 className="size-7 cursor-pointer text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
               />
             </div>
-            <div className="mt-4">
+            <div className="mt-4 rounded-2xl p-2 overflow-y-auto customScrollbar h-full w-full">
               {/* CONTENT OF THE MODAL STARTS HERE */}
-              <div className="overflow-y-auto customScrollbar h-full w-full">
+              <div className="">
                 <p className="mb-4">
                   Welcome to the <strong>Ocean Vision</strong>, a glimpse into
                   the features and future potential of what &apos;The
@@ -115,9 +115,9 @@ const OceanVisionModal = () => {
                 setIsOceanVisionModalOpen(false);
                 successToast(`Ocean Vision Activated`);
               }}
-              className="m-auto flex-shrink-0"
+              className="w-full -mb-5 py-3 flex justify-center flex-shrink-0"
             >
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 px-4 text-md">
+              <Button className=" bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 px-4 text-md">
                 {oceanVision ? "Deactivate" : "Activate"}
               </Button>
             </div>
