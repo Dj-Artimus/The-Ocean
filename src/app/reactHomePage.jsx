@@ -50,24 +50,20 @@ export default function ReactHomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const feedRef = useRef();
 
-  const fetchFeedData = fetchDataForInfiniteScroll(
-    isLoading,
-    setIsLoading,
-    hasMore,
-    setHasMore,
-    page,
-    setPage,
-    5,
-    GetFeedDroplets
-  );
+  const fetchFeedData = () =>
+    fetchDataForInfiniteScroll(
+      isLoading,
+      setIsLoading,
+      hasMore,
+      setHasMore,
+      page,
+      setPage,
+      5,
+      GetFeedDroplets
+    );
 
-  const handleScroll = setInfiniteScroll(
-    feedRef,
-    hasMore,
-    page,
-    isLoading,
-    fetchFeedData
-  );
+  const handleScroll = () =>
+    setInfiniteScroll(feedRef, hasMore, page, isLoading, fetchFeedData);
 
   useEffect(() => {
     // Fetch initial droplets

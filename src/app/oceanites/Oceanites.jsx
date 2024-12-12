@@ -15,7 +15,11 @@ import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import InputTextarea from "@/components/InputTextArea";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchDataForInfiniteScroll, setInfiniteScroll, setScrollListener } from "@/utils/InfiniteScrollSetUp";
+import {
+  fetchDataForInfiniteScroll,
+  setInfiniteScroll,
+  setScrollListener,
+} from "@/utils/InfiniteScrollSetUp";
 
 const OceaniteAtolls = () => {
   const { SearchOceanites, oceanitesData, GetOceanites } = UserStore();
@@ -32,24 +36,20 @@ const OceaniteAtolls = () => {
     await SearchOceanites(searchKeyword);
   }, [SearchOceanites, searchKeyword]);
 
-  const getOceanites = fetchDataForInfiniteScroll(
-    isLoading,
-    setIsLoading,
-    hasMore,
-    setHasMore,
-    page,
-    setPage,
-    10,
-    GetOceanites
-  );
+  const getOceanites = () =>
+    fetchDataForInfiniteScroll(
+      isLoading,
+      setIsLoading,
+      hasMore,
+      setHasMore,
+      page,
+      setPage,
+      10,
+      GetOceanites
+    );
 
-  const handleScroll = setInfiniteScroll(
-    oceanitesRef,
-    hasMore,
-    page,
-    isLoading,
-    getOceanites
-  );
+  const handleScroll = () =>
+    setInfiniteScroll(oceanitesRef, hasMore, page, isLoading, getOceanites);
 
   useEffect(() => {
     getOceanites();
