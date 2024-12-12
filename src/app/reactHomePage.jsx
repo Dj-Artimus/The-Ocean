@@ -19,7 +19,11 @@ import { DropletStore } from "@/store/DropletStore";
 import UILoader from "@/components/UILoader";
 import { UIStore } from "@/store/UIStore";
 import Button from "@/components/Button";
-import { debounce } from "@mui/material";
+import {
+  fetchDataForInfiniteScroll,
+  setInfiniteScroll,
+  setScrollListener,
+} from "@/utils/InfiniteScrollSetUp";
 
 export default function ReactHomePage() {
   const router = useRouter();
@@ -36,7 +40,6 @@ export default function ReactHomePage() {
     setFeedDroplets,
     GetFeedDroplets,
     isFeedDropletsFetched,
-    subscribeToDropletChanges,
     setDropletDataType,
     dropletsData,
   } = DropletStore();
@@ -47,31 +50,24 @@ export default function ReactHomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const feedRef = useRef();
 
-  const fetchFeedData = useCallback(async () => {
-    if (isLoading || !hasMore) return;
+  const fetchFeedData = fetchDataForInfiniteScroll(
+    isLoading,
+    setIsLoading,
+    hasMore,
+    setHasMore,
+    page,
+    setPage,
+    5,
+    GetFeedDroplets
+  );
 
-    setIsLoading(true);
-    try {
-      const newDroplets = await GetFeedDroplets(page, 5);
-      console.log("Fetched Droplets:", newDroplets);
-
-      if (newDroplets?.length > 0) {
-        if (newDroplets.length < 5) setHasMore(false); // Stop fetching
-        else setPage((prev) => prev + 1); // Increment only if fetch is valid
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error fetching droplets:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [GetFeedDroplets, hasMore, page, setFeedDroplets, isLoading]);
-
-  useEffect(() => {
-    console.log("Has More:", hasMore);
-    console.log("Current Page:", page);
-  }, [hasMore, page]);
+  const handleScroll = setInfiniteScroll(
+    feedRef,
+    hasMore,
+    page,
+    isLoading,
+    fetchFeedData
+  );
 
   useEffect(() => {
     // Fetch initial droplets
@@ -85,42 +81,9 @@ export default function ReactHomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Ensure this runs only once
 
-  const handleInfiniteScroll = useCallback(
-    debounce(async () => {
-      const element = feedRef.current;
-      if (element) {
-        const { scrollTop, scrollHeight, clientHeight } = element;
-        //   console.log("scrollTop", scrollTop);
-        //   console.log("scrollHeight", scrollHeight);
-        //   console.log("clientHeight", clientHeight);
-
-        if (
-          hasMore &&
-          clientHeight + 100 < scrollHeight &&
-          scrollTop + clientHeight >= scrollHeight - 100
-        ) {
-          console.log("Fetch more data!", page);
-          if (page > 1 && !isLoading) await fetchFeedData();
-        }
-      }
-    }, 300),
-    [feedRef.current, fetchFeedData, hasMore, isLoading]
-  );
-
   useEffect(() => {
-    const element = feedRef.current;
-    const debouncedScroll = debounce(handleInfiniteScroll, 300);
-
-    if (element) {
-      element.addEventListener("scroll", debouncedScroll);
-    }
-
-    return () => {
-      if (element) {
-        element.removeEventListener("scroll", debouncedScroll);
-      }
-    };
-  }, [handleInfiniteScroll]);
+    setScrollListener(feedRef, handleScroll);
+  }, [setScrollListener, handleScroll]);
 
   // if (!isFeedDropletsFetched) return <UILoader />;
   return (

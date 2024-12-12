@@ -308,12 +308,44 @@ export const UserStore =
                     return uploadedAllFiles;
                 },
 
-                GetInitialOceanites: async () => {
+                GetOceanites: async (page = 1, limit = 5) => {
                     try {
-                        const { data, error } = await supabase.schema('Ocean').from('Profile').select('*').range(0, 9);
-                        if (error) return console.log('error to search user', error)
-                        set({ oceanitesData: [...data] });
+
+                        const getOceanitesCount = async () => {
+                            const { count } = await supabase.schema("Ocean").from("Profile").select('*', { count: 'exact' });
+                            return count;
+                        }
+
+                        const getOceanites = async (lastOceanite) => {
+                            const offset = (page - 1) * limit;
+                            const { data, error } = await supabase.schema('Ocean').from('Profile').select('*').range(offset, lastOceanite ? lastOceanite : (offset + limit - 1));
+                            if (error || !data) {
+                                console.log('No Oceanites found');
+                                return null;
+                            }
+
+                            const existingOceanites = get().oceanitesData;
+                            const newOceanites = data.filter(
+                                (oceanite) => !existingOceanites.some((existing) => existing.id === oceanite.id)
+                            );
+
+                            set({
+                                oceanitesData: [...existingOceanites, ...newOceanites], // Append new oceanites
+                            });
+                            console.log('oceanites fetched successfully', data)
+
+                            return data;
+                        }
+
+                        const data = await getOceanites();
+
+                        if (data.length === 0) {
+                            const count = await getOceanitesCount();
+                            const data = await getOceanites(count - 1);
+                            return data;
+                        }
                         return data;
+
                     } catch (error) {
                         console.log('error to fetch the oceanites', error);
                     }

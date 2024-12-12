@@ -129,8 +129,6 @@ export const CommunicationStore = create(
                                     ],
                                 };
 
-                                msgToast( currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar ,newMessage.content)
-
                             }
                             else if (eventType === 'UPDATE') {
 
@@ -153,6 +151,9 @@ export const CommunicationStore = create(
                                     return await markRead(newMessage.sender_id);
                                 }
                                 read();
+                            }
+                            if (newMessage.sender_id !== communicatorId && newMessage.sender_id !== user.id) {
+                                msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content)
                             }
 
                         }

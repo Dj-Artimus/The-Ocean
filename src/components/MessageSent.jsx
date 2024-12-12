@@ -15,7 +15,7 @@ const MessageSent = ({
   return (
     <div className="w-full">
       <div
-        className={`bg-primary shadow-sm shadow-red-300 dark:shadow-blue-900 dark:bg-d_primary max-w-[70%] pt-1 px-3 float-end rounded-xl mb-3 rounded-tr-none ${
+        className={`bg-primary shadow-sm shadow-blue-400 dark:shadow-blue-950 dark:bg-d_primary max-w-[70%] pt-1 px-3 float-end rounded-xl mb-3 rounded-tr-none ${
           (images.length !== 0 || videos.length !== 0) && "pb-3"
         } `}
       >
@@ -59,7 +59,7 @@ const MessageSent = ({
             />
           </div>
         </div>
-        <div className="clear-both pb-[2px]">
+        <div className="clear-both pb-[3px]">
           <ContentAndMediaElement
             content={content}
             images={images}

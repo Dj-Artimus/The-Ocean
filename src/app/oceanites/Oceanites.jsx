@@ -2,32 +2,62 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import "../globals.css";
-import { ArrowBack, Search } from "@mui/icons-material";
+import {
+  ArrowBack,
+  CrisisAlertRounded,
+  CycloneRounded,
+  Search,
+} from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import OceaniteCard from "@/components/OceaniteCard";
 import LeftSideBar from "@/components/LeftSideBar";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
 import InputTextarea from "@/components/InputTextArea";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { fetchDataForInfiniteScroll, setInfiniteScroll } from "@/utils/InfiniteScrollSetUp";
 
 const OceaniteAtolls = () => {
-  const { SearchOceanites, oceanitesData, GetInitialOceanites } = UserStore();
+  const { SearchOceanites, oceanitesData, GetOceanites } = UserStore();
   const { isMsgsOpen, setIsMsgsOpen, isOCardOpen } = UIStore();
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  const handleSubmit = async () => {
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const oceanitesRef = useRef();
+  const router = useRouter();
+
+  const handleSubmit = useCallback(async () => {
     await SearchOceanites(searchKeyword);
-  };
+  }, [SearchOceanites, searchKeyword]);
+
+  const getOceanites = fetchDataForInfiniteScroll(
+    isLoading,
+    setIsLoading,
+    hasMore,
+    setHasMore,
+    page,
+    setPage,
+    10,
+    GetOceanites
+  );
+
+  const handleScroll = setInfiniteScroll(
+    oceanitesRef,
+    hasMore,
+    page,
+    isLoading,
+    getOceanites
+  );
 
   useEffect(() => {
-    const getOceanites = async () => {
-      await GetInitialOceanites();
-    };
     getOceanites();
-  }, [GetInitialOceanites]);
+  }, [getOceanites]);
 
-  const router = useRouter();
+  useEffect(() => {
+    setScrollListener(feedRef, handleScroll);
+  }, [setScrollListener, handleScroll]);
 
   return (
     <div>
@@ -64,7 +94,10 @@ const OceaniteAtolls = () => {
         />
 
         {/* MAIN CONTENT STARTS HERE */}
-        <div className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px]">
+        <div
+          ref={oceanitesRef}
+          className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px] overflow-y-auto customScrollbar"
+        >
           {/* OCEANITES STARTS HERE */}
 
           <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
@@ -97,6 +130,17 @@ const OceaniteAtolls = () => {
               );
             })}
           </div>
+          {isLoading && (
+            <div className="animate-pulse w-full flex justify-center items-center">
+              <CycloneRounded className="animate-spin size-8" />
+            </div>
+          )}
+          {!hasMore && (
+            <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
+              <CrisisAlertRounded className="size-6 animate-spin" />
+              No more Oceanites, we are still Growing...
+            </div>
+          )}
 
           {/* OCEANITES ENDS HERE */}
 
