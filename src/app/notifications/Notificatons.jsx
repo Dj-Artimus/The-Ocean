@@ -17,7 +17,6 @@ const Notifications = () => {
 
   useEffect(() => {
     setNotificationsCount(0);
-    console.log("notificationsData", notificationsData);
   }, [setNotificationsCount]);
 
   const router = useRouter();

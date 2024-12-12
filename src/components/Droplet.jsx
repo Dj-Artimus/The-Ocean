@@ -157,13 +157,13 @@ const Droplet = ({
         setIsGemming(false);
       }
     },
-    [isGemming, UnGemDroplet, GemDroplet, setGemmed, setIsGemming, gemmed]
+    [UnGemDroplet, GemDroplet, setGemmed, setIsGemming, gemmed]
   );
 
   useEffect(() => {
     checkIsDropletRippled(droplet_id);
   }, [
-    ripplesRefreshId && isRippleInitiated,
+    ripplesRefreshId, isRippleInitiated,
     checkIsDropletRippled,
     droplet_id,
   ]);

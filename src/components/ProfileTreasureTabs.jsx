@@ -66,6 +66,7 @@ export default function ProfileTreasureTabs({ oceanite_id }) {
       GetUserStaredDroplets,
       GetUserRippledDroplets,
       oceanite_id,
+      profileTreasureTabIndex,
     ]
   );
 
@@ -80,7 +81,7 @@ export default function ProfileTreasureTabs({ oceanite_id }) {
       getDropletData(index);
       setDropletDataType(dropletDataTypes[index].type);
     },
-    [setProfileTreasureTabIndex, getDropletData, setDropletDataType]
+    [setProfileTreasureTabIndex, getDropletData, setDropletDataType,dropletDataTypes]
   );
 
   return (
@@ -140,7 +141,10 @@ export default function ProfileTreasureTabs({ oceanite_id }) {
               }
             )
           ) : (
-            <div className="w-full pt-8 text-center text-3xl text-text_clr dark:text-d_text_clr " > No Data Found ! </div>
+            <div className="w-full pt-8 text-center text-3xl text-text_clr dark:text-d_text_clr ">
+              {" "}
+              No Data Found !{" "}
+            </div>
           )}
         </div>
       </CustomprofileTreasureTabIndexPanel>

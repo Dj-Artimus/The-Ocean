@@ -43,7 +43,7 @@ export default function OceaniteProfile() {
     setIsOCardOpen(false);
     setIsPageLoading(false);
     if (!oceaniteProfileData?.id) router.push("/");
-  }, [setIsMsgsOpen, setIsOCardOpen, oceaniteProfileData?.id, router]);
+  }, [setIsMsgsOpen, setIsOCardOpen, oceaniteProfileData?.id, router, setIsPageLoading]);
 
   useEffect(() => {
     // Set up real-time subscription for updates

@@ -114,7 +114,7 @@ const RippleDrawer = () => {
         if (page > 1) await GetRipples();
       }
     }
-  },[rippleRef,GetRipples]);
+  },[rippleRef,GetRipples,hasMore,page]);
 
   useEffect(() => {
     const element = rippleRef.current;

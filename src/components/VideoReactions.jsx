@@ -76,7 +76,7 @@ const VideoReactions = ({ video }) => {
         setIsStaring(false);
       }
     },
-    [setIsStaring, setStared, StarDroplet, UnStarDroplet]
+    [setIsStaring, stared, setStared, StarDroplet, UnStarDroplet]
   );
 
   const handleGemDroplet = useCallback(
@@ -115,7 +115,7 @@ const VideoReactions = ({ video }) => {
   }, [
     rippleDrawerOpen,
     isRippleInitiated,
-    isRippleInitiated,
+    setIsRippleInitiated,
     checkIsDropletRippled,
     video?.droplet_id,
   ]);

@@ -24,7 +24,7 @@ const ResetPassword = () => {
   useEffect(() => {
     setIsLoadingPage(false);
     InitiatePasswordReset();
-  }, []);
+  }, [InitiatePasswordReset,]);
 
   const validatePassword = (pwd) => {
     if (pwd.length < 8) return "Password must be at least 8 characters long";

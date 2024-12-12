@@ -66,7 +66,7 @@ export default function ReactHomePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [GetFeedDroplets, hasMore, page, setFeedDroplets]);
+  }, [GetFeedDroplets, hasMore, page, setFeedDroplets, isLoading]);
 
   useEffect(() => {
     console.log("Has More:", hasMore);
