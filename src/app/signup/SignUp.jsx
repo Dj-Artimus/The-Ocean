@@ -141,15 +141,6 @@ const SignUp = () => {
                   autoComplete: "current-password", // Set the autocomplete attribute
                 },
               }}
-              sx={{
-                // Customize helper text
-                "& .MuiFormHelperText-root": {
-                  backgroundColor: "#0f172a", // Make helper text background transparent\
-                  width: "101%",
-                  padding: "4px 14px 0", // Adjust padding as needed
-                  margin: "0px 0px 0px -2px", // Remove margin between helper text and input field
-                },
-              }}
             />
             {isPasswordFocused && <PasswordMeter password={password} />}
             {isSubmiting ? (

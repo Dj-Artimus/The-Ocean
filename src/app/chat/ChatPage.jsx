@@ -274,6 +274,7 @@ export default function ChatPage() {
                     <div
                       onClick={() => {
                         setCommunicatorId("");
+                        revokeURLs();
                         setIsMsgsOpen(true);
                       }}
                       className="mb-1 me-1 lg:hidden cursor-pointer"
@@ -290,6 +291,7 @@ export default function ChatPage() {
                     <div
                       onClick={() => {
                         setCommunicatorId("");
+                        revokeURLs();
                         router.push("/");
                       }}
                       className="mb-1 hidden lg:block cursor-pointer"
@@ -392,7 +394,7 @@ export default function ChatPage() {
                           setImgViewerSources(images);
                           setImgViewerIndex(0);
                         }}
-                        className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
+                        className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-14 right-1/2 translate-x-1/2"
                       />
                     )}
                     <ImageRounded
@@ -426,7 +428,7 @@ export default function ChatPage() {
                           setVidViewerIndex(0);
                         }}
                         controls={false}
-                        className=" absolute rounded-lg h-10 sm:bottom-10 sm:h-12 bottom-8 right-1/2 translate-x-1/2"
+                        className=" absolute rounded-lg h-10 sm:bottom-10 sm:h-12 bottom-14 right-1/2 translate-x-1/2"
                       />
                     )}
                     <Movie
@@ -453,6 +455,7 @@ export default function ChatPage() {
                   className="text-blue-500"
                   onClick={() => {
                     setIsMediaAttacherOpen(!isMediaAttacherOpen);
+                    isMediaAttacherOpen && revokeURLs();
                   }}
                 >
                   <AddCircle

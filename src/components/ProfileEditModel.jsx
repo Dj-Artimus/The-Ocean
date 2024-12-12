@@ -44,9 +44,10 @@ const ProfileEditModal = ({ profileData }) => {
     setIsProfileEditModalOpen,
     setIsMediaFileUploading,
   } = UIStore();
-  const { CreateProfile, FileUploader } = UserStore();
+  const { CreateProfile, FileUploader, CheckTakenUsernames } = UserStore();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState("success");
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const router = useRouter();
@@ -115,6 +116,21 @@ const ProfileEditModal = ({ profileData }) => {
         }));
   };
 
+  const checkUsername = async (value) => {
+    setUsername(value);
+    // This is a mock check. In reality, you'd make an API call to your backend here.
+    if (value.length < 3) {
+      setUsernameStatus("");
+    } else if (value.length >= 3) {
+      const isUserNameTaken = await CheckTakenUsernames(value);
+      if (isUserNameTaken) {
+        setUsernameStatus("error");
+      } else {
+        setUsernameStatus("success");
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmiting(true);
@@ -129,8 +145,6 @@ const ProfileEditModal = ({ profileData }) => {
       (await FileUploader(avatarData.storageBucket, avatarData.file));
 
     setIsMediaFileUploading(false);
-
-
 
     const dob = new Date(Date.UTC(year, month - 1, day));
 
@@ -244,6 +258,42 @@ const ProfileEditModal = ({ profileData }) => {
                 </div>
 
                 {/* PROFILE PIC AND BANNER ENDS HERE */}
+
+                <TextField
+                  fullWidth
+                  label="Username"
+                  type="text"
+                  variant="outlined"
+                  className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0 text-gray-900 dark:text-gray-100"
+                  value={username}
+                  onChange={(e) => checkUsername(e.target.value)}
+                  required
+                  slotProps={{
+                    input: {
+                      className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                    },
+                    inputLabel: {
+                      className:
+                        "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.25px]",
+                    },
+                    htmlInput: {
+                      autoComplete: "username",
+                    },
+                  }}
+                />
+                {usernameStatus && (
+                  <p
+                    className={`text-sm ${
+                      usernameStatus === "error"
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    {usernameStatus === "error"
+                      ? "Username is already taken"
+                      : "Username is available"}
+                  </p>
+                )}
 
                 <TextField
                   fullWidth
@@ -401,8 +451,13 @@ const ProfileEditModal = ({ profileData }) => {
                   variant="contained"
                   fullWidth
                   className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
+                  disabled={usernameStatus !== "success"}
                 >
-              {isSubmiting ? <Cyclone className="animate-spin" /> : "Save Profile"}
+                  {isSubmiting ? (
+                    <Cyclone className="animate-spin" />
+                  ) : (
+                    "Save Profile"
+                  )}
                 </Button>
               </form>
             </div>

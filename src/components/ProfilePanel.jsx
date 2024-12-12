@@ -82,7 +82,7 @@ const ProfilePanel = ({
             onClick={() => {
               setIsProfileEditModalOpen(true);
             }}
-            className="p-1 px-4 pe-3 flex text-sm items-center gap-1 border backdrop-blur-sm bg-opacity-50 dark:bg-opacity-10 border-slate-600 shadow-sm shadow-blue-600 rounded-full hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 xs6:-bottom-14 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
+            className="p-1 px-4 pe-3 flex text-sm items-center gap-1 border backdrop-blur-md bg-opacity-70 dark:bg-opacity-10 border-slate-600 shadow-sm shadow-blue-600 rounded-full hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 xs6:-bottom-14 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
           >
             Profile
             <EditNoteIcon className=" size-7" />
@@ -92,7 +92,7 @@ const ProfilePanel = ({
             onClick={() => {
               handleAnchor(user_id);
             }}
-            className="p-1 px-4 flex text-sm items-center gap-1 border backdrop-blur-sm bg-opacity-50 dark:bg-opacity-50 border-slate-600 shadow-sm shadow-blue-600 rounded-2xl hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 xs6:-bottom-14 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
+            className="p-1 px-4 flex text-sm items-center gap-1 border backdrop-blur-md bg-opacity-50 dark:bg-opacity-70 border-slate-600 shadow-sm shadow-blue-600 rounded-2xl hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 xs6:-bottom-14 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
           >
             {anchoringsIds.includes(user_id) ? (
               <Button

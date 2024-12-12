@@ -14,6 +14,12 @@ export const UIStore = create(
         set({ expectedVersion: state })
     },
 
+    isExpectedVersionModalOpen: false,
+    setIsExpectedVersionModalOpen: (state) => {
+        set({ isExpectedVersionModalOpen: state })
+    },
+    
+
     isUILoading: true,
     setIsUILoading: (state) => {
         set({ isUILoading: state })

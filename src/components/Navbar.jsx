@@ -16,7 +16,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 const Navbar = ({ navStyle }) => {
-  const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen } =
+  const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen, setIsProfileEditModalOpen } =
     UIStore();
   const { profileData } = UserStore();
 
@@ -67,6 +67,7 @@ const Navbar = ({ navStyle }) => {
       {/* CREATE DROPLET STARTS HERE */}
       <div
         onClick={() => {
+          setIsProfileEditModalOpen(false);
           setIsCreateDropletModalOpen(true);
         }}
         className="dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full "
