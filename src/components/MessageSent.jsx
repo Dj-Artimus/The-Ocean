@@ -59,7 +59,7 @@ const MessageSent = ({
             />
           </div>
         </div>
-        <div className="clear-both pb-[1px]">
+        <div className="clear-both pb-[2px]">
           <ContentAndMediaElement
             content={content}
             images={images}
