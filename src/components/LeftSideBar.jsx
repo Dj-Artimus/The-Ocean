@@ -79,14 +79,6 @@ const LeftSideBar = ({ styles }) => {
             />
           </div>
           {/* USERS PROFILE IN anchors STARTS HERE */}
-          <UserMsgProfile
-            avatar_url={
-              "https://lh3.googleusercontent.com/a/ACg8ocLUD0rfzVVcVysPuGnai3cbs9q3UQRr9ry4FK-RD4UG30B7MQ=s96-c"
-            }
-            name={"name of dj"}
-            wave={"this is th ewafse"}
-            profile_id={"deac3b89-f6c3-4ce3-b79d-eab7243048a1"}
-          />
           {searchKeyword
             ? harborMatesData
                 ?.filter((data) => data.name.includes(searchKeyword))

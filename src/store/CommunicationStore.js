@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserStore } from "./UserStore";
 import toast from "react-hot-toast";
-import { errorToast } from "@/components/ToasterProvider";
+import { errorToast, msgToast } from "@/components/ToasterProvider";
 
 const supabase = createClient();
 
@@ -129,7 +129,7 @@ export const CommunicationStore = create(
                                     ],
                                 };
 
-                                toast.success(newMessage.content)
+                                msgToast( currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar ,newMessage.content)
 
                             }
                             else if (eventType === 'UPDATE') {
@@ -147,8 +147,9 @@ export const CommunicationStore = create(
                             set({ communicatorDetails: currentCommunicatorDetails });
 
                             if (newMessage.sender_id === communicatorId && newMessage.sender_id !== user.id) {
-                                const markRead = get().MarkMessagesAsRead();
+                                const markRead = get().MarkMessagesAsRead;
                                 const read = async () => {
+                                    console.log('newMessage.sender_id', newMessage.sender_id)
                                     return await markRead(newMessage.sender_id);
                                 }
                                 read();
