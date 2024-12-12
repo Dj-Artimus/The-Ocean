@@ -35,7 +35,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
             )}
           </div>
         </div>
-        <div className="clear-both">
+        <div className="clear-both -mb-2">
           <ContentAndMediaElement
             content={content}
             images={images}

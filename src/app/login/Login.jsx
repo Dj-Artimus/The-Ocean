@@ -5,6 +5,7 @@ import { Cyclone, GitHub, Google } from "@mui/icons-material";
 import Link from "next/link";
 import { AuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
+import { UserStore } from "@/store/UserStore";
 
 const Login = () => {
   const { Login, OAuthLogin } = AuthStore();
