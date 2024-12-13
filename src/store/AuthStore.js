@@ -23,11 +23,10 @@ export const AuthStore = create((set, get) => ({
 
             if (error) {
                 errorToast("Error signing up:", error.message);
-                console.log('Error signing up:', error.message);
                 // Display an error message to the user
                 return false;
             }
-            successToast('Success! Email sent for verification');
+            successToast('Sign Up done! Email sent for verification');
             set({ signUpEmail: email })
             return true;
         } catch (err) {
@@ -39,15 +38,15 @@ export const AuthStore = create((set, get) => ({
         try {
             const { data, error } = await supabase.auth.verifyOtp({ email: get().signUpEmail, token: otp, type: 'email' })
 
-            if (error) {
-                errorToast("Error in Verifying", error.message);
-                console.log('Error signing up:', error.message);
+            if (!error) {
+                successToast('User verification done successfully!');
+                set({ signUpEmail: '' })
                 // Display an error message to the user
-                return false;
+                return true;
             }
-            successToast('User verification done successfully!');
-            set({ signUpEmail: '' })
-            return true;
+            console.log('Error signing up:', error.message);
+            errorToast("Error in Verifying", error.message);
+            return false;
         } catch (err) {
             console.log('Sign-up failed:', err);
         }
@@ -120,8 +119,8 @@ export const AuthStore = create((set, get) => ({
                 const { data, error } = await supabase.auth
                     .updateUser({ password: newPassword })
 
-                if (error) {errorToast("There was an error reseting your password."); return false}
-                if (data) {successToast("Password reset successfully!"); return true;}
+                if (error) { errorToast("There was an error reseting your password."); return false }
+                if (data) { successToast("Password reset successfully!"); return true; }
             }
         } catch (err) {
             console.log('Reset failed:', err);

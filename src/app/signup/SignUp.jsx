@@ -50,7 +50,7 @@ const SignUp = () => {
       const signUp = await SignUpUser(email, password);
       e.target.reset();
       setIsSubmiting(false);
-      router.push('/verify-email');
+      signUp && router.push('/verify-email');
 
       // Reset the form or redirect the user as necessary
     }
@@ -85,11 +85,11 @@ const SignUp = () => {
               required
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                  className: "text-gray-900 dark:text-gray-100",
                 },
                 inputLabel: {
                   className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
+                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
                 },
                 htmlInput: {
                   autoComplete: "username", // Set the autocomplete attribute
@@ -97,20 +97,10 @@ const SignUp = () => {
                 
               }}
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'secondary.main' : '#f8f9fa',
                 borderRadius: '18px',
                 input: {
-                  color: (theme) => theme.palette.mode === 'dark' ? '#fff' : '#000',
-                },
-                '.MuiInputLabel-root': {
-                  color: (theme) => theme.palette.mode === 'dark' ? '#bbb' : '#333',
-                },
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: (theme) => theme.palette.mode === 'dark' ? '#444' : '#ccc',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: (theme) => theme.palette.primary.main,
-                },
+                  color: (theme) => theme.palette.mode === 'dark' ? '#111827' : '#f3f4f6',
+                }
               }}
             />
             <TextField
