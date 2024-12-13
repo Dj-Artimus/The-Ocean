@@ -438,8 +438,19 @@ export const DropletStore = create(
                         (droplet) => !existingDroplets.some((existing) => existing.id === droplet.id)
                     );
 
+                    // Fisher-Yates Shuffle Algorithm
+                    const shuffleDroplets = (array) => {
+                        for (let i = array?.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1)); // Random index
+                            [array[i], array[j]] = [array[j], array[i]]; // Swap
+                        }
+                        return array;
+                    };
+
+                    const shuffledDroplets = shuffleDroplets(newDroplets);
+
                     set({
-                        feedDroplets: [...existingDroplets, ...newDroplets], // Append new droplets
+                        feedDroplets: [...existingDroplets, ...shuffledDroplets], // Append new droplets
                         // feedDroplets: data,
                         // feedDroplets: [ ...get().feedDroplets, ...data],
                         dropletsData: data,

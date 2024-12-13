@@ -7,7 +7,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
   return (
     <div className="w-full">
       <div
-        className={` bg-blue-200 shadow-sm shadow-blue-400 dark:shadow-blue-950 dark:bg-d_secondary max-w-[70%] pt-1 px-3 float-start mb-3 rounded-xl rounded-tl-none ${
+        className={` bg-blue-200 bg-opacity-50 shadow-sm shadow-blue-400 dark:shadow-blue-950 dark:bg-d_secondary max-w-[70%] pt-1 px-3 float-start mb-3 rounded-xl rounded-tl-none ${
           (images.length !== 0 || videos.length !== 0) && "pb-3"
         } `}
       >
@@ -20,8 +20,8 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
                   width: "16px",
                   height: "16px",
                   margin: "-3px 4px",
-                  color: "cyan",
                 }}
+                className='text-blue-500'
               />
             ) : (
               <Done

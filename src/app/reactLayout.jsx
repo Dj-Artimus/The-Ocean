@@ -17,7 +17,7 @@ import { errorToast } from "@/components/ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
 
 const ReactLayout = ({ children }) => {
@@ -81,8 +81,12 @@ const ReactLayout = ({ children }) => {
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
   }, [updateOnlineStatus]);
 
+  const theme = createTheme({
+    cssVariables: true,
+  });
+
   return (
-    <ThemeProvider theme={ darkModeOn ? 'dark' : 'light'} >
+    <ThemeProvider theme={theme} noSsr >
       <ErrorBoundary>
         <>
           <CssBaseline />

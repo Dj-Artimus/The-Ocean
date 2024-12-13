@@ -31,8 +31,9 @@ const MessageSent = ({
                   width: "16px",
                   height: "16px",
                   margin: "-3px 4px",
-                  color: "cyan",
                 }}
+                className='text-blue-500'
+
               />
             ) : (
               <Done

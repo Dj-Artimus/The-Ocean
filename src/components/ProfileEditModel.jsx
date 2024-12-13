@@ -453,7 +453,7 @@ const ProfileEditModal = ({ profileData }) => {
                   variant="contained"
                   fullWidth
                   className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
-                  disabled={usernameStatus !== "success"}
+                  disabled={usernameStatus === "error"}
                 >
                   {isSubmiting ? (
                     <Cyclone className="animate-spin" />
