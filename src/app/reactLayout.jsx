@@ -94,25 +94,23 @@ const ReactLayout = ({ children }) => {
   });
 
   return (
-    <ThemeProvider theme={theme} noSsr>
+    <ErrorBoundary>
       <InitColorSchemeScript attribute="class" />
-      <ErrorBoundary>
-        <>
-          <CssBaseline />
-          <ToasterProvider />
-          <DropletModal />
-          <ImageViewer />
-          <VideoViewer />
-          <FilesUploadingLoader />
-          {children}
-          <RippleDrawer />
-          <OceanVisionModal />
-          <MoreOptionsModal />
-          <ShareOptionsModal />
-          {isPageLoading && <PageLoader />}
-        </>
-      </ErrorBoundary>
-    </ThemeProvider>
+      <>
+        <CssBaseline />
+        <ToasterProvider />
+        <DropletModal />
+        <ImageViewer />
+        <VideoViewer />
+        <FilesUploadingLoader />
+        {children}
+        <RippleDrawer />
+        <OceanVisionModal />
+        <MoreOptionsModal />
+        <ShareOptionsModal />
+        {isPageLoading && <PageLoader />}
+      </>
+    </ErrorBoundary>
   );
 };
 
