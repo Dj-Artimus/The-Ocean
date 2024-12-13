@@ -1,7 +1,6 @@
-import { errorToast, successToast } from '@/components/ToasterProvider';
-import { createClient } from '@/utils/supabase/client';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { createClient } from '@/utils/supabase/client';
 import { CommunicationStore } from './CommunicationStore';
 
 const supabase = createClient();
@@ -373,6 +372,9 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
 
+                    set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
+
+
                     const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
 
                     const newHarborMateId = data?.anchoring_id?.id
@@ -387,12 +389,10 @@ export const UserStore =
                         // Track unique IDs
                         uniqueAnchoringsIds.add(harborMateData.anchoring_id.id);
                     }
-
                     // Update communicator details
                     const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                     setCommunicatorDetails({ ...CommunicationStore.getState().communicatorDetails, ...updateCommunicatorDetails });
 
-                    set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
                     return true;
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
@@ -407,6 +407,9 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite })
 
+
+                    set({ harborMatesData: updatedHarborMatesData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
+
                     const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
 
                     if (harborMatesDetails[anchoring_id]) {
@@ -416,9 +419,10 @@ export const UserStore =
                     // Update communicator details
                     const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                     setCommunicatorDetails({ ...updateCommunicatorDetails });
-
-                    set({ harborMatesData: updatedHarborMatesData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
+                    
                     return true;
+
+
                 },
 
                 SubscribeToAnchors: () => {
