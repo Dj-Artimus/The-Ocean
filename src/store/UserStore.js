@@ -373,6 +373,25 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
 
+                    const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
+
+                    const newHarborMateId = data?.anchoring_id?.id
+
+                    if (newHarborMateId && newHarborMateId !== profile.id) {
+                        if (updateCommunicatorDetails[newHarborMateId]) {
+                            updateCommunicatorDetails[newHarborMateId] = { ...updateCommunicatorDetails[newHarborMateId], ...data.anchoring_id };
+                        } else {
+                            updateCommunicatorDetails[newHarborMateId] = data.anchoring_id;
+                        }
+
+                        // Track unique IDs
+                        uniqueAnchoringsIds.add(harborMateData.anchoring_id.id);
+                    }
+
+                    // Update communicator details
+                    const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
+                    setCommunicatorDetails({ ...CommunicationStore.getState().communicatorDetails, ...updateCommunicatorDetails });
+
                     set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
                     return true;
                 },
@@ -387,6 +406,16 @@ export const UserStore =
                     const updatedAnchoringsIds = get().anchoringsIds.filter((anchoringId) => anchoringId !== anchoring_id);
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite })
+
+                    const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
+
+                    if (harborMatesDetails[anchoring_id]) {
+                        delete harborMatesDetails[anchoring_id]
+                    }
+
+                    // Update communicator details
+                    const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
+                    setCommunicatorDetails({ ...updateCommunicatorDetails });
 
                     set({ harborMatesData: updatedHarborMatesData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
                     return true;

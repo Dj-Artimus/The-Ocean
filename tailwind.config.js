@@ -8,6 +8,10 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  corePlugins: {
+    preflight: false,
+  },
+  important: "#__next",
   theme: {
     extend: {
       colors: {
@@ -65,7 +69,7 @@ module.exports = {
     "bg-gray-50",    // Background color
     "dark:bg-d_secondary", // Custom dark mode class
     "dark:text-gray-100",  // Custom dark mode text
-    "hover:bg-blue-500", "rounded-2xl", "py-3" , "text-gray-700", "dark:text-gray-200"  // Hover state for buttons
+    "hover:bg-blue-500", "rounded-2xl", "py-3", "text-gray-700", "dark:text-gray-200"  // Hover state for buttons
     // Add any other classes you used in your components
   ],
 };

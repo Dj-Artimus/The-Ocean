@@ -133,6 +133,7 @@ const SignUp = () => {
                 htmlInput: {
                   autoComplete: "current-password", // Set the autocomplete attribute
                 },
+                
               }}
             />
             {isPasswordFocused && <PasswordMeter password={password} />}

@@ -74,7 +74,7 @@ const UsernameSelectionPage = () => {
               variant="outlined"
               className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0 text-gray-900 dark:text-gray-100"
               value={username}
-              onChange={(e) => checkUsername(e.target.value)}
+              onChange={(e) => checkUsername(e.target.value.trim())}
               required
               slotProps={{
                 input: {
