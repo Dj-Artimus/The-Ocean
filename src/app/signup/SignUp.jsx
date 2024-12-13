@@ -38,6 +38,8 @@ const SignUp = () => {
     return "";
   };
 
+  // refactor the Code, check for bugs and null pointers , make this code strongly typed and make it more faster and more efficient. understand the logic and implement another approach if u have better than this one.
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     setIsSubmitted(true);
@@ -79,32 +81,43 @@ const SignUp = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className: "text-gray-700 dark:text-gray-300",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
+                },
+                htmlInput: {
+                  autoComplete: "username",
                 },
               }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="username"
             />
             <TextField
               fullWidth
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className: "text-gray-700 dark:text-gray-300",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
+                },
+                htmlInput: {
+                  autoComplete: "new-password",
                 },
               }}
               value={password}
@@ -117,7 +130,6 @@ const SignUp = () => {
               error={isSubmitted && !!passwordError}
               helperText={isSubmitted && passwordError}
               required
-              autoComplete="current-password"
             />
             {isPasswordFocused && <PasswordMeter password={password} />}
             {isSubmiting ? (
@@ -125,7 +137,7 @@ const SignUp = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full py-3 text-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
+                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-3 text-md"
               >
                 <Cyclone className="animate-spin" />
               </Button>
@@ -135,7 +147,7 @@ const SignUp = () => {
                 variant="contained"
                 fullWidth
                 startIcon={<Email />}
-                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full py-3 text-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
+                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-3 text-md"
                 onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
               >
                 SignUp

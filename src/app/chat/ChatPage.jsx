@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-// import { supabase } from "@/lib/supabase";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import LeftSideBar from "@/components/LeftSideBar";
