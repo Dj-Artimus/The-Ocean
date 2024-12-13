@@ -33,8 +33,8 @@ const Login = () => {
       const login = await Login(email, password);
       console.log("Form submitted successfully");
       setIsSubmiting(false);
-      login && await fetchProfileData();
-      login && router.push('/');
+      login && (await fetchProfileData());
+      login && router.push("/");
       // Reset the form or redirect the user as necessary
     }
   };
@@ -62,20 +62,22 @@ const Login = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-lg text-gray-900 dark:text-gray-100"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className: 
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
                 },
                 htmlInput: {
-                  autoComplete: "username", // Set the autocomplete attribute
+                  autoComplete: "email",
                 },
               }}
             />
@@ -84,22 +86,24 @@ const Login = () => {
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 "
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={isSubmitted && !!passwordError}
               helperText={isSubmitted && passwordError}
               required
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
                 },
                 htmlInput: {
-                  autoComplete: "current-password", // Set the autocomplete attribute
+                  autoComplete: "current-password",
                 },
               }}
             />
@@ -107,7 +111,7 @@ const Login = () => {
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 text-md"
+              className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
               onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
             >
               {isSubmiting ? <Cyclone className="animate-spin" /> : "Login"}
@@ -141,7 +145,7 @@ const Login = () => {
               onClick={() => {
                 OAuthLogin("github");
               }}
-              className="border-gray-300 text-gray-700 rounded-2xl py-3 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              className="!border-gray-300 !text-gray-700 !rounded-xl !py-3 !shadow !shadow-blue-600 hover:!bg-gray-50 dark:!border-gray-600 dark:!text-gray-200 dark:hover:!bg-gray-700"
             >
               GitHub
             </Button>
@@ -152,7 +156,7 @@ const Login = () => {
               onClick={() => {
                 OAuthLogin("google");
               }}
-              className="border-gray-300 text-gray-700 rounded-2xl py-3 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              className="!border-gray-300 !text-gray-700 !rounded-xl !py-3 !shadow !shadow-blue-600 hover:!bg-gray-50 dark:!border-gray-600 dark:!text-gray-200 dark:hover:!bg-gray-700"
             >
               Google
             </Button>

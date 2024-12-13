@@ -1,6 +1,5 @@
 import { errorToast, successToast } from '@/components/ToasterProvider';
 import { createClient } from '@/utils/supabase/client';
-import { redirect } from 'next/navigation';
 import { create } from 'zustand';
 
 const supabase = createClient();
@@ -49,6 +48,26 @@ export const AuthStore = create((set, get) => ({
             return false;
         } catch (err) {
             console.log('Sign-up failed:', err);
+        }
+    },
+
+    ResendOtp: async () => {
+        try {
+            const { error } = await supabase.auth.resend({
+                type: 'signup',
+                email: get().signUpEmail,
+                options
+            })
+
+            if (!error) {
+                successToast('OTP resent successfully!');
+                return true;
+            }
+            console.log('Error resending OTP:', error.message);
+            errorToast("Error in resending OTP", error.message);
+            return false;
+        } catch (err) {
+            console.log('Resend OTP failed:', err);
         }
     },
 

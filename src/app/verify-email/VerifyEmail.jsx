@@ -8,7 +8,7 @@ import { AuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
 
 const VerifyEmail = () => {
-  const {VerifyUser} = AuthStore();
+  const { VerifyUser, ResendOtp } = AuthStore();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -41,7 +41,7 @@ const VerifyEmail = () => {
 
   const handlePaste = (e) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData("text/plain").slice(0, 6);
+    const pastedData = e.clipboardData.getData("text");
     const newOtp = [...otp];
     for (let i = 0; i < pastedData.length; i++) {
       if (!isNaN(pastedData[i])) {
@@ -62,7 +62,7 @@ const VerifyEmail = () => {
       setIsSubmiting(true);
       const verify = await VerifyUser(otpString);
       setIsSubmiting(false);
-      verify && router.push('/select-username');
+      verify && router.push("/select-username");
     }
   };
 
@@ -84,12 +84,12 @@ const VerifyEmail = () => {
           </div>
 
           <div className=" mb-4">
-          <Typography
-            variant="body1"
-            className="text-cente text-gray-600 dark:text-gray-400"
-          >
-            Enter the 6-digit OTP provided in the email
-          </Typography>
+            <Typography
+              variant="body1"
+              className="text-center text-gray-600 dark:text-gray-400"
+            >
+              Enter the 6-digit OTP provided in the email
+            </Typography>
           </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -103,7 +103,12 @@ const VerifyEmail = () => {
                   value={digit}
                   onChange={(e) => handleChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  onPaste={handlePaste}
+                  onPaste={(e) => {
+                    const pastedData = e.clipboardData.getData("text");
+                    if (pastedData.length === 6) {
+                      handlePaste(e);
+                    }
+                  }}
                   className="min-w-8 min-h-10 w-12 h-12 mx-1 text-center text-gray-700 text-2xl border-2 border-slate-400 dark:border-slate-700 rounded-lg focus:border-blue-500 focus:outline-none dark:bg-d_secondary dark:text-gray-100"
                 />
               ))}
@@ -120,7 +125,7 @@ const VerifyEmail = () => {
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 text-lg hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-xl py-2 text-md"
+              className="bg-blue-600 text-lg hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl py-2 text-md"
               onMouseDown={(e) => e.preventDefault()}
             >
               {isSubmiting ? <Cyclone className="animate-spin" /> : "Verify"}
@@ -134,7 +139,9 @@ const VerifyEmail = () => {
             >
               Didn&apos;t receive the OTP?{" "}
               <Link
-                href="#"
+                onClick={async () => {
+                  await ResendOtp();
+                }}
                 className="text-blue-600 hover:underline dark:text-blue-400"
               >
                 Resend OTP

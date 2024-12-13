@@ -97,28 +97,31 @@ const ForgotPassword = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-2xl py-0"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-2xl",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 rounded-2xl pt-[2.5px]",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
                 },
                 htmlInput: {
-                  autoComplete: "username", // Set the autocomplete attribute
+                  autoComplete: "email",
                 },
               }}
             />
+
             <Button
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 text-md"
+              className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
               onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
             >
               {isSubmiting ? (

@@ -266,17 +266,20 @@ const ProfileEditModal = ({ profileData }) => {
                   label="Username"
                   type="text"
                   variant="outlined"
-                  className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0 text-gray-900 dark:text-gray-100"
                   value={username}
                   onChange={(e) => checkUsername(e.target.value.trim())}
                   required
+                  className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
                   slotProps={{
                     input: {
-                      className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                      className:
+                        "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                     },
                     inputLabel: {
-                      className:
-                        "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.25px]",
+                      className: "!text-slate-700 dark:!text-slate-400",
+                    },
+                    select: {
+                      className: " border border-slate-300",
                     },
                     htmlInput: {
                       autoComplete: "username",
@@ -301,17 +304,23 @@ const ProfileEditModal = ({ profileData }) => {
                   fullWidth
                   label="Name"
                   variant="outlined"
-                  className="bg-gray-50 dark:bg-d_secondary rounded-lg"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
+                  className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
                   slotProps={{
                     input: {
-                      className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                      className:
+                        "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                     },
                     inputLabel: {
-                      className:
-                        "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.5px]",
+                      className: "!text-slate-700 dark:!text-slate-400",
+                    },
+                    select: {
+                      className: " border border-slate-300",
+                    },
+                    htmlInput: {
+                      autoComplete: "name",
                     },
                   }}
                 />
@@ -322,9 +331,9 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
                     >
-                      <InputLabel className="text-gray-700 dark:text-gray-300">
+                      <InputLabel className="!text-gray-700 dark:!text-gray-300">
                         Day
                       </InputLabel>
                       <Select
@@ -344,9 +353,9 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
                     >
-                      <InputLabel className="text-gray-700 dark:text-gray-300">
+                      <InputLabel className="!text-gray-700 dark:!text-gray-300">
                         Month
                       </InputLabel>
                       <Select
@@ -366,9 +375,9 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
                     >
-                      <InputLabel className="text-gray-700 dark:text-gray-300">
+                      <InputLabel className="!text-gray-700 dark:!text-gray-300">
                         Year
                       </InputLabel>
                       <Select
@@ -398,9 +407,9 @@ const ProfileEditModal = ({ profileData }) => {
                   <FormControl
                     fullWidth
                     variant="outlined"
-                    className="bg-gray-50 dark:bg-d_secondary rounded-lg"
+                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
                   >
-                    <InputLabel className="text-gray-700 dark:text-gray-300">
+                    <InputLabel className="!text-gray-700 dark:!text-gray-300">
                       Gender
                     </InputLabel>
                     <Select
@@ -428,17 +437,19 @@ const ProfileEditModal = ({ profileData }) => {
                     variant="outlined"
                     multiline
                     rows={3}
-                    className="bg-gray-50 dark:bg-d_secondary rounded-lg"
                     value={wave}
                     onChange={(e) => setWave(e.target.value)}
+                    className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
                     slotProps={{
                       input: {
                         className:
-                          "text-gray-900 dark:text-gray-100 rounded-lg ",
+                          "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                       },
                       inputLabel: {
-                        className:
-                          "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.5px]",
+                        className: "!text-slate-700 dark:!text-slate-400",
+                      },
+                      select: {
+                        className: " border border-slate-300",
                       },
                     }}
                   />
@@ -452,7 +463,7 @@ const ProfileEditModal = ({ profileData }) => {
                   type="submit"
                   variant="contained"
                   fullWidth
-                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-2 text-md"
+                  className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
                   disabled={usernameStatus === "error"}
                 >
                   {isSubmiting ? (

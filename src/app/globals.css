@@ -21,14 +21,14 @@ body {
 }
 
 .customScrollbar {
-  scrollbar-width : thin;
-  scrollbar-color : #a14eff transparent;
+  scrollbar-width: thin;
+  scrollbar-color: #a14eff transparent;
   scroll-behavior: smooth;
 }
 
 .dark .customScrollbar {
-  scrollbar-color : #2e47ff transparent;
-  scrollbar-width : thin;
+  scrollbar-color: #2e47ff transparent;
+  scrollbar-width: thin;
   scroll-behavior: smooth;
 }
 /* For WebKit-based browsers (Chrome, Safari, Edge) */
@@ -67,6 +67,45 @@ body {
 }
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #fcf0ff inset; /* Dark background for autofilled text */
-  -webkit-text-fill-color: #0f172a ; /* Light text for better readability */
+  -webkit-text-fill-color: #0f172a; /* Light text for better readability */
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.bubble {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  filter: blur(10px);
+  animation: float 10s infinite ease-in-out;
+}
+
+.bubble-1 {
+  width: 80px;
+  height: 80px;
+  bottom: 10%;
+  left: 15%;
+}
+
+.bubble-2 {
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  right: 10%;
+}
+
+.bubble-3 {
+  width: 60px;
+  height: 60px;
+  bottom: 30%;
+  right: 25%;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
 }

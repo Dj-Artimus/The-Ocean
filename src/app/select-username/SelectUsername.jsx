@@ -15,7 +15,7 @@ const UsernameSelectionPage = () => {
   const [usernameStatus, setUsernameStatus] = useState("");
   const [isSubmiting, setIsSubmiting] = useState(false);
 
-  const redirect = useRouter()
+  const redirect = useRouter();
 
   useEffect(() => {
     setIsLoadingPage(false);
@@ -27,9 +27,9 @@ const UsernameSelectionPage = () => {
     setIsSubmiting(true);
     const isUsernameUpdated = await UpdateUsername(username);
     console.log("Username submitted:", username);
-    if(isUsernameUpdated){
+    if (isUsernameUpdated) {
       setIsSubmiting(false);
-      redirect.push('create-profile');
+      redirect.push("create-profile");
     }
   };
 
@@ -72,17 +72,19 @@ const UsernameSelectionPage = () => {
               label="Username"
               type="text"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg py-0 text-gray-900 dark:text-gray-100"
               value={username}
               onChange={(e) => checkUsername(e.target.value.trim())}
               required
+              className="bg-gray-50 dark:bg-d_secondary py-0 rounded-xl !text-gray-900 !dark:text-gray-100"
               slotProps={{
                 input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
+                  className: "!text-slate-900 dark:!text-slate-100 !rounded-xl",
                 },
                 inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 rounded-lg pt-[2.25px]",
+                  className: "!text-slate-700 dark:!text-slate-400",
+                },
+                select: {
+                  className: " border border-slate-300",
                 },
                 htmlInput: {
                   autoComplete: "username",
@@ -104,7 +106,7 @@ const UsernameSelectionPage = () => {
               type="submit"
               variant="contained"
               fullWidth
-              className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg py-3 text-md"
+              className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
               onMouseDown={(e) => e.preventDefault()}
               disabled={usernameStatus !== "success"}
             >

@@ -93,7 +93,7 @@ const SignUp = () => {
                   className: " border border-slate-300",
                 },
                 htmlInput: {
-                  autoComplete: "username",
+                  autoComplete: "email",
                 },
               }}
               value={email}
@@ -137,7 +137,7 @@ const SignUp = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-3 text-md"
+                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
               >
                 <Cyclone className="animate-spin" />
               </Button>
@@ -147,7 +147,7 @@ const SignUp = () => {
                 variant="contained"
                 fullWidth
                 startIcon={<Email />}
-                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-3 text-md"
+                className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
                 onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
               >
                 SignUp
@@ -174,7 +174,7 @@ const SignUp = () => {
               onClick={() => {
                 OAuthLogin("github");
               }}
-              className="border-gray-300 text-gray-700 rounded-2xl py-3 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              className="!border-gray-300 !text-gray-700 !rounded-xl !py-3 !shadow !shadow-blue-600 hover:!bg-gray-50 dark:!border-gray-600 dark:!text-gray-200 dark:hover:!bg-gray-700"
             >
               GitHub
             </Button>
@@ -185,7 +185,7 @@ const SignUp = () => {
               onClick={() => {
                 OAuthLogin("google");
               }}
-              className="border-gray-300 text-gray-700 rounded-2xl py-3 shadow shadow-blue-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              className="!border-gray-300 !text-gray-700 !rounded-xl !py-3 !shadow !shadow-blue-600 hover:!bg-gray-50 dark:!border-gray-600 dark:!text-gray-200 dark:hover:!bg-gray-700"
             >
               Google
             </Button>
