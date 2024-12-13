@@ -50,7 +50,7 @@ const SignUp = () => {
       const signUp = await SignUpUser(email, password);
       e.target.reset();
       setIsSubmiting(false);
-      signUp && router.push('/verify-email');
+      signUp && router.push("/verify-email");
 
       // Reset the form or redirect the user as necessary
     }
@@ -88,19 +88,22 @@ const SignUp = () => {
                   className: "text-gray-900 dark:text-gray-100",
                 },
                 inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px]",
+                  className: "text-gray-700 dark:text-gray-300 pt-[2.5px]",
                 },
                 htmlInput: {
                   autoComplete: "username", // Set the autocomplete attribute
                 },
-                
               }}
               sx={{
-                borderRadius: '18px',
+                borderRadius: "15px",
                 input: {
-                  color: (theme) => theme.palette.mode === 'dark' ? '#111827' : '#f3f4f6',
-                }
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "#111827" : "#f3f4f6",
+                },
+                "::placeholder": {
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "#111827" : "#f3f4f6",
+                },
               }}
             />
             <TextField

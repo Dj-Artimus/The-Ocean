@@ -17,11 +17,11 @@ import { errorToast } from "@/components/ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
 
 const ReactLayout = ({ children }) => {
-  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading } =
+  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading, darkModeOn } =
     UIStore();
   const {
     fetchProfileData,
@@ -82,7 +82,8 @@ const ReactLayout = ({ children }) => {
   }, [updateOnlineStatus]);
 
   return (
-    <ErrorBoundary>
+    <ThemeProvider theme={ darkModeOn ? 'dark' : 'light'} >
+      <ErrorBoundary>
         <>
           <CssBaseline />
           <ToasterProvider />
@@ -97,7 +98,8 @@ const ReactLayout = ({ children }) => {
           <ShareOptionsModal />
           {isPageLoading && <PageLoader />}
         </>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 
