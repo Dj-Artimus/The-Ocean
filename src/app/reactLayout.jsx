@@ -87,15 +87,9 @@ const ReactLayout = ({ children }) => {
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
   }, [updateOnlineStatus]);
 
-  const theme = createTheme({
-    cssVariables: {
-      colorSchemeSelector: "class",
-    },
-  });
 
   return (
     <ErrorBoundary>
-      <InitColorSchemeScript attribute="class" />
       <>
         <CssBaseline />
         <ToasterProvider />
