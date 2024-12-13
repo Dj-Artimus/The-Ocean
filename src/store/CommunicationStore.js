@@ -6,243 +6,184 @@ import { errorToast, msgToast } from "@/components/ToasterProvider";
 
 const supabase = createClient();
 
+
 export const CommunicationStore = create(
-    // persist(
+    //   persist(
     (set, get) => ({
         communicatorId: '',
-        setCommunicatorId: (id) => { set({ communicatorId: id }) },
         communicatorDetails: {},
-        setCommunicatorDetails: (data) => { set({ communicatorDetails: data }) },
-
         unreadMsgsCountRefresher: {},
-        setUnreadMsgsCountRefresher: (data) => { set({ unreadMsgsCountRefresher: data }) },
+
+        setCommunicatorId: (id) => set({ communicatorId: id }),
+        setCommunicatorDetails: (data) => set({ communicatorDetails: data }),
+        setUnreadMsgsCountRefresher: (data) => set({ unreadMsgsCountRefresher: data }),
 
         FetchCommunicationMessages: async () => {
             try {
-                const communicatorId = get().communicatorId;
-                if (communicatorId) {
-                    const user = UserStore.getState().profileData;
+                const { communicatorId } = get();
+                const { id: userId } = UserStore.getState().profileData || {};
+                if (!communicatorId || !userId) return;
 
-                    const { data, error } = await supabase.schema("Ocean").from('Message').select('*').or(`and(sender_id.eq.${user.id},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${user.id})`).order('created_at', { ascending: true });
+                const { data, error } = await supabase
+                    .schema("Ocean")
+                    .from('Message')
+                    .select('*')
+                    .or(`and(sender_id.eq.${userId},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`)
+                    .order('created_at', { ascending: true });
 
-                    if (error) console.log('error from the fetching the messages', error)
+                if (error) throw error;
 
-                    console.log('data from the fetch communications', data)
+                const updateCommunicatorData = { ...get().communicatorDetails };
+                const existingMessages = updateCommunicatorData[communicatorId]?.messages || [];
+                const uniqueMessages = [...new Map([...existingMessages, ...data].map(msg => [msg.id, msg])).values()];
 
-                    const updateCommunicatorData = { ...get().communicatorDetails };
+                updateCommunicatorData[communicatorId] = {
+                    ...updateCommunicatorData[communicatorId],
+                    messages: uniqueMessages,
+                };
 
-                    // Safely handle undefined messages
-                    const existingMessages = updateCommunicatorData[communicatorId]?.messages || [];
-
-                    // Combine new and existing messages and remove duplicates
-                    const combinedMessages = [...existingMessages, ...data];
-                    const uniqueMessages = Array.from(
-                        new Map(combinedMessages.map(msg => [msg.id, msg])).values()
-                    );
-
-                    // Update the communicator details with deduplicated messages
-                    updateCommunicatorData[communicatorId] = {
-                        ...updateCommunicatorData[communicatorId], // Preserve existing properties
-                        messages: uniqueMessages, // Store only unique messages
-                    };
-
-                    // Update Zustand state
-                    set({ communicatorDetails: updateCommunicatorData });
-
-
-                    console.log('fetch messages data', data)
-
-                    return data;
-                }
+                set({ communicatorDetails: updateCommunicatorData });
+                return uniqueMessages;
             } catch (error) {
-                console.log('error from the catch fetching the messages', error)
-
+                console.error('Error fetching messages:', error);
             }
         },
 
         SendMessage: async (msgData) => {
             try {
-                const communicatorId = get().communicatorId;
+                const { communicatorId } = get();
+                const { id: userId } = UserStore.getState().profileData || {};
+                if (!communicatorId || !userId || !msgData) return false;
 
+                const { error } = await supabase
+                    .schema("Ocean")
+                    .from('Message')
+                    .insert({ ...msgData, sender_id: userId, receiver_id: communicatorId });
 
-                if (communicatorId && msgData) {
-                    const user = UserStore.getState().profileData;
-
-                    const { data, error } = await supabase.schema("Ocean").from('Message').insert({ ...msgData, sender_id: user.id, receiver_id: communicatorId }).select('*');
-
-                    if (error) {
-                        console.log('error from the send msg', error);
-                        errorToast(`error to send message: ${error.message} `);
-                        return false;
-                    }
-
-                    console.log(' sending the message data', data)
-                    return true;
+                if (error) {
+                    errorToast(`Error sending message: ${error.message}`);
+                    return false;
                 }
+
+                return true;
             } catch (error) {
-                console.log(' catch error from send msg', error)
+                console.error('Error sending message:', error);
+                return false;
             }
         },
 
         subscribeToMessages: () => {
+            const { communicatorId, communicatorDetails } = get();
+            const { id: userId } = UserStore.getState().profileData || {};
+            if (!userId) return;
 
-            const communicatorId = get().communicatorId;
-            const communicatorIds = Object.keys(get().communicatorDetails);
-            console.log('array of communicator ids:', communicatorIds)
-            const user = UserStore.getState().profileData;
-            communicatorIds.unshift(user.id);
-            console.log('array of communicator ids after adding user and in local string:', communicatorIds.toLocaleString())
-            // if (!communicatorId || !user) return;
-
-            console.log('starting the real time for messages');
-
+            const communicatorIds = [userId, ...Object.keys(communicatorDetails)];
             const channel = supabase
-                .channel(`realtime-messages:user${user.id}`)
+                .channel(`realtime-messages:user${userId}`)
                 .on(
                     'postgres_changes',
                     {
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        // filter: `sender_id=in.(${user.id},${communicatorId})`
-                        filter: `sender_id=in.(${communicatorIds.toLocaleString()})`
+                        filter: `sender_id=in.(${communicatorIds.join(',')})`,
                     },
                     (payload) => {
-                        console.log('Realtime event:', payload);
-
                         const { eventType, new: newMessage } = payload;
-
+                        const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
                         const currentCommunicatorDetails = { ...get().communicatorDetails };
-                        const currentCommunicatorId = newMessage.sender_id === user.id ? newMessage.receiver_id : newMessage.sender_id;
 
-                        if (eventType === 'INSERT') {
+                        if (eventType === 'INSERT' || eventType === 'UPDATE') {
+                            const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
                             currentCommunicatorDetails[currentCommunicatorId] = {
                                 ...currentCommunicatorDetails[currentCommunicatorId],
-                                messages: [
-                                    ...(currentCommunicatorDetails[currentCommunicatorId]?.messages || []),
-                                    newMessage,
-                                ],
+                                messages: eventType === 'INSERT' ? [...messages, newMessage] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
                             };
-
-                        }
-                        else if (eventType === 'UPDATE') {
-
-                            const updatedMessage = payload.new;
-
+                        } else if (eventType === 'DELETE') {
+                            const { old: deletedMessage } = payload;
                             currentCommunicatorDetails[currentCommunicatorId] = {
                                 ...currentCommunicatorDetails[currentCommunicatorId],
-                                messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.map((msg) =>
-                                    msg.id === updatedMessage.id ? updatedMessage : msg
-                                ),
+                                messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
                             };
                         }
 
                         set({ communicatorDetails: currentCommunicatorDetails });
-
-                        if (newMessage.sender_id === communicatorId && newMessage.receiver_id === user.id && newMessage.is_read === false ) {
-                            const markRead = get().handleMessageRead;
-                            const read = async () => {
-                                console.log('newMessage.sender_id', newMessage.sender_id)
-                                return await markRead(newMessage.id);
-                            }
-                            read();
+                        if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
+                            get().handleMessageRead(newMessage.id);
                         }
-                        if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === user.id) {
-                            msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content)
+                        if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId) {
+                            msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content);
                         }
-
-                    }
-                ).on(
-                    'postgres_changes',
-                    {
-                        event: 'DELETE',
-                        schema: 'Ocean',
-                        table: 'Message'
-                    },
-                    (payload) => {
-                        console.log('Realtime event for delete:', payload);
-
-                        const currentCommunicatorDetails = { ...get().communicatorDetails };
-                        if (payload.eventType === 'DELETE') {
-
-                            const deletedMessage = payload.old;
-
-                            currentCommunicatorDetails[communicatorId] = {
-                                ...currentCommunicatorDetails[communicatorId],
-                                messages: currentCommunicatorDetails[communicatorId]?.messages?.filter((msg) => msg.id !== deletedMessage.id),
-                            };
-                        }
-
-                        set({ communicatorDetails: currentCommunicatorDetails });
 
                     }
                 )
                 .subscribe();
 
-            console.log(channel.state); // Should log 'subscribed'
-
             return channel;
         },
 
         FetchUnreadMessagesCount: async (sender_id) => {
-            const user = UserStore.getState().profileData;
-            if (user) {
+            try {
+                const { id: userId } = UserStore.getState().profileData || {};
+                if (!userId) return 0;
+
                 const { data, error } = await supabase
                     .schema('Ocean')
                     .from('Message')
                     .select('id')
-                    .eq('receiver_id', user.id)
+                    .eq('receiver_id', userId)
                     .eq('sender_id', sender_id)
                     .eq('is_read', false);
 
-                if (error) {
-                    console.error('Error fetching unread messages:', error);
-                    return 0;
-                }
-
-                console.log('data.length from unread msg count', data.length)
-
-                return data.length === 0 ? 0 : data.length;
+                if (error) throw error;
+                return data.length || 0;
+            } catch (error) {
+                console.error('Error fetching unread messages:', error);
+                return 0;
             }
         },
 
-        // CommunicationStore.js
         handleMessageRead: async (messageId) => {
-            if (messageId) {
-                const { error } = await supabase.schema('Ocean').from('Message')
+            try {
+                if (!messageId) return;
+
+                const { error } = await supabase
+                    .schema('Ocean')
+                    .from('Message')
                     .update({ is_read: true })
                     .eq('id', messageId);
 
-                if (error) {
-                    console.error("Failed to mark messages as read:", error);
-                }
+                if (error) throw error;
+            } catch (error) {
+                console.error('Failed to mark message as read:', error);
             }
         },
 
         MarkMessagesAsRead: async (senderId) => {
-            const user = UserStore.getState().profileData; // Fetch the logged-in user data
-            if (user) {
-                const { error } = await supabase.schema('Ocean')
-                    .from('Message') // Update the appropriate table
-                    .update({ is_read: true }) // Set is_read to true
-                    .eq('receiver_id', user.id) // Receiver is the logged-in user
-                    .eq('sender_id', senderId) // Messages are from the sender
-                    .eq('is_read', false);
+            try {
+                const { id: userId } = UserStore.getState().profileData || {};
+                if (!userId) return;
 
-                if (error) {
-                    console.error("Failed to mark messages as read:", error);
-                }
+                const { error } = await supabase
+                    .schema('Ocean')
+                    .from('Message')
+                    .update({ is_read: true })
+                    .eq('receiver_id', userId)
+                    .eq('sender_id', senderId)
+                    .eq('is_read', false);
+                if (error) throw error;
+            } catch (error) {
+                console.error('Failed to mark messages as read:', error);
             }
         },
 
-
     }),
-    // {
-    //     name: 'communicator-store',
-    //     getStorage: () => localStorage, // You can replace with sessionStorage
-    // }
-    // )
-)
+    //     {
+    //       name: 'communicator-store',
+    //       getStorage: () => localStorage,
+    //     }
+    //   )
+);
 
 // import { create } from "zustand";
 // import { UserStore } from "./UserStore";

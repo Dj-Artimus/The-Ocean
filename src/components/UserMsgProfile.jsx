@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
   const { setIsMsgsOpen, oceanVision } = UIStore();
-  const { setCommunicatorId, FetchUnreadMessagesCount, subscribeToMessages, unreadMsgsCountRefresher } = CommunicationStore();
+  const { setCommunicatorId, communicatorId, FetchUnreadMessagesCount, subscribeToMessages, unreadMsgsCountRefresher } = CommunicationStore();
   const { subscribeToOnlineStatus } = UserStore();
   const [isOnline, setIsOnline] = useState(false);
   const [unreadMsgCount, setUnreadMsgCount] = useState(0);
@@ -23,7 +23,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [profile_id, subscribeToOnlineStatus]);
+  }, [profile_id, subscribeToOnlineStatus, communicatorId]);
 
   useEffect(() => {
     FetchUnreadMessagesCount(profile_id).then((count) => {
