@@ -19,10 +19,16 @@ import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 
 const ReactLayout = ({ children }) => {
-  const { toggleDarkMode, isUILoading, setIsUILoading, isPageLoading, darkModeOn } =
-    UIStore();
+  const {
+    toggleDarkMode,
+    isUILoading,
+    setIsUILoading,
+    isPageLoading,
+    darkModeOn,
+  } = UIStore();
   const {
     fetchProfileData,
     subscribeToProfileChanges,
@@ -82,11 +88,14 @@ const ReactLayout = ({ children }) => {
   }, [updateOnlineStatus]);
 
   const theme = createTheme({
-    cssVariables: true,
+    cssVariables: {
+      colorSchemeSelector: "class",
+    },
   });
 
   return (
-    <ThemeProvider theme={theme} noSsr >
+    <ThemeProvider theme={theme} noSsr>
+      <InitColorSchemeScript attribute="class" />
       <ErrorBoundary>
         <>
           <CssBaseline />
