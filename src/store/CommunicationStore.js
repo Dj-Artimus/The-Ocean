@@ -2,7 +2,6 @@ import { createClient } from "@/utils/supabase/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { UserStore } from "./UserStore";
-import toast from "react-hot-toast";
 import { errorToast, msgToast } from "@/components/ToasterProvider";
 
 const supabase = createClient();

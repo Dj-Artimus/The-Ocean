@@ -375,54 +375,46 @@ export const UserStore =
                     set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
 
 
-                    const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
+                    const updateCommunicatorDetails = { ...CommunicationStore.getState().communicatorDetails };
 
-                    const newHarborMateId = data?.anchoring_id?.id
+                    const newHarborMateId = data?.anchoring_id?.id;
 
-                    if (newHarborMateId && newHarborMateId !== profile.id) {
-                        if (updateCommunicatorDetails[newHarborMateId]) {
-                            updateCommunicatorDetails[newHarborMateId] = { ...updateCommunicatorDetails[newHarborMateId], ...data.anchoring_id };
-                        } else {
-                            updateCommunicatorDetails[newHarborMateId] = data.anchoring_id;
-                        }
-
-                        // Track unique IDs
-                        uniqueAnchoringsIds.add(harborMateData.anchoring_id.id);
+                    if (newHarborMateId && newHarborMateId !== user.id) {
+                        updateCommunicatorDetails[newHarborMateId] = {
+                            ...(updateCommunicatorDetails[newHarborMateId] || {}),
+                            ...data.anchoring_id
+                        };
                     }
-                    // Update communicator details
-                    const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
-                    setCommunicatorDetails({ ...CommunicationStore.getState().communicatorDetails, ...updateCommunicatorDetails });
 
+                    CommunicationStore.getState().setCommunicatorDetails(updateCommunicatorDetails);
                     return true;
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
                     const user = get().profileData;
+                    if (!user) return console.log('User not found to unanchor the Oceanite');
+
                     const { error } = await supabase.schema('Ocean').from('Oceanites').delete().eq('anchor_id', user.id).eq('anchoring_id', anchoring_id);
-                    if (error) { console.log('Something went wrong to anchor the Oceanite', error); }
+                    if (error) { console.log('Something went wrong to unanchor the Oceanite', error); return false; }
 
+                    const updatedHarborMatesData = get().harborMatesData?.filter((data) => data.id !== anchoring_id) || [];
 
-                    const updatedHarborMatesData = get().harborMatesData.filter((data) => data.id !== anchoring_id);
+                    const updatedAnchoringsIds = get().anchoringsIds?.filter((anchoringId) => anchoringId !== anchoring_id) || [];
 
-                    const updatedAnchoringsIds = get().anchoringsIds.filter((anchoringId) => anchoringId !== anchoring_id);
-
-                    const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite })
-
+                    const updatedOceanitesData = get().oceanitesData?.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors - 1 }; else return oceanite }) || [];
 
                     set({ harborMatesData: updatedHarborMatesData, anchoringsIds: updatedAnchoringsIds, oceanitesData: updatedOceanitesData });
 
                     const updateCommunicatorDetails = CommunicationStore.getState().communicatorDetails || {};
 
-                    if (harborMatesDetails[anchoring_id]) {
-                        delete harborMatesDetails[anchoring_id]
+                    if (updateCommunicatorDetails[anchoring_id]) {
+                        delete updateCommunicatorDetails[anchoring_id]
                     }
 
                     // Update communicator details
                     const setCommunicatorDetails = CommunicationStore.getState().setCommunicatorDetails;
                     setCommunicatorDetails({ ...updateCommunicatorDetails });
-                    
+
                     return true;
-
-
                 },
 
                 SubscribeToAnchors: () => {
