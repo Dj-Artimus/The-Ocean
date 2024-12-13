@@ -60,16 +60,12 @@ export const CommunicationStore = create(
             }
         },
 
-
         SendMessage: async (msgData) => {
             try {
                 const communicatorId = get().communicatorId;
 
 
                 if (communicatorId && msgData) {
-                    console.log('communicatorId from the send msg store', communicatorId)
-                    console.log('content from the send msg store', msgData)
-
                     const user = UserStore.getState().profileData;
 
                     const { data, error } = await supabase.schema("Ocean").from('Message').insert({ ...msgData, sender_id: user.id, receiver_id: communicatorId }).select('*');
@@ -143,11 +139,11 @@ export const CommunicationStore = create(
 
                         set({ communicatorDetails: currentCommunicatorDetails });
 
-                        if (newMessage.sender_id === communicatorId && newMessage.sender_id !== user.id) {
-                            const markRead = get().MarkMessagesAsRead;
+                        if (newMessage.sender_id === communicatorId && newMessage.receiver_id === user.id && newMessage.is_read === false ) {
+                            const markRead = get().handleMessageRead;
                             const read = async () => {
                                 console.log('newMessage.sender_id', newMessage.sender_id)
-                                return await markRead(newMessage.sender_id);
+                                return await markRead(newMessage.id);
                             }
                             read();
                         }
@@ -210,6 +206,19 @@ export const CommunicationStore = create(
             }
         },
 
+        // CommunicationStore.js
+        handleMessageRead: async (messageId) => {
+            if (messageId) {
+                const { error } = await supabase.schema('Ocean').from('Message')
+                    .update({ is_read: true })
+                    .eq('id', messageId);
+
+                if (error) {
+                    console.error("Failed to mark messages as read:", error);
+                }
+            }
+        },
+
         MarkMessagesAsRead: async (senderId) => {
             const user = UserStore.getState().profileData; // Fetch the logged-in user data
             if (user) {
@@ -235,8 +244,6 @@ export const CommunicationStore = create(
     // )
 )
 
-
-// import { createClient } from "@/utils/supabase/client";
 // import { create } from "zustand";
 // import { UserStore } from "./UserStore";
 // import { errorToast, msgToast } from "@/components/ToasterProvider";

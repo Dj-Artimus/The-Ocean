@@ -79,39 +79,34 @@ const SignUp = () => {
               label="Email&nbsp;"
               type="email"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
               slotProps={{
                 input: {
                   className: "text-gray-900 dark:text-gray-100",
                 },
                 inputLabel: {
-                  className: "text-gray-700 dark:text-gray-300 pt-[2.5px]",
-                },
-                htmlInput: {
-                  autoComplete: "username", // Set the autocomplete attribute
+                  className: "text-gray-700 dark:text-gray-300",
                 },
               }}
-              sx={{
-                borderRadius: "15px",
-                input: {
-                  color: (theme) =>
-                    theme.palette.mode === "dark" ? "#111827" : "#f3f4f6",
-                },
-                "::placeholder": {
-                  color: (theme) =>
-                    theme.palette.mode === "dark" ? "#111827" : "#f3f4f6",
-                },
-              }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="username"
             />
             <TextField
               fullWidth
               label="Password&nbsp;"
               type="password"
               variant="outlined"
-              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100"
+              className="bg-gray-50 dark:bg-d_secondary rounded-lg text-gray-900 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
+              slotProps={{
+                input: {
+                  className: "text-gray-900 dark:text-gray-100",
+                },
+                inputLabel: {
+                  className: "text-gray-700 dark:text-gray-300",
+                },
+              }}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -122,19 +117,7 @@ const SignUp = () => {
               error={isSubmitted && !!passwordError}
               helperText={isSubmitted && passwordError}
               required
-              slotProps={{
-                input: {
-                  className: "text-gray-900 dark:text-gray-100 rounded-lg",
-                },
-                inputLabel: {
-                  className:
-                    "text-gray-700 dark:text-gray-300 pt-[2.5px] rounded-lg",
-                },
-                htmlInput: {
-                  autoComplete: "current-password", // Set the autocomplete attribute
-                },
-                
-              }}
+              autoComplete="current-password"
             />
             {isPasswordFocused && <PasswordMeter password={password} />}
             {isSubmiting ? (
@@ -142,7 +125,7 @@ const SignUp = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                className="bg-blue-600 bg-sl hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-xl py-3 text-md"
+                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full py-3 text-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
               >
                 <Cyclone className="animate-spin" />
               </Button>
@@ -152,7 +135,7 @@ const SignUp = () => {
                 variant="contained"
                 fullWidth
                 startIcon={<Email />}
-                className="bg-blue-600 bg-sl hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-xl py-3 text-md"
+                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full py-3 text-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-d_foreground"
                 onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
               >
                 SignUp
