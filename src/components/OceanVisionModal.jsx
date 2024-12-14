@@ -2,7 +2,7 @@
 
 import { Close } from "@mui/icons-material";
 import React, { useState, useEffect } from "react";
-import { successToast } from "./ToasterProvider";
+import { errorToast, successToast } from "./ToasterProvider";
 import { UIStore } from "@/store/UIStore";
 import "../app/globals.css";
 import Button from "./Button";
@@ -15,52 +15,49 @@ const OceanVisionModal = () => {
     oceanVision,
   } = UIStore();
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); // For opening animation
+  const [isClosing, setIsClosing] = useState(false); // For closing animation
 
   useEffect(() => {
     if (isOceanVisionModalOpen) {
-      setIsVisible(true);
+      setIsVisible(true); // Trigger opening animation
     }
   }, [isOceanVisionModalOpen]);
 
   const handleClose = () => {
-    setIsClosing(true);
+    setIsClosing(true); // Trigger closing animation
     setTimeout(() => {
-      setIsOceanVisionModalOpen(false);
-      setIsClosing(false);
-      setIsVisible(false);
-    }, 500);
+      setIsOceanVisionModalOpen(false); // Fully hide modal
+      setIsClosing(false); // Reset closing state
+      setIsVisible(false); // Reset visibility
+    }, 500); // Match animation duration
   };
 
   return (
     <div>
       {isOceanVisionModalOpen && (
         <div
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-bl from-blue-800 via-blue-900 to-indigo-950 bg-opacity-90 backdrop-blur-sm transition-opacity duration-500 ${
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-d_ternary bg-opacity-40 backdrop-blur-sm transition-opacity duration-500 ease-in-out ${
             isClosing || !isVisible ? "opacity-0" : "opacity-100"
           }`}
           onClick={handleClose}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-[90%] max-w-[850px] flex flex-col shadow-2xl rounded-3xl bg-gradient-to-br from-indigo-700 to-blue-900 text-white overflow-hidden transform transition-transform duration-500 ease-in-out ${
-              isClosing || !isVisible ? "scale-95" : "scale-100"
+            className={`w-[80%] max-w-[600px] h-[60%] flex flex-col m-auto border border-slate-700 shadow-md dark:shadow-sm bg-foreground dark:bg-d_foreground p-5 text-text_clr dark:text-d_text_clr rounded-2xl transform transition-all duration-500 ease-out ${
+              isClosing || !isVisible
+                ? "opacity-0 scale-90"
+                : "opacity-100 scale-100"
             }`}
           >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 rounded-t-3xl shadow-md">
-              <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wide">
-                🌊 Ocean Vision
-              </h1>
+            <div className="flex flex-shrink-0 justify-between items-center">
+              <h1 className="text-xl">Ocean Vision</h1>
               <Close
                 onClick={handleClose}
-                className="cursor-pointer text-white hover:text-gray-300 transition duration-300"
+                className="size-7 cursor-pointer text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
               />
             </div>
-
-            {/* Modal Body */}
-            <div className="relative z-10 mt-4 rounded-2xl p-2 overflow-y-auto customScrollbar h-full w-full">
+            <div className="mt-4 rounded-2xl p-2 overflow-y-auto customScrollbar h-full w-full">
               {/* CONTENT OF THE MODAL STARTS HERE */}
               <div className="">
                 <p className="mb-4">
@@ -109,22 +106,19 @@ const OceanVisionModal = () => {
                   possibilities of &apos;Ocean Vision.&apos; Together,
                   let&apos;s make waves!
                 </p>
-              </div>
+              </div>{" "}
             </div>
-
-            {/* Modal Footer */}
-            <div className="flex justify-center items-center bg-gradient-to-r from-indigo-700 to-blue-800 px-6 py-4 rounded-b-3xl">
-              <Button
-                onClick={() => {
-                  setOceanVision(!oceanVision);
-                  successToast(
-                    `Ocean Vision ${oceanVision ? "Deactivated" : "Activated"}!`
-                  );
-                  handleClose();
-                }}
-                className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-300 hover:to-blue-400 text-white font-semibold rounded-full px-6 py-3 shadow-lg transform hover:scale-105 transition-all"
-              >
-                {oceanVision ? "Deactivate Vision" : "Activate Vision"}
+            {/* CONTENT OF THE MODAL ENDS HERE */}
+            <div
+              onClick={() => {
+                setOceanVision(true);
+                setIsOceanVisionModalOpen(false);
+                successToast(`Ocean Vision Activated`);
+              }}
+              className="w-full -mb-5 py-3 flex justify-center flex-shrink-0"
+            >
+              <Button className=" bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-3 px-4 text-md">
+                {oceanVision ? "Deactivate" : "Activate"}
               </Button>
             </div>
           </div>

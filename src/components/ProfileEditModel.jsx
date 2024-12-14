@@ -331,7 +331,7 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary !text-slate-900 dark:!text-slate-100 rounded-lg"
                     >
                       <InputLabel className="!text-gray-700 dark:!text-gray-300">
                         Day
@@ -341,7 +341,7 @@ const ProfileEditModal = ({ profileData }) => {
                         onChange={(e) => setDay(e.target.value)}
                         label="Day"
                         required
-                        className="text-gray-900 dark:text-gray-100"
+                        className="!text-gray-900 dark:!text-gray-100"
                       >
                         {Array.from({ length: 31 }, (_, i) => (
                           <MenuItem key={i + 1} value={i + 1}>
@@ -353,9 +353,9 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg !text-slate-900 dark:!text-slate-100"
                     >
-                      <InputLabel className="!text-gray-700 dark:!text-gray-300">
+                      <InputLabel className="!text-gray-700 dark:!text-gray-300 ">
                         Month
                       </InputLabel>
                       <Select
@@ -363,7 +363,7 @@ const ProfileEditModal = ({ profileData }) => {
                         onChange={(e) => setMonth(e.target.value)}
                         label="Month"
                         required
-                        className="text-gray-900 dark:text-gray-100"
+                        className="!text-gray-900 dark:!text-gray-100"
                       >
                         {months.map((m) => (
                           <MenuItem key={m.value} value={m.value} className="">
@@ -375,7 +375,7 @@ const ProfileEditModal = ({ profileData }) => {
                     <FormControl
                       fullWidth
                       variant="outlined"
-                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                      className="!bg-gray-50 dark:!bg-d_secondary rounded-lg !text-slate-900 dark:!text-slate-100"
                     >
                       <InputLabel className="!text-gray-700 dark:!text-gray-300">
                         Year
@@ -407,7 +407,7 @@ const ProfileEditModal = ({ profileData }) => {
                   <FormControl
                     fullWidth
                     variant="outlined"
-                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg !text-slate-900 dark:!text-slate-100"
                   >
                     <InputLabel className="!text-gray-700 dark:!text-gray-300">
                       Gender
