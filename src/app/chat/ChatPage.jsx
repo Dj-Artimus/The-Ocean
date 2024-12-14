@@ -23,6 +23,7 @@ import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
 import { errorToast } from "@/components/ToasterProvider";
 import { setScrollListener } from "@/utils/InfiniteScrollSetUp";
+import { debounce } from "lodash";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -184,18 +185,22 @@ export default function ChatPage() {
     }
   }, [communicatorId, communicatorDetails, scrollToBottom]);
 
-  const handleScroll = () =>
-    setInfiniteScroll(feedRef, hasMore, page, isLoading, fetchMsgData);
-
-  const fetchMsgData = fetchDataForInfiniteScroll(
-    isLoadingOlderMessages,
-    setIsLoadingOlderMessages,
-    hasMore,
-    setHasMore,
-    page,
-    setPage,
-    12,
-    FetchCommunicationMessages
+  const handleScroll = useCallback(
+    debounce(async () => {
+      if (messagesRef.current?.scrollTop === 0 && !isLoadingOlderMessages) {
+        setIsLoadingOlderMessages(true);
+        const olderMessages = await FetchCommunicationMessages();
+        if (olderMessages?.length) {
+          const currentHeight = messagesRef.current.scrollHeight;
+          setTimeout(() => {
+            messagesRef.current.scrollTop =
+              messagesRef.current.scrollHeight - currentHeight;
+          }, 0);
+        }
+        setIsLoadingOlderMessages(false);
+      }
+    }, 300),
+    [FetchCommunicationMessages, isLoadingOlderMessages]
   );
 
   useEffect(() => {
@@ -217,7 +222,7 @@ export default function ChatPage() {
     return () => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
-  }, [communicatorDetails, subscribeToMessages, scrollToBottom]); // Add 'subscribeToMessages' as a dependency
+  }, [subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
 
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
