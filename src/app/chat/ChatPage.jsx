@@ -87,28 +87,32 @@ export default function ChatPage() {
   };
 
   const revokeURLs = () => {
-    // Revoke URLs for images
-    messageImages &&
+    if (messageImages) {
       messageImages.forEach((image) => {
         if (image.source) URL.revokeObjectURL(image.source);
       });
+    }
 
-    // Revoke URLs for videos
-    messageVideos &&
+    if (messageVideos) {
       messageVideos.forEach((video) => {
         if (video.source) URL.revokeObjectURL(video.source);
       });
+    }
   };
 
   const handleFileChange = async (e, type) => {
-    type === "images" ? setMessageImages([]) : setMessageVideos([]);
-    const files = Array.from(e.target.files); // Convert FileList to an array
+    if (type === "images") {
+      setMessageImages([]);
+    } else {
+      setMessageVideos([]);
+    }
+    const files = Array.from(e.target.files);
     if (!files?.length) return;
 
     const updatedFiles = files.map((file) => ({
-      source: URL.createObjectURL(file), // Temporary URL for preview
+      source: URL.createObjectURL(file),
       file,
-      path: null, // Set later
+      path: null,
       storageBucket: type === "images" ? "messages_Images" : "messages_Videos",
     }));
 
@@ -121,7 +125,6 @@ export default function ChatPage() {
 
   const handleSendMessage = async () => {
     setIsMsgSending(true);
-
     setIsMediaFileUploading(true);
 
     const images = await UploadMedia(messageImages, setMessageImages);
@@ -134,12 +137,13 @@ export default function ChatPage() {
       images: images?.map((img) => `${img.url}<|>${img.path}`) || [],
       videos: videos?.map((vid) => `${vid.url}<|>${vid.path}`) || [],
     });
+
     if (isSend) {
       revokeURLs();
       setMessageImages([]);
       setMessageVideos([]);
     } else {
-      errorToast("Failed to drop the droplet.");
+      errorToast("Failed to send the message.");
     }
     setIsMsgSending(false);
     setMessageInput("");
@@ -147,7 +151,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     setIsMsgsOpen(true);
-  }, [setIsMsgsOpen]); // Add 'setIsMsgsOpen' as a dependency
+  }, [setIsMsgsOpen]);
 
   useEffect(() => {
     if (communicatorId) {
@@ -162,10 +166,10 @@ export default function ChatPage() {
     isMsgsOpen,
     MarkMessagesAsRead,
     FetchCommunicationMessages,
-  ]); // Add all relevant dependencies
+  ]);
 
   const handleMoreOptionsClick = (msg) => {
-    console.log("openig model..");
+    console.log("opening modal..");
     setContentEditId(msg.id);
     setContentToEdit(msg.content);
     setContentToEditType("Message");
@@ -209,9 +213,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!communicatorId) return;
-    // Subscribe to online status
     const unsubscribe = subscribeToOnlineStatus(communicatorId, setIsOnline);
-    // Cleanup on component unmount
     return () => {
       if (unsubscribe) unsubscribe();
     };
@@ -222,8 +224,7 @@ export default function ChatPage() {
     return () => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
-  }, [subscribeToMessages]); // Add 'subscribeToMessages' as a dependency
-
+  }, [subscribeToMessages]);
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
       {/* NAVIGATION BAR STARTS HERE */}
