@@ -118,6 +118,38 @@ export const CommunicationStore = create(
             if (!userId) return;
 
             const communicatorIds = [userId, ...Object.keys(communicatorDetails)];
+            const handlePayload = async (payload) => {
+                console.log('payload from subscribeToMessages', payload)
+                const { eventType, new: newMessage } = payload;
+                const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
+                const currentCommunicatorDetails = { ...get().communicatorDetails };
+
+                if (eventType === 'INSERT' || eventType === 'UPDATE') {
+                    let is_read = false;
+                    if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
+                        await get().handleMessageRead(newMessage.id);
+                        is_read = true;
+                    }
+                    const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
+                    currentCommunicatorDetails[currentCommunicatorId] = {
+                        ...currentCommunicatorDetails[currentCommunicatorId],
+                        messages: eventType === 'INSERT' ? [...messages, { ...newMessage, is_read }] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
+                    };
+                } else if (eventType === 'DELETE') {
+                    const { old: deletedMessage } = payload;
+                    currentCommunicatorDetails[currentCommunicatorId] = {
+                        ...currentCommunicatorDetails[currentCommunicatorId],
+                        messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
+                    };
+                }
+
+                set({ communicatorDetails: currentCommunicatorDetails });
+                if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId && eventType === 'INSERT') {
+                    msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content);
+                }
+
+            };
+
             const channel = supabase
                 .channel(`realtime-messages:user${userId}`)
                 .on(
@@ -127,39 +159,18 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        filter: `or(receiver_id=eq.${userId},sender_id=eq.${userId})`,
-                    },
-                    async (payload) => {
-                        console.log('payload from subscribeToMessages', payload)
-                        const { eventType, new: newMessage } = payload;
-                        const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
-                        const currentCommunicatorDetails = { ...get().communicatorDetails };
-
-                        if (eventType === 'INSERT' || eventType === 'UPDATE') {
-                            let is_read = false;
-                            if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
-                                await get().handleMessageRead(newMessage.id);
-                                is_read = true;
-                            }
-                            const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
-                            currentCommunicatorDetails[currentCommunicatorId] = {
-                                ...currentCommunicatorDetails[currentCommunicatorId],
-                                messages: eventType === 'INSERT' ? [...messages, {...newMessage, is_read}] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
-                            };
-                        } else if (eventType === 'DELETE') {
-                            const { old: deletedMessage } = payload;
-                            currentCommunicatorDetails[currentCommunicatorId] = {
-                                ...currentCommunicatorDetails[currentCommunicatorId],
-                                messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
-                            };
-                        }
-
-                        set({ communicatorDetails: currentCommunicatorDetails });
-                        if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId && eventType === 'INSERT') {
-                            msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content);
-                        }
-
-                    }
+                        filter: `receiver_id=eq.${userId}`,
+                    }, (payload) => handlePayload(payload) // Pass payload to handlePayload
+                )
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'Ocean',
+                        table: 'Message',
+                        // filter: `sender_id=in.(${communicatorIds.join(',')})`,
+                        filter: `sender_id=eq.${userId}`,
+                    }, (payload) => handlePayload(payload)
                 )
                 .subscribe();
 
