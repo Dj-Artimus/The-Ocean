@@ -63,11 +63,9 @@ export const CommunicationStore = create(
                     return false;
                 }
 
-                console.log('data from send message', data)
-
                 // Optimistic UI update
                 set((state) => {
-                    const updatedMessages = [...state.communicatorDetails[communicatorId]?.messages || [], { ...data }];
+                    const updatedMessages = [...state.communicatorDetails[communicatorId]?.messages || [], data[0]];
                     return {
                         communicatorDetails: {
                             ...state.communicatorDetails,
