@@ -133,7 +133,8 @@ export const CommunicationStore = create(
                     const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
                     currentCommunicatorDetails[currentCommunicatorId] = {
                         ...currentCommunicatorDetails[currentCommunicatorId],
-                        messages: eventType === 'INSERT' ? [...messages, { ...newMessage, is_read }] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
+                        messages: eventType === 'INSERT' && !(messages.some(msg => msg.id === newMessage.id)) ? [...messages, { ...newMessage, is_read }] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
+
                     };
                 } else if (eventType === 'DELETE') {
                     const { old: deletedMessage } = payload;
