@@ -52,10 +52,10 @@ export const CommunicationStore = create(
                 const { id: userId } = UserStore.getState().profileData || {};
                 if (!communicatorId || !userId || !msgData) return false;
 
-                const { error } = await supabase
+                const { data, error } = await supabase
                     .schema("Ocean")
                     .from('Message')
-                    .insert({ ...msgData, sender_id: userId, receiver_id: communicatorId });
+                    .insert({ ...msgData, sender_id: userId, receiver_id: communicatorId }).select();
 
                 if (error) {
                     errorToast(`Error sending message: ${error.message}`);
@@ -63,7 +63,7 @@ export const CommunicationStore = create(
                 }
                 // Optimistic UI update
                 set((state) => {
-                    const updatedMessages = [...state.communicatorDetails[communicatorId].messages, { ...msgData, sender_id: userId }];
+                    const updatedMessages = [...state.communicatorDetails[communicatorId].messages, data ];
                     return {
                         communicatorDetails: {
                             ...state.communicatorDetails,

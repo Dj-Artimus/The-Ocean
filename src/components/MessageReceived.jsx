@@ -1,9 +1,25 @@
 import { Done, DoneAll } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect } from "react";
 import ContentAndMediaElement from "./ContentAndMediaElement";
 import { formaterDateAndTime } from "@/utils/TimeAndCountFormater";
+import { CommunicationStore } from "@/store/CommunicationStore";
 
-const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
+const MessageReceived = ({
+  content,
+  images,
+  videos,
+  created_at,
+  isRead,
+  id,
+}) => {
+  const { handleMessageRead } = CommunicationStore();
+
+  useEffect(() => {
+    if (!isRead) {
+      handleMessageRead(id); // Mark message as read when displayed
+    }
+  }, [isRead, id, handleMessageRead]);
+
   return (
     <div className="w-full">
       <div
@@ -21,7 +37,7 @@ const MessageReceived = ({ content, images, videos, created_at, isRead }) => {
                   height: "16px",
                   margin: "-3px 4px",
                 }}
-                className='text-blue-500'
+                className="text-blue-500"
               />
             ) : (
               <Done

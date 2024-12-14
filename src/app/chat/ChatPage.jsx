@@ -344,6 +344,7 @@ export default function ChatPage() {
                       msg.sender_id === profileData.id ? (
                         <MessageSent
                           key={msg.id}
+                          id={msg.id}
                           content={msg.content}
                           images={msg.images}
                           videos={msg.videos}
@@ -355,6 +356,7 @@ export default function ChatPage() {
                       ) : (
                         <MessageReceived
                           key={msg.id}
+                          id={msg.id}
                           content={msg.content}
                           images={msg.images}
                           videos={msg.videos}
