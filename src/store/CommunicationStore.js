@@ -150,7 +150,7 @@ export const CommunicationStore = create(
                 }
 
             };
-            console.log('communicatorIds.toLocalString()', communicatorIds.toLocalString())
+            console.log('communicatorIds.toLocalString()', communicatorIds.toLocaleString())
             const channel = supabase
                 .channel(`realtime-messages:user${userId}`)
                 .on(
