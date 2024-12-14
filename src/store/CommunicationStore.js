@@ -160,7 +160,7 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        filter: `receiver_id=eq.${userId},sender_id=eq.${userId}`,
+                        filter: `receiver_id=eq.${userId} OR sender_id=eq.${userId}`,
                     }, (payload) => handlePayload(payload) // Pass payload to handlePayload
                 )
                 .subscribe();
