@@ -17,15 +17,16 @@ export const CommunicationStore = create(
 
         FetchCommunicationMessages: async () => {
             try {
-                const state = get();
-                const userId = state?.profileData?.id;
-                const communicatorId = state?.communicatorId;
-                const communicatorDetails = state?.communicatorDetails;
+                const { profileData, communicatorId, communicatorDetails } = get();
+                const userId = profileData?.id;
 
                 console.log('userId', userId)
                 console.log('fetching the communication messages...')
 
                 if (!userId || !communicatorId) return null;
+
+                console.log('communicatorId from the fetch communication messages', communicatorId);
+                console.log('communicatorDetails from the fetch communication messages', communicatorDetails);
 
                 const lastMessageCreatedAt = communicatorDetails?.[communicatorId]?.messages?.[0]?.created_at;
 

@@ -169,12 +169,12 @@ export default function ChatPage() {
       );
       const handleMsgs = async () => {
         await MarkMessagesAsRead(communicatorId);
-        return await FetchCommunicationMessages();
+        return console.log(
+          await FetchCommunicationMessages(),
+          "messages from the chat page after initial fetching"
+        );
       };
-      console.log(
-        "messages from the chat page after initial fetching",
-        handleMsgs()
-      );
+      handleMsgs();
     }
   }, [
     communicatorId,
@@ -192,7 +192,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (communicatorId && communicatorDetails[communicatorId]?.messages) {
-      console.log('scrolling to the bottom...')
+      console.log("scrolling to the bottom...");
       scrollToBottom();
     }
   }, [communicatorId, communicatorDetails, scrollToBottom]);
@@ -200,7 +200,9 @@ export default function ChatPage() {
   const handleScroll = useCallback(
     debounce(async () => {
       if (messagesRef.current?.scrollTop === 0 && !isLoadingOlderMessages) {
-        console.log("fetching older messages from the handle scroll and also handling scrolling");
+        console.log(
+          "fetching older messages from the handle scroll and also handling scrolling"
+        );
         setIsLoadingOlderMessages(true);
         const olderMessages = await FetchCommunicationMessages();
         if (olderMessages?.length) {
@@ -234,7 +236,7 @@ export default function ChatPage() {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
   }, [subscribeToMessages]);
-  
+
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
       {/* NAVIGATION BAR STARTS HERE */}
