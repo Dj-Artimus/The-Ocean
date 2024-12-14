@@ -1,4 +1,5 @@
-import { debounce } from "@mui/material";
+import { debounce } from "lodash";
+
 
 export const setInfiniteScroll =
   debounce(async (ref, hasMore, page, isLoading, dataFetcher) => {

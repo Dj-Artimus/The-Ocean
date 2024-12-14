@@ -22,9 +22,14 @@ export const CommunicationStore = create(
                 const communicatorId = state?.communicatorId;
                 const communicatorDetails = state?.communicatorDetails;
 
+                console.log('userId', userId)
+                console.log('fetching the communication messages...')
+
                 if (!userId || !communicatorId) return null;
 
                 const lastMessageCreatedAt = communicatorDetails?.[communicatorId]?.messages?.[0]?.created_at;
+
+                console.log('lastMessageCreatedAt', lastMessageCreatedAt)
 
                 const query = supabase
                     .schema("Ocean")
@@ -45,6 +50,8 @@ export const CommunicationStore = create(
                 if (error) throw error;
 
                 if (!data) return null;
+
+                console.log('data from fetching the messages ', data)
 
                 const updateCommunicatorData = {
                     ...communicatorDetails,

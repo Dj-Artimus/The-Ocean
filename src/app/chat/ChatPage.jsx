@@ -149,25 +149,6 @@ export default function ChatPage() {
     setMessageInput("");
   };
 
-  useEffect(() => {
-    setIsMsgsOpen(true);
-  }, [setIsMsgsOpen]);
-
-  useEffect(() => {
-    if (communicatorId) {
-      MarkMessagesAsRead(communicatorId);
-      const getMsgs = async () => {
-        await FetchCommunicationMessages();
-      };
-      getMsgs();
-    }
-  }, [
-    communicatorId,
-    isMsgsOpen,
-    MarkMessagesAsRead,
-    FetchCommunicationMessages,
-  ]);
-
   const handleMoreOptionsClick = (msg) => {
     console.log("opening modal..");
     setContentEditId(msg.id);
@@ -175,6 +156,32 @@ export default function ChatPage() {
     setContentToEditType("Message");
     setIsMoreOptionsModalOpen(true);
   };
+
+  useEffect(() => {
+    setIsMsgsOpen(true);
+  }, [setIsMsgsOpen]);
+
+  useEffect(() => {
+    if (communicatorId) {
+      console.log(
+        "communicatorId , starting the  fetching of the messages from the chat page ",
+        communicatorId
+      );
+      const handleMsgs = async () => {
+        await MarkMessagesAsRead(communicatorId);
+        return await FetchCommunicationMessages();
+      };
+      console.log(
+        "messages from the chat page after initial fetching",
+        handleMsgs()
+      );
+    }
+  }, [
+    communicatorId,
+    isMsgsOpen,
+    MarkMessagesAsRead,
+    FetchCommunicationMessages,
+  ]);
 
   const scrollToBottom = useCallback(() => {
     messagesRef.current?.scrollTo({
@@ -185,6 +192,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (communicatorId && communicatorDetails[communicatorId]?.messages) {
+      console.log('scrolling to the bottom...')
       scrollToBottom();
     }
   }, [communicatorId, communicatorDetails, scrollToBottom]);
@@ -192,6 +200,7 @@ export default function ChatPage() {
   const handleScroll = useCallback(
     debounce(async () => {
       if (messagesRef.current?.scrollTop === 0 && !isLoadingOlderMessages) {
+        console.log("fetching older messages from the handle scroll and also handling scrolling");
         setIsLoadingOlderMessages(true);
         const olderMessages = await FetchCommunicationMessages();
         if (olderMessages?.length) {
@@ -225,6 +234,7 @@ export default function ChatPage() {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
   }, [subscribeToMessages]);
+  
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
       {/* NAVIGATION BAR STARTS HERE */}
