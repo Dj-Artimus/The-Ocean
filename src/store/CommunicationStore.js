@@ -127,7 +127,7 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        filter: `receiver_id=eq.${userId},sender_id=eq.${userId}`,
+                        filter: `or(receiver_id=eq.${userId},sender_id=eq.${userId})`,
                     },
                     async (payload) => {
                         console.log('payload from subscribeToMessages', payload)
