@@ -17,8 +17,8 @@ export const CommunicationStore = create(
 
         FetchCommunicationMessages: async () => {
             try {
-                const { profileData, communicatorId, communicatorDetails } = get();
-                const userId = profileData?.id;
+                const { communicatorId, communicatorDetails } = get();
+                const userId = UserStore.getState().profileData?.id;
 
                 console.log('userId', userId)
                 console.log('fetching the communication messages...')
