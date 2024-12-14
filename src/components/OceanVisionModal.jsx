@@ -61,7 +61,7 @@ const OceanVisionModal = () => {
               {/* CONTENT OF THE MODAL STARTS HERE */}
               <div className="">
                 <p className="mb-4">
-                  Welcome to the <strong>Ocean Vision</strong>, a glimpse into
+                  Welcome to <strong>🌊 Ocean Vision</strong>, a glimpse into
                   the features and future potential of what &apos;The
                   Ocean&apos; aims to achieve. While the project started as a
                   bold attempt to create a unified social media platform,
@@ -69,25 +69,22 @@ const OceanVisionModal = () => {
                   requirements, and data privacy policies posed significant
                   challenges.
                 </p>
-                <p className="mb-4">
-                  The &apos;Ocean Vision&apos; unlocks the following UI
-                  features:
-                </p>
-                <ul className="list-disc list-inside mb-4">
-                  <li>
-                    <strong>Stream Connections:</strong> A beautifully designed
-                    UI that provides insights into the user&apos;s connected
-                    social media platforms, including LinkedIn, X (Twitter),
-                    Instagram, and more.
+                <p className="mb-4">🌟 Highlights of Ocean Vision:</p>
+                <ul className="list-disc list-inside mb-4 space-y-2">
+                  <li className="hover:scale-105 transition-transform">
+                    <strong>🌐 Stream Connections:</strong> A beautifully
+                    designed UI that provides insights into the user&apos;s
+                    connected social media platforms, including LinkedIn, X
+                    (Twitter), Instagram, and more.
                   </li>
-                  <li>
-                    <strong>Ocean Board:</strong> A dynamic scoreboard
+                  <li className="hover:scale-105 transition-transform">
+                    <strong>📊 Ocean Board:</strong> A dynamic scoreboard
                     displaying the user&apos;s followers and followings across
                     connected platforms, offering a consolidated view of their
                     social media presence.
                   </li>
-                  <li>
-                    ...and many more exciting features are in the pipeline!
+                  <li className="hover:scale-105 transition-transform">
+                    🚀 ...and many more exciting features are in the pipeline!
                   </li>
                 </ul>
                 <p className="mb-4">
@@ -100,16 +97,16 @@ const OceanVisionModal = () => {
                 <p className="mb-4">
                   Thank you for being part of this journey and exploring the
                   possibilities of &apos;Ocean Vision.&apos; Together,
-                  let&apos;s make waves!
+                  let&apos;s make waves! 🌊
                 </p>
-              </div>{" "}
+              </div>
             </div>
             {/* CONTENT OF THE MODAL ENDS HERE */}
             <div
               onClick={() => {
                 setOceanVision(true);
                 setIsOceanVisionModalOpen(false);
-                successToast(`Ocean Vision Activated`);
+                successToast(`🌊 Ocean Vision Activated!`);
               }}
               className="w-full -mb-5 py-3 flex justify-center flex-shrink-0"
             >

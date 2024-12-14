@@ -17,35 +17,56 @@ export const CommunicationStore = create(
 
         FetchCommunicationMessages: async () => {
             try {
-                const { communicatorId } = get();
-                const { id: userId } = UserStore.getState().profileData || {};
-                if (!communicatorId || !userId) return;
+                const state = get();
+                const userId = state?.profileData?.id;
+                const communicatorId = state?.communicatorId;
+                const communicatorDetails = state?.communicatorDetails;
 
-                const { data, error } = await supabase
+                if (!userId || !communicatorId) return null;
+
+                const lastMessageCreatedAt = communicatorDetails?.[communicatorId]?.messages?.[0]?.created_at;
+
+                const query = supabase
                     .schema("Ocean")
                     .from('Message')
                     .select('*')
-                    .or(`and(sender_id.eq.${userId},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`)
-                    .order('created_at', { ascending: true });
+                    .or(
+                        `and(sender_id.eq.${userId},receiver_id.eq.${communicatorId})`,
+                        `and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`
+                    )
+                    .order('created_at', { ascending: true })
+                    .limit(12);
 
+                if (lastMessageCreatedAt) {
+                    query.gt('created_at', lastMessageCreatedAt);
+                }
+
+                const { data, error } = await query;
                 if (error) throw error;
 
-                const updateCommunicatorData = { ...get().communicatorDetails };
-                const existingMessages = updateCommunicatorData[communicatorId]?.messages || [];
-                const uniqueMessages = [...new Map([...existingMessages, ...data].map(msg => [msg.id, msg])).values()];
+                if (!data) return null;
 
-                updateCommunicatorData[communicatorId] = {
-                    ...updateCommunicatorData[communicatorId],
-                    messages: uniqueMessages,
+                const updateCommunicatorData = {
+                    ...communicatorDetails,
+                    [communicatorId]: {
+                        ...communicatorDetails[communicatorId],
+                        messages: [
+                            ...new Map([
+                                ...(communicatorDetails[communicatorId]?.messages || []),
+                                ...data
+                            ].map(msg => [msg.id, msg]))
+                                .values()
+                        ]
+                    }
                 };
 
                 set({ communicatorDetails: updateCommunicatorData });
-                return uniqueMessages;
+                return updateCommunicatorData[communicatorId].messages;
             } catch (error) {
                 console.error('Error fetching messages:', error);
+                errorToast('Error fetching messages', error.message);
             }
         },
-
         SendMessage: async (msgData) => {
             if (!msgData) return false;
             const communicatorId = get().communicatorId;
@@ -99,7 +120,7 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        filter: `sender_id=eq.(${userId})`,
+                        filter: `receiver_id=eq.${userId}`,
                     },
                     (payload) => {
                         const { eventType, new: newMessage } = payload;

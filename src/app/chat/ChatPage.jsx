@@ -9,13 +9,20 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import "../globals.css";
 import MessageSent from "@/components/MessageSent";
 import MessageReceived from "@/components/MessageReceived";
-import { AddCircle, ArrowBack, ImageRounded, Movie } from "@mui/icons-material";
+import {
+  AddCircle,
+  ArrowBack,
+  CycloneRounded,
+  ImageRounded,
+  Movie,
+} from "@mui/icons-material";
 import Navbar from "@/components/Navbar";
 import InputTextarea from "@/components/InputTextArea";
 import { UIStore } from "@/store/UIStore";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
 import { errorToast } from "@/components/ToasterProvider";
+import { setScrollListener } from "@/utils/InfiniteScrollSetUp";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -63,6 +70,9 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState("");
   const [messageImages, setMessageImages] = useState([]);
   const [messageVideos, setMessageVideos] = useState([]);
+  const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
   const [isOnline, setIsOnline] = useState(false);
 
@@ -162,16 +172,35 @@ export default function ChatPage() {
   };
 
   const scrollToBottom = useCallback(() => {
-    messagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messagesRef]);
+    messagesRef.current?.scrollTo({
+      top: messagesRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, []);
 
   useEffect(() => {
-    scrollToBottom();
-    const messagesChannel = subscribeToMessages();
-    return () => {
-      if (messagesChannel) messagesChannel.unsubscribe();
-    };
-  }, [communicatorDetails, subscribeToMessages, scrollToBottom]); // Add 'subscribeToMessages' as a dependency
+    if (communicatorId && communicatorDetails[communicatorId]?.messages) {
+      scrollToBottom();
+    }
+  }, [communicatorId, communicatorDetails, scrollToBottom]);
+
+  const handleScroll = () =>
+    setInfiniteScroll(feedRef, hasMore, page, isLoading, fetchMsgData);
+
+  const fetchMsgData = fetchDataForInfiniteScroll(
+    isLoadingOlderMessages,
+    setIsLoadingOlderMessages,
+    hasMore,
+    setHasMore,
+    page,
+    setPage,
+    12,
+    FetchCommunicationMessages
+  );
+
+  useEffect(() => {
+    setScrollListener(messagesRef, handleScroll);
+  }, [handleScroll]);
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -182,6 +211,13 @@ export default function ChatPage() {
       if (unsubscribe) unsubscribe();
     };
   }, [communicatorId, subscribeToOnlineStatus]);
+
+  useEffect(() => {
+    const messagesChannel = subscribeToMessages();
+    return () => {
+      if (messagesChannel) messagesChannel.unsubscribe();
+    };
+  }, [communicatorDetails, subscribeToMessages, scrollToBottom]); // Add 'subscribeToMessages' as a dependency
 
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
@@ -339,7 +375,15 @@ export default function ChatPage() {
                     Say hi 👋 to start the conversation.{" "}
                   </div>
                 ) : (
-                  <div className="min-w-full flex flex-col">
+                  <div
+                    ref={messagesRef}
+                    className="flex flex-col-reverse overflow-auto"
+                  >
+                    {isLoadingOlderMessages && (
+                      <div className="animate-pulse w-full flex justify-center items-center">
+                        <CycloneRounded className="animate-spin size-8" />
+                      </div>
+                    )}
                     {communicatorDetails[communicatorId]?.messages?.map((msg) =>
                       msg.sender_id === profileData.id ? (
                         <MessageSent
