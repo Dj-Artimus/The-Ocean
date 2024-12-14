@@ -127,18 +127,24 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        filter: `receiver_id=eq.${userId}`,
+                        filter: `receiver_id=eq.${userId},sender_id=eq.${userId}`,
                     },
-                    (payload) => {
+                    async (payload) => {
+                        console.log('payload from subscribeToMessages', payload)
                         const { eventType, new: newMessage } = payload;
                         const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
                         const currentCommunicatorDetails = { ...get().communicatorDetails };
 
                         if (eventType === 'INSERT' || eventType === 'UPDATE') {
+                            let is_read = false;
+                            if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
+                                await get().handleMessageRead(newMessage.id);
+                                is_read = true;
+                            }
                             const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
                             currentCommunicatorDetails[currentCommunicatorId] = {
                                 ...currentCommunicatorDetails[currentCommunicatorId],
-                                messages: eventType === 'INSERT' ? [...messages, newMessage] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
+                                messages: eventType === 'INSERT' ? [...messages, {...newMessage, is_read}] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
                             };
                         } else if (eventType === 'DELETE') {
                             const { old: deletedMessage } = payload;
@@ -149,10 +155,7 @@ export const CommunicationStore = create(
                         }
 
                         set({ communicatorDetails: currentCommunicatorDetails });
-                        if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
-                            get().handleMessageRead(newMessage.id);
-                        }
-                        if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId) {
+                        if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId && eventType === 'INSERT') {
                             msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content);
                         }
 

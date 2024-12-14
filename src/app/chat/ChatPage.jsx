@@ -199,20 +199,35 @@ export default function ChatPage() {
 
   const handleScroll = useCallback(
     debounce(async () => {
-      if (messagesRef.current?.scrollTop === 0 && !isLoadingOlderMessages) {
-        console.log(
-          "fetching older messages from the handle scroll and also handling scrolling"
-        );
-        setIsLoadingOlderMessages(true);
-        const olderMessages = await FetchCommunicationMessages();
-        if (olderMessages?.length) {
-          const currentHeight = messagesRef.current.scrollHeight;
-          setTimeout(() => {
-            messagesRef.current.scrollTop =
-              messagesRef.current.scrollHeight - currentHeight;
-          }, 0);
+      const element = messagesRef.current;
+      if (element) {
+        const { scrollTop, scrollHeight, clientHeight } = element;
+        console.log("scrollTop", scrollTop);
+        console.log("scrollHeight", scrollHeight);
+        console.log("clientHeight", clientHeight);
+
+        if (scrollTop === 0 && !isLoadingOlderMessages) {
+          console.log(
+            "fetching older messages from the handle scroll and also handling scrolling"
+          );
+          setIsLoadingOlderMessages(true);
+
+          const olderMessages = await FetchCommunicationMessages();
+
+          if (olderMessages?.length) {
+            const currentHeight = messagesRef.current.scrollHeight;
+            console.log("Current Height Before Fetch:", currentHeight);
+
+            setTimeout(() => {
+              const newScrollHeight = messagesRef.current.scrollHeight;
+              console.log("New Scroll Height After Fetch:", newScrollHeight);
+              messagesRef.current.scrollTop = newScrollHeight - currentHeight;
+              console.log("Scroll Top set to:", messagesRef.current.scrollTop);
+            }, 0);
+          }
+
+          setIsLoadingOlderMessages(false);
         }
-        setIsLoadingOlderMessages(false);
       }
     }, 300),
     [FetchCommunicationMessages, isLoadingOlderMessages]
