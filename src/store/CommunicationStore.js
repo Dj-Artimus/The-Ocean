@@ -138,9 +138,9 @@ export const CommunicationStore = create(
                     };
                 } else if (eventType === 'DELETE') {
                     const { old: deletedMessage } = payload;
-                    currentCommunicatorDetails[currentCommunicatorId] = {
-                        ...currentCommunicatorDetails[currentCommunicatorId],
-                        messages: currentCommunicatorDetails[currentCommunicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
+                    currentCommunicatorDetails[communicatorId] = {
+                        ...currentCommunicatorDetails[communicatorId],
+                        messages: currentCommunicatorDetails[communicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
                     };
                 }
 
@@ -159,20 +159,20 @@ export const CommunicationStore = create(
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                        // filter: `receiver_id=eq.${userId}`,
+                        // filter: `sender_id=in.(${communicatorIds.join(',')})`,
+                        filter: `receiver_id=eq.${userId}`,
                     }, (payload) => handlePayload(payload) // Pass payload to handlePayload
                 )
-                // .on(
-                //     'postgres_changes',
-                //     {
-                //         event: '*',
-                //         schema: 'Ocean',
-                //         table: 'Message',
-                //         // filter: `sender_id=in.(${communicatorIds.join(',')})`,
-                //         filter: `sender_id=eq.${userId}`,
-                //     }, (payload) => handlePayload(payload)
-                // )
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'Ocean',
+                        table: 'Message',
+                        // filter: `sender_id=in.(${communicatorIds.join(',')})`,
+                        filter: `sender_id=eq.${userId}`,
+                    }, (payload) => handlePayload(payload)
+                )
                 .subscribe();
 
             return channel;
