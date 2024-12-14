@@ -116,7 +116,7 @@ export const CommunicationStore = create(
             const { communicatorId, communicatorDetails } = get();
             const { id: userId } = UserStore.getState().profileData || {};
             if (!userId) return;
-
+            console.log( 'checking the subscribeToMessages communicator details', communicatorDetails);
             const communicatorIds = [userId, ...Object.keys(communicatorDetails)];
             const handlePayload = async (payload) => {
                 console.log('payload from subscribeToMessages', payload)
