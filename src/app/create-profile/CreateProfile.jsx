@@ -279,7 +279,7 @@ const CreateProfile = () => {
                       onChange={(e) => setDay(e.target.value)}
                       label="Day"
                       required
-                      className="text-gray-900 dark:text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100"
                     >
                       {Array.from({ length: 31 }, (_, i) => (
                         <MenuItem key={i + 1} value={i + 1}>
@@ -301,7 +301,7 @@ const CreateProfile = () => {
                       onChange={(e) => setMonth(e.target.value)}
                       label="Month"
                       required
-                      className="text-gray-900 dark:text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100"
                     >
                       {months.map((m) => (
                         <MenuItem key={m.value} value={m.value} className="">
@@ -323,7 +323,7 @@ const CreateProfile = () => {
                       onChange={(e) => setYear(e.target.value)}
                       label="Year"
                       required
-                      className="text-gray-900 dark:text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100"
                     >
                       {years.map((y) => (
                         <MenuItem key={y} value={y}>
@@ -355,7 +355,7 @@ const CreateProfile = () => {
                     onChange={(e) => setGender(e.target.value)}
                     label="Gender"
                     required
-                    className="text-gray-900 dark:text-gray-100"
+                    className="!text-gray-900 dark:!text-gray-100"
                   >
                     <MenuItem value="male">Male</MenuItem>
                     <MenuItem value="female">Female</MenuItem>

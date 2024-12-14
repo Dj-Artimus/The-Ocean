@@ -385,7 +385,7 @@ const ProfileEditModal = ({ profileData }) => {
                         onChange={(e) => setYear(e.target.value)}
                         label="Year"
                         required
-                        className="text-gray-900 dark:text-gray-100"
+                        className="!text-gray-900 dark:!text-gray-100"
                       >
                         {years.map((y) => (
                           <MenuItem key={y} value={y}>
@@ -417,7 +417,7 @@ const ProfileEditModal = ({ profileData }) => {
                       onChange={(e) => setGender(e.target.value)}
                       label="Gender"
                       required
-                      className="text-gray-900 dark:text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100"
                     >
                       <MenuItem value="male">Male</MenuItem>
                       <MenuItem value="female">Female</MenuItem>

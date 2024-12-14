@@ -61,6 +61,19 @@ export const CommunicationStore = create(
                     errorToast(`Error sending message: ${error.message}`);
                     return false;
                 }
+                // Optimistic UI update
+                set((state) => {
+                    const updatedMessages = [...state.communicatorDetails[communicatorId].messages, { ...msgData, sender_id: userId }];
+                    return {
+                        communicatorDetails: {
+                            ...state.communicatorDetails,
+                            [communicatorId]: {
+                                ...state.communicatorDetails[communicatorId],
+                                messages: updatedMessages,
+                            },
+                        },
+                    };
+                });
 
                 return true;
             } catch (error) {
