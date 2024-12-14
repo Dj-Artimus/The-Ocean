@@ -24,7 +24,7 @@ const MessageReceived = ({
     <div className="w-full">
       <div
         className={` bg-blue-200 bg-opacity-50 shadow-sm shadow-blue-400 dark:shadow-blue-950 dark:bg-d_secondary max-w-[70%] pt-1 px-3 float-start mb-3 rounded-xl rounded-tl-none ${
-          (images.length !== 0 || videos.length !== 0) && "pb-3"
+          (images?.length !== 0 || videos?.length !== 0) && "pb-3"
         } `}
       >
         <div className="flex justify-between text-text_clr2 dark:text-d_text_clr2  clear-both">

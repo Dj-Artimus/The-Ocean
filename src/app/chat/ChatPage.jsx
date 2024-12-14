@@ -92,7 +92,7 @@ export default function ChatPage() {
   const handleFileChange = async (e, type) => {
     type === "images" ? setMessageImages([]) : setMessageVideos([]);
     const files = Array.from(e.target.files); // Convert FileList to an array
-    if (!files.length) return;
+    if (!files?.length) return;
 
     const updatedFiles = files.map((file) => ({
       source: URL.createObjectURL(file), // Temporary URL for preview

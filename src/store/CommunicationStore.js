@@ -48,7 +48,7 @@ export const CommunicationStore = create(
 
         SendMessage: async (msgData) => {
             try {
-                const { communicatorId } = get();
+                const communicatorId  = get().communicatorId;
                 const { id: userId } = UserStore.getState().profileData || {};
                 if (!communicatorId || !userId || !msgData) return false;
 
@@ -96,7 +96,8 @@ export const CommunicationStore = create(
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${communicatorIds.join(',')})`,
+                        // filter: `sender_id=in.(${communicatorIds.join(',')})`,
+                        filter: `sender_id=eq.(${userId})`,
                     },
                     (payload) => {
                         const { eventType, new: newMessage } = payload;

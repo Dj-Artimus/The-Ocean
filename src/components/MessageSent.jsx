@@ -16,7 +16,7 @@ const MessageSent = ({
     <div className="w-full">
       <div
         className={`bg-primary shadow-sm shadow-blue-400 dark:shadow-blue-950 dark:bg-d_primary max-w-[70%] pt-1 px-3 float-end rounded-xl mb-3 rounded-tr-none ${
-          (images.length !== 0 || videos.length !== 0) && "pb-3"
+          (images?.length !== 0 || videos?.length !== 0) && "pb-3"
         } `}
       >
         <div className="flex justify-between text-text_clr2 dark:text-d_text_clr2  clear-both">
@@ -32,8 +32,7 @@ const MessageSent = ({
                   height: "16px",
                   margin: "-3px 4px",
                 }}
-                className='text-blue-500'
-
+                className="text-blue-500"
               />
             ) : (
               <Done
