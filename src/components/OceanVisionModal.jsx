@@ -87,10 +87,6 @@ const OceanVisionModal = () => {
                     social media presence.
                   </li>
                   <li>
-                    <strong>Redrop:</strong> A feature similar to reposting,
-                    allowing users to reshare existing droplets effortlessly.
-                  </li>
-                  <li>
                     ...and many more exciting features are in the pipeline!
                   </li>
                 </ul>
