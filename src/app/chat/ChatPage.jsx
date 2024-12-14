@@ -384,7 +384,10 @@ export default function ChatPage() {
                 </div>
                 <hr className="mx-4 mt-[2px] border-slate-700" />
               </div>
-              <div className="px-4 py-3 h-full w-full overflow-y-auto customScrollbar ">
+              <div
+                ref={messagesRef}
+                className="px-4 py-3 h-full w-full overflow-y-auto customScrollbar "
+              >
                 {/* MESSAGES START HERE  */}
 
                 {communicatorDetails[communicatorId]?.messages?.length ===
@@ -393,10 +396,7 @@ export default function ChatPage() {
                     Say hi 👋 to start the conversation.{" "}
                   </div>
                 ) : (
-                  <div
-                    ref={messagesRef}
-                    className="flex flex-col-reverse overflow-auto"
-                  >
+                  <div className="flex flex-col w-full">
                     {isLoadingOlderMessages && (
                       <div className="animate-pulse w-full flex justify-center items-center">
                         <CycloneRounded className="animate-spin size-8" />

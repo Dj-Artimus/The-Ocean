@@ -37,8 +37,7 @@ export const CommunicationStore = create(
                     .from('Message')
                     .select('*')
                     .or(
-                        `and(sender_id.eq.${userId},receiver_id.eq.${communicatorId})`,
-                        `and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`
+                        `and(sender_id.eq.${userId},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`
                     )
                     .order('created_at', { ascending: true })
                     .limit(12);
