@@ -68,7 +68,7 @@ const CreateProfile = () => {
     path: null,
     storageBucket: "avatars",
   });
-  const [name, setName] = useState(profileData?.name);
+  const [name, setName] = useState(profileData?.name || "");
   const [day, setDay] = useState(Number(profileData?.dob?.split("-")[2]) || "");
   const [month, setMonth] = useState(
     Number(profileData?.dob?.split("-")[1]) || ""
@@ -269,7 +269,7 @@ const CreateProfile = () => {
                   <FormControl
                     fullWidth
                     variant="outlined"
-                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                    className="!bg-gray-50 dark:!bg-d_secondary rounded-xl"
                   >
                     <InputLabel className="!text-gray-700 dark:!text-gray-300">
                       Day
@@ -279,7 +279,7 @@ const CreateProfile = () => {
                       onChange={(e) => setDay(e.target.value)}
                       label="Day"
                       required
-                      className="!text-gray-900 dark:!text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100 !rounded-xl"
                     >
                       {Array.from({ length: 31 }, (_, i) => (
                         <MenuItem key={i + 1} value={i + 1}>
@@ -291,7 +291,7 @@ const CreateProfile = () => {
                   <FormControl
                     fullWidth
                     variant="outlined"
-                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                    className="!bg-gray-50 dark:!bg-d_secondary rounded-xl"
                   >
                     <InputLabel className="!text-gray-700 dark:!text-gray-300">
                       Month
@@ -301,7 +301,7 @@ const CreateProfile = () => {
                       onChange={(e) => setMonth(e.target.value)}
                       label="Month"
                       required
-                      className="!text-gray-900 dark:!text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100 !rounded-xl"
                     >
                       {months.map((m) => (
                         <MenuItem key={m.value} value={m.value} className="">
@@ -313,7 +313,7 @@ const CreateProfile = () => {
                   <FormControl
                     fullWidth
                     variant="outlined"
-                    className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                    className="!bg-gray-50 dark:!bg-d_secondary rounded-xl"
                   >
                     <InputLabel className="!text-gray-700 dark:!text-gray-300">
                       Year
@@ -323,7 +323,7 @@ const CreateProfile = () => {
                       onChange={(e) => setYear(e.target.value)}
                       label="Year"
                       required
-                      className="!text-gray-900 dark:!text-gray-100"
+                      className="!text-gray-900 dark:!text-gray-100 !rounded-xl"
                     >
                       {years.map((y) => (
                         <MenuItem key={y} value={y}>
@@ -345,7 +345,7 @@ const CreateProfile = () => {
                 <FormControl
                   fullWidth
                   variant="outlined"
-                  className="!bg-gray-50 dark:!bg-d_secondary rounded-lg"
+                  className="!bg-gray-50 dark:!bg-d_secondary !rounded-xl"
                 >
                   <InputLabel className="!text-gray-700 dark:!text-gray-300">
                     Gender
@@ -355,7 +355,7 @@ const CreateProfile = () => {
                     onChange={(e) => setGender(e.target.value)}
                     label="Gender"
                     required
-                    className="!text-gray-900 dark:!text-gray-100"
+                    className="!text-gray-900 dark:!text-gray-100 !rounded-xl"
                   >
                     <MenuItem value="male">Male</MenuItem>
                     <MenuItem value="female">Female</MenuItem>

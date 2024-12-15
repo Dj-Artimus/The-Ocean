@@ -40,7 +40,7 @@ export const CommunicationStore = create(
                         `and(sender_id.eq.${userId},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`
                     )
                     .order('created_at', { ascending: true })
-                    .limit(12);
+                // .limit(12);
 
                 if (lastMessageCreatedAt) {
                     query.gt('created_at', lastMessageCreatedAt);
@@ -113,17 +113,19 @@ export const CommunicationStore = create(
         },
 
         subscribeToMessages: () => {
-            const { communicatorId, communicatorDetails } = get();
+            const communicatorId = get().communicatorId;
+            const communicatorDetails = get().communicatorDetails;
             const { id: userId } = UserStore.getState().profileData || {};
             if (!userId) return;
-            console.log( 'checking the subscribeToMessages communicator details', communicatorDetails);
             const communicatorIds = [userId, ...Object.keys(communicatorDetails)];
+            const currentCommunicatorDetails = { ...get().communicatorDetails };
+            console.log('communicatorId', communicatorId)
+            console.log('communicatorDetails', communicatorDetails)
+
             const handlePayload = async (payload) => {
                 console.log('payload from subscribeToMessages', payload)
                 const { eventType, new: newMessage } = payload;
                 const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
-                const currentCommunicatorDetails = { ...get().communicatorDetails };
-
                 if (eventType === 'INSERT' || eventType === 'UPDATE') {
                     let is_read = false;
                     if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
@@ -136,13 +138,7 @@ export const CommunicationStore = create(
                         messages: eventType === 'INSERT' && !(messages.some(msg => msg.id === newMessage.id)) ? [...messages, { ...newMessage, is_read }] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
 
                     };
-                } else if (eventType === 'DELETE') {
-                    const { old: deletedMessage } = payload;
-                    currentCommunicatorDetails[communicatorId] = {
-                        ...currentCommunicatorDetails[communicatorId],
-                        messages: currentCommunicatorDetails[communicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
-                    };
-                }
+                } 
 
                 set({ communicatorDetails: currentCommunicatorDetails });
                 if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId && eventType === 'INSERT') {
@@ -159,9 +155,37 @@ export const CommunicationStore = create(
                         event: '*',
                         schema: 'Ocean',
                         table: 'Message',
-                        filter: `sender_id=in.(${communicatorIds.toLocaleString()})`,
-                        // filter: `receiver_id=eq.${userId} OR sender_id=eq.${userId}`,
-                    }, (payload) => handlePayload(payload) // Pass payload to handlePayload
+                        filter: `receiver_id=eq.${userId}`,
+                    }, (payload) => { handlePayload(payload) } // Pass payload to handlePayload
+                )
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'Ocean',
+                        table: 'Message',
+                        filter: `sender_id=eq.${userId}`,
+                    }, (payload) => { handlePayload(payload) } // Pass payload to handlePayload
+                )
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'DELETE',
+                        schema: 'Ocean',
+                        table: 'Message',
+                        // filter: `receiver_id=in.(${userId},${communicatorId})`,
+                    }, (payload) => {
+                        console.log('payload from the delete', payload)
+                        console.log('communicatorId', communicatorId)
+                        const { old: deletedMessage } = payload;
+
+                        currentCommunicatorDetails[communicatorId] = {
+                            ...get().communicatorDetails[communicatorId],
+                            messages: currentCommunicatorDetails[communicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
+                        };
+                        set({ communicatorDetails: currentCommunicatorDetails });
+
+                    } // Pass payload to handlePayload
                 )
                 .subscribe();
 
@@ -225,5 +249,4 @@ export const CommunicationStore = create(
 
     }),
 );
-
 

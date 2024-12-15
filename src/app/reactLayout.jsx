@@ -19,7 +19,7 @@ import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
-import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+
 
 const ReactLayout = ({ children }) => {
   const {
@@ -37,31 +37,44 @@ const ReactLayout = ({ children }) => {
     updateOnlineStatus,
   } = UserStore();
 
-  const originalConsoleError = console?.error;
+  useEffect(() => {
+    const originalConsoleError = console?.error;
 
-  console.error = (message, ...args) => {
-    // Convert non-string messages to strings for safe handling
-    const messageStr =
-      typeof message === "string" ? message : JSON.stringify(message);
+    console.error = (...args) => {
+      const [firstArg, ...restArgs] = args;
 
-    // Handle specific network errors
-    if (
-      messageStr?.includes("Failed to fetch") ||
-      messageStr?.includes("AuthRetryableFetchError")
-    ) {
-      errorToast("Network error. Please check your internet connection.");
-      return; // Skip logging this error to console
-    }
+      // Check for bugs such as null pointer references, unhandled exceptions, and more
+      if (firstArg instanceof Error) {
+        const { message, stack } = firstArg;
+        const messageStr =
+          typeof message === "string" ? message : JSON.stringify(message);
 
-    // Handle extension-related errors (e.g., TempMail, Grammarly, etc.)
-    if (messageStr?.includes("autoCorrectionCache")) {
-      console.warn("An extension might be causing this error: ", messageStr);
-      return; // Skip logging this error to console
-    }
+        // Handle specific network errors
+        if (
+          messageStr?.includes("Failed to fetch") ||
+          messageStr?.includes("AuthRetryableFetchError")
+        ) {
+          errorToast("Network error. Please check your internet connection.");
+          return; // Skip logging this error to console
+        }
 
-    // Call the original console.error with its arguments for other cases
-    originalConsoleError(message, ...args);
-  };
+        // Handle extension-related errors (e.g., TempMail, Grammarly, etc.)
+        if (messageStr?.includes("autoCorrectionCache")) {
+          console.warn(
+            "An extension might be causing this error: ",
+            messageStr
+          );
+          return; // Skip logging this error to console
+        }
+
+        // Log the error with its stack trace
+        originalConsoleError(firstArg, stack, ...restArgs);
+      } else {
+        // Call the original console.error with its arguments for other cases
+        originalConsoleError(firstArg, ...restArgs);
+      }
+    };
+  });
 
   useEffect(() => {
     const cleanup = initializeTheme(toggleDarkMode);
@@ -86,7 +99,6 @@ const ReactLayout = ({ children }) => {
     // Update to offline when user disconnects
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
   }, [updateOnlineStatus]);
-
 
   return (
     <ErrorBoundary>

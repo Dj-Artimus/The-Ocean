@@ -19,7 +19,7 @@ const UsernameSelectionPage = () => {
 
   useEffect(() => {
     setIsLoadingPage(false);
-    profileData.username.length > 0 && redirect.push("/");
+    profileData?.username?.length > 0 && redirect.push("/");
   }, []);
 
   const handleSubmit = async (e) => {

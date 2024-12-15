@@ -138,14 +138,14 @@ const VerifyEmail = () => {
               className="text-center text-gray-600 dark:text-gray-400"
             >
               Didn&apos;t receive the OTP?{" "}
-              <Link
+              <span
                 onClick={async () => {
                   await ResendOtp();
                 }}
                 className="text-blue-600 hover:underline dark:text-blue-400"
               >
                 Resend OTP
-              </Link>
+              </span>
             </Typography>
           </div>
         </div>

@@ -372,7 +372,8 @@ export const UserStore =
 
                     const updatedOceanitesData = get().oceanitesData.map((oceanite) => { if (oceanite.id === anchoring_id) return { ...oceanite, anchors: oceanite.anchors + 1 }; else return oceanite })
 
-                    set({ harborMatesData: [...get().harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
+                    const harborMatesData = get().harborMatesData.filter(harborMate => harborMate.id !== data.anchoring_id.id);
+                    set({ harborMatesData: [...harborMatesData, data.anchoring_id], anchoringsIds: [...get().anchoringsIds, data.anchoring_id.id], oceanitesData: updatedOceanitesData })
 
 
                     const updateCommunicatorDetails = { ...CommunicationStore.getState().communicatorDetails };
@@ -420,26 +421,52 @@ export const UserStore =
                 SubscribeToAnchors: () => {
                     const user = get().profileData;
 
+                    if (!user) return console.log('User not found to subscribe to anchors');
+
                     const channel = supabase.channel(`realtime:Anchors:user:${user.id}`).on(
                         'postgres_changes',
                         { event: '*', schema: 'Ocean', table: 'Oceanites', filter: `anchoring_id=eq.${user.id}` },
                         async (payload) => {
+                            console.log(payload, 'DELETE')
 
                             const { eventType } = payload;
 
                             if (eventType === 'INSERT') {
 
+                                if (!payload.new.id) {
+                                    console.log('No payload.new.id to subscribe to anchors');
+                                    return;
+                                }
+
                                 const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').eq('id', payload.new.id).single();
 
-                                if (error) return console.log('error to get the oceanite data', error)
+                                if (error) {
+                                    console.log('error to get the oceanite data', error);
+                                    return;
+                                }
 
-                                set({ harborMatesData: [data, ...get().harborMatesData] })
+                                set({ harborMatesData: [data.anchor_id, ...get().harborMatesData] });
+
+                                const updateCommunicatorDetails = { ...CommunicationStore.getState().communicatorDetails };
+
+                                const newHarborMateId = data?.anchor_id?.id;
+
+                                if (newHarborMateId && newHarborMateId !== user.id) {
+                                    updateCommunicatorDetails[newHarborMateId] = {
+                                        ...(updateCommunicatorDetails[newHarborMateId] || {}),
+                                        ...data.anchor_id
+                                    };
+                                }
+
+                                CommunicationStore.getState().setCommunicatorDetails(updateCommunicatorDetails);
                             }
                             else if (eventType === 'DELETE') {
+
 
                                 const updatedHarborMatesData = get().harborMatesData.filter((data) => data.id !== payload.old.id);
 
                                 set({ harborMatesData: updatedHarborMatesData });
+                                
                             }
                         }
                     ).subscribe();
