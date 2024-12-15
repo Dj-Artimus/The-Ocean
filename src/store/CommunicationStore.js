@@ -113,40 +113,61 @@ export const CommunicationStore = create(
         },
 
         subscribeToMessages: () => {
-            const communicatorId = get().communicatorId;
-            const communicatorDetails = get().communicatorDetails;
             const { id: userId } = UserStore.getState().profileData || {};
             if (!userId) return;
-            const communicatorIds = [userId, ...Object.keys(communicatorDetails)];
-            const currentCommunicatorDetails = { ...get().communicatorDetails };
-            console.log('communicatorId', communicatorId)
-            console.log('communicatorDetails', communicatorDetails)
 
             const handlePayload = async (payload) => {
-                console.log('payload from subscribeToMessages', payload)
                 const { eventType, new: newMessage } = payload;
-                const currentCommunicatorId = newMessage.sender_id === userId ? newMessage.receiver_id : newMessage.sender_id;
+                const currentCommunicatorDetails = structuredClone(get().communicatorDetails);
+                const currentCommunicatorId = newMessage?.sender_id === userId ? newMessage?.receiver_id : newMessage?.sender_id;
+                const communicatorId = get().communicatorId;
+
                 if (eventType === 'INSERT' || eventType === 'UPDATE') {
                     let is_read = false;
-                    if (newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
+                    const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
+
+                    if (newMessage && newMessage.sender_id === communicatorId && newMessage.receiver_id === userId && !newMessage.is_read) {
                         await get().handleMessageRead(newMessage.id);
                         is_read = true;
                     }
-                    const messages = currentCommunicatorDetails[currentCommunicatorId]?.messages || [];
+
                     currentCommunicatorDetails[currentCommunicatorId] = {
                         ...currentCommunicatorDetails[currentCommunicatorId],
-                        messages: eventType === 'INSERT' && !(messages.some(msg => msg.id === newMessage.id)) ? [...messages, { ...newMessage, is_read }] : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
-
+                        messages: eventType === 'INSERT'
+                            ? [...messages.filter(msg => msg.id !== newMessage.id), { ...newMessage, is_read }]
+                            : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
                     };
-                } 
+                } else if (eventType === 'DELETE') {
+                    // Filter out the deleted message by its ID
+                    const messages = currentCommunicatorDetails[communicatorId]?.messages || [];
+                    currentCommunicatorDetails[communicatorId] = {
+                        ...currentCommunicatorDetails[communicatorId],
+                        messages: messages.filter(msg => msg.id !== payload.old.id),
+                    };
+                }
 
-                set({ communicatorDetails: currentCommunicatorDetails });
-                if (newMessage.sender_id !== communicatorId && newMessage.receiver_id === userId && eventType === 'INSERT') {
-                    msgToast(currentCommunicatorDetails[currentCommunicatorId]?.name, currentCommunicatorDetails[currentCommunicatorId]?.avatar, newMessage.content);
+                set((state) => ({
+                    communicatorDetails: {
+                        ...state.communicatorDetails,
+                        ...currentCommunicatorDetails,
+                    },
+                }));
+
+                if (
+                    eventType === 'INSERT' &&
+                    newMessage?.receiver_id === userId && // Message is sent to the current user
+                    newMessage?.sender_id !== communicatorId && // Sender is not the current communicator
+                    newMessage?.receiver_id !== communicatorId // Receiver is not the current communicator (not actively chatting)
+                ) {
+                    msgToast(
+                        currentCommunicatorDetails[currentCommunicatorId]?.name,
+                        currentCommunicatorDetails[currentCommunicatorId]?.avatar,
+                        newMessage?.content
+                    );
                 }
 
             };
-            console.log('communicatorIds.toLocalString()', communicatorIds.toLocaleString())
+
             const channel = supabase
                 .channel(`realtime-messages:user${userId}`)
                 .on(
@@ -156,7 +177,7 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         filter: `receiver_id=eq.${userId}`,
-                    }, (payload) => { handlePayload(payload) } // Pass payload to handlePayload
+                    }, handlePayload // Pass payload to handlePayload
                 )
                 .on(
                     'postgres_changes',
@@ -165,7 +186,7 @@ export const CommunicationStore = create(
                         schema: 'Ocean',
                         table: 'Message',
                         filter: `sender_id=eq.${userId}`,
-                    }, (payload) => { handlePayload(payload) } // Pass payload to handlePayload
+                    }, handlePayload // Pass payload to handlePayload
                 )
                 .on(
                     'postgres_changes',
@@ -173,19 +194,7 @@ export const CommunicationStore = create(
                         event: 'DELETE',
                         schema: 'Ocean',
                         table: 'Message',
-                        // filter: `receiver_id=in.(${userId},${communicatorId})`,
-                    }, (payload) => {
-                        console.log('payload from the delete', payload)
-                        console.log('communicatorId', communicatorId)
-                        const { old: deletedMessage } = payload;
-
-                        currentCommunicatorDetails[communicatorId] = {
-                            ...get().communicatorDetails[communicatorId],
-                            messages: currentCommunicatorDetails[communicatorId]?.messages?.filter(msg => msg.id !== deletedMessage.id),
-                        };
-                        set({ communicatorDetails: currentCommunicatorDetails });
-
-                    } // Pass payload to handlePayload
+                    }, handlePayload
                 )
                 .subscribe();
 
