@@ -2,8 +2,11 @@ import React from 'react'
 import Footer from './Footer'
 import OceanScore from './OceanScore'
 import OceanBoard from './OceanBoard'
+import { UIStore } from '@/store/UIStore'
 
-const ProfileRightSideBar = () => {
+const ProfileRightSideBar = ({anchorings, anchors}) => {
+  const { oceanVision } = UIStore();
+
   return (
     <div className="h-full p-4 pe-3 sticky top-0 ps-1 hidden lg:w-[25%] lg:block">
     <div
@@ -19,9 +22,9 @@ const ProfileRightSideBar = () => {
         </div>
         {/* HEADING BAR ENDS HERE */}
 
-        <OceanBoard />
+        { oceanVision && <OceanBoard />}
 
-        <OceanScore anchors={"409"} anchorings={"45k"} />
+        <OceanScore anchors={anchors} anchorings={anchorings} />
 
         <Footer />
 

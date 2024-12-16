@@ -135,7 +135,7 @@ export default function Profile() {
 
       {/* RIGHT SIDE BAR STARTS HERE */}
 
-      <ProfileRightSideBar />
+      <ProfileRightSideBar anchorings={profileData?.anchorings} anchors={profileData?.anchors} />
 
       {/* RIGHT SIDE BAR ENDS HERE */}
     </div>

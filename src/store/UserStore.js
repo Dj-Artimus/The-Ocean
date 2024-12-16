@@ -15,6 +15,8 @@ export const UserStore =
                 setProfileData: (data) => { set({ profileData: data }) },
 
                 oceanitesData: [],
+                anchorsData: [],
+                anchoringsData: [],
 
                 oceaniteProfileData: {},
                 setOceaniteProfileData: (data) => { set({ oceaniteProfileData: data }) },
@@ -350,6 +352,92 @@ export const UserStore =
                     }
                 },
 
+                GetAnchors: async (page = 1, limit = 5) => {
+                    try {
+
+                        const getAnchorsCount = async () => {
+                            const { count } = await supabase.schema("Ocean").from("Oceanites").select('*', { count: 'exact' }).eq('anchoring_id', get().profileData.id);
+                            return count;
+                        }
+
+                        const getAnchors = async (lastAnchor) => {
+                            const offset = (page - 1) * limit;
+                            const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*, anchor_id(*)').eq('anchoring_id', get().profileData.id).range(offset, lastAnchor ? lastAnchor : (offset + limit - 1));
+                            if (error || !data) {
+                                console.log('No Oceanites found');
+                                return null;
+                            }
+
+                            const existingAnchors = get().anchorsData;
+                            const newAnchors = data.map(
+                                (oceanite) => !existingAnchors.some((existing) => existing.id === oceanite.anchor_id.id) && oceanite.anchor_id
+                            );
+
+                            set({
+                                anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
+                            });
+                            console.log('Anchors fetched successfully', data)
+
+                            return data;
+                        }
+
+                        const data = await getAnchors();
+
+                        if (data.length === 0) {
+                            const count = await getAnchorsCount();
+                            const data = await getAnchors(count - 1);
+                            return data;
+                        }
+                        return data;
+
+                    } catch (error) {
+                        console.log('error to fetch the anchors', error);
+                    }
+                },
+
+                GetAnchorings: async (page = 1, limit = 5) => {
+                    try {
+
+                        const getAnchoringsCount = async () => {
+                            const { count } = await supabase.schema("Ocean").from("Oceanites").select('*', { count: 'exact' }).eq('anchor_id', get().profileData.id);
+                            return count;
+                        }
+
+                        const getAnchorings = async (lastAnchoring) => {
+                            const offset = (page - 1) * limit;
+                            const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*, anchoring_id(*)').eq('anchor_id', get().profileData.id).range(offset, lastAnchoring ? lastAnchoring : (offset + limit - 1));
+                            if (error || !data) {
+                                console.log('No Oceanites found');
+                                return null;
+                            }
+
+                            const existingAnchorings = get().anchoringsData;
+                            const newAnchorings = data.map(
+                                (oceanite) => !existingAnchorings.some((existing) => existing.id === oceanite.anchoring_id.id) && oceanite.anchoring_id
+                            );
+
+                            set({
+                                anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
+                            });
+                            console.log('Anchorings fetched successfully', data)
+
+                            return data;
+                        }
+
+                        const data = await getAnchorings();
+
+                        if (data.length === 0) {
+                            const count = await getAnchoringsCount();
+                            const data = await getAnchorings(count - 1);
+                            return data;
+                        }
+                        return data;
+
+                    } catch (error) {
+                        console.log('error to fetch the anchorings', error);
+                    }
+                },
+
                 SearchOceanites: async (keywords) => {
                     try {
                         const { data, error } = await supabase.schema('Ocean').from('Profile').select('*')
@@ -466,7 +554,7 @@ export const UserStore =
                                 const updatedHarborMatesData = get().harborMatesData.filter((data) => data.id !== payload.old.id);
 
                                 set({ harborMatesData: updatedHarborMatesData });
-                                
+
                             }
                         }
                     ).subscribe();

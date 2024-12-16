@@ -81,7 +81,7 @@ const LeftSideBar = ({ styles }) => {
           {/* USERS PROFILE IN anchors STARTS HERE */}
           {searchKeyword
             ? harborMatesData
-                ?.filter((data) => data.name.includes(searchKeyword))
+                ?.filter((data) => data.name.toLowerCase().includes(searchKeyword.toLowerCase()))
                 ?.map((data) => (
                   <UserMsgProfile
                     key={data?.id}

@@ -9,6 +9,7 @@ import { Anchor, Sailing } from "@mui/icons-material";
 import Button from "./Button";
 import { formatCount } from "@/utils/TimeAndCountFormater";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const ProfilePanel = ({
   user_id,
@@ -32,6 +33,8 @@ const ProfilePanel = ({
     setOceaniteProfileData,
   } = UserStore();
   const [isAnchoring, setIsAnchoring] = useState(false);
+
+  const router = useRouter();
 
   const handleAnchor = async (anchoring_id) => {
     setIsAnchoring(true);
@@ -149,7 +152,7 @@ const ProfilePanel = ({
           </div>
         </div>
         <div className="flex flex-col xs3:flex-row xs3:gap-2 xs3:items-center text-blue-500 font-semibold">
-          <div className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
+          <div onClick={() => {router.push("/anchors")}} className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
             <h1>{formatCount(anchors)}</h1>
             <AnchorIcon className="size-6" />
             <h1>Anchors</h1>
@@ -157,7 +160,7 @@ const ProfilePanel = ({
           <span className="text-slate-500 -mx-2 xs4:mx-0 hidden xs3:block">
             •
           </span>
-          <div className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
+          <div onClick={() => {router.push("/anchorings")}} className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
             <h1>{formatCount(anchorings)}</h1>
             <SailingRoundedIcon className="size-6" />
             <h1>Anchorings</h1>
