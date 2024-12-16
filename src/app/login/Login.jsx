@@ -31,7 +31,6 @@ const Login = () => {
       // Proceed with form submission
       setIsSubmiting(true);
       const login = await Login(email, password);
-      console.log("Form submitted successfully");
       setIsSubmiting(false);
       login && (await fetchProfileData());
       login && router.push("/");

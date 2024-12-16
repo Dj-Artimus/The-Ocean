@@ -189,7 +189,6 @@ const VideoReactions = ({ video }) => {
       <div className="flex items-center gap-1">
         <Button
           onClick={() => {
-            console.log("Droplet id", video?.droplet_id);
             setIsRippleInitiated(true);
             setIsRippleDrawerOpen(true);
             setRippleDrawerDropletId(video?.droplet_id);
@@ -209,7 +208,6 @@ const VideoReactions = ({ video }) => {
       </div>
       <Button
         onClick={() => {
-          console.log("openig model..");
           setDropletIdToShare(video?.droplet_id);
           setDropletContentToShare(video?.content);
           setIsShareOptionsModalOpen(true);

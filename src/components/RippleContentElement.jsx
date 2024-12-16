@@ -44,7 +44,6 @@ const RippleContentElement = ({ content, echoes }) => {
 
   const handleStarARipple = async (id) => {
     setStared(!stared);
-    console.log(id);
   };
 
   return (

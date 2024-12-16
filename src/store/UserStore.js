@@ -40,8 +40,6 @@ export const UserStore =
                                 .eq('user_id', data.user.id)
                                 .single();
 
-                            console.log('fetchProfileData', profile);
-
                             if (profileError) return console.log('Error to fetch Profile', profileError.message);
 
                             const { data: harborMates, error: harborMatesError } = await supabase
@@ -200,15 +198,12 @@ export const UserStore =
                     try {
                         const { data, error } = await supabase.schema("Ocean").from('Profile').select('id').eq('username', username)
 
-                        console.log(data)
                         if (error || !data) {
                             console.log('Something Went Wrong : ', error);
                             return null;
                         } else if (data && data.length > 0) {
-                            console.log('Username is taken');
                             return true;
                         } else {
-                            console.log('Username is available');
                             return false;
                         }
                     } catch (error) {
@@ -225,7 +220,6 @@ export const UserStore =
                             console.log('Something Went Wrong : ', error);
                             return false;
                         } else {
-                            console.log('Username is Updated');
                             return true;
                         }
                     } catch (error) {
@@ -242,7 +236,6 @@ export const UserStore =
                             console.log('Something Went Wrong : ', error);
                             return null;
                         } else {
-                            console.log('Profile is Created');
                             return true;
                         }
                     } catch (error) {
@@ -268,11 +261,8 @@ export const UserStore =
                             });
 
                         if (error) {
-                            console.log("Error uploading file:", error.message);
-                        } else {
-                            console.log("File uploaded successfully:", data);
+                            return console.log("Error uploading file:", error.message);
                         }
-
                         // Retrieve the public URL of the uploaded image
                         const { data: { publicUrl } } = supabase.storage
                             .from(bucket)
@@ -321,7 +311,6 @@ export const UserStore =
                             const offset = (page - 1) * limit;
                             const { data, error } = await supabase.schema('Ocean').from('Profile').select('*').range(offset, lastOceanite ? lastOceanite : (offset + limit - 1));
                             if (error || !data) {
-                                console.log('No Oceanites found');
                                 return null;
                             }
 
@@ -333,7 +322,6 @@ export const UserStore =
                             set({
                                 oceanitesData: [...existingOceanites, ...newOceanites], // Append new oceanites
                             });
-                            console.log('oceanites fetched successfully', data)
 
                             return data;
                         }
@@ -364,7 +352,6 @@ export const UserStore =
                             const offset = (page - 1) * limit;
                             const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*, anchor_id(*)').eq('anchoring_id', get().profileData.id).range(offset, lastAnchor ? lastAnchor : (offset + limit - 1));
                             if (error || !data) {
-                                console.log('No Oceanites found');
                                 return null;
                             }
 
@@ -376,8 +363,6 @@ export const UserStore =
                             set({
                                 anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
                             });
-                            console.log('Anchors fetched successfully', data)
-
                             return data;
                         }
 
@@ -407,7 +392,6 @@ export const UserStore =
                             const offset = (page - 1) * limit;
                             const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*, anchoring_id(*)').eq('anchor_id', get().profileData.id).range(offset, lastAnchoring ? lastAnchoring : (offset + limit - 1));
                             if (error || !data) {
-                                console.log('No Oceanites found');
                                 return null;
                             }
 
@@ -480,7 +464,7 @@ export const UserStore =
                 },
                 UnAnchorOceanite: async (anchoring_id) => {
                     const user = get().profileData;
-                    if (!user) return console.log('User not found to unanchor the Oceanite');
+                    if (!user) return;
 
                     const { error } = await supabase.schema('Ocean').from('Oceanites').delete().eq('anchor_id', user.id).eq('anchoring_id', anchoring_id);
                     if (error) { console.log('Something went wrong to unanchor the Oceanite', error); return false; }
@@ -509,27 +493,23 @@ export const UserStore =
                 SubscribeToAnchors: () => {
                     const user = get().profileData;
 
-                    if (!user) return console.log('User not found to subscribe to anchors');
+                    if (!user) return;
 
                     const channel = supabase.channel(`realtime:Anchors:user:${user.id}`).on(
                         'postgres_changes',
                         { event: '*', schema: 'Ocean', table: 'Oceanites', filter: `anchoring_id=eq.${user.id}` },
                         async (payload) => {
-                            console.log(payload, 'DELETE')
-
                             const { eventType } = payload;
 
                             if (eventType === 'INSERT') {
 
                                 if (!payload.new.id) {
-                                    console.log('No payload.new.id to subscribe to anchors');
                                     return;
                                 }
 
                                 const { data, error } = await supabase.schema('Ocean').from('Oceanites').select('*,anchoring_id(*),anchor_id(*)').eq('id', payload.new.id).single();
 
                                 if (error) {
-                                    console.log('error to get the oceanite data', error);
                                     return;
                                 }
 

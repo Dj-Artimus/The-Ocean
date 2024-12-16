@@ -56,7 +56,6 @@ const Ripple = ({
               {user_id === profileData.id && (
                 <div
                   onClick={() => {
-                    console.log("openig model..");
                     setContentEditId(ripple_id);
                     setContentToEdit(rippleContent);
                     setContentToEditType("Ripple");

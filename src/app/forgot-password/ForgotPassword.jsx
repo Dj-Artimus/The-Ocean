@@ -29,7 +29,6 @@ const ForgotPassword = () => {
       // Proceed with form submission
       setIsSubmiting(true);
       setIsSubmitted(await ForgotPassword(email));
-      console.log("Form submitted successfully");
       setIsSubmiting(false);
       // Reset the form or redirect the user as necessary
     }

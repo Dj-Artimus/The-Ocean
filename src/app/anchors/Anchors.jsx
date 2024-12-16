@@ -98,11 +98,11 @@ const Anchors = () => {
           ref={oceanitesRef}
           className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px] overflow-y-auto customScrollbar"
         >
-          {/* OCEANITES STARTS HERE */}
+          {/* ANCHORS STARTS HERE */}
 
           <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
             <InputTextarea
-              placeholder={"Search Oceanite..."}
+              placeholder={"Search Anchorer..."}
               input={searchKeyword}
               setInput={setSearchKeyword}
               handleSubmit={handleSubmit}
@@ -148,7 +148,7 @@ const Anchors = () => {
           {!hasMore && (
             <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
               <CrisisAlertRounded className="size-6 animate-spin" />
-              No more Oceanites, we are still Growing...
+              No more anchorers...
             </div>
           )}
 

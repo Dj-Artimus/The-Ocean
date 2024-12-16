@@ -273,7 +273,6 @@ const Droplet = ({
               {author_id === profileData.id ? (
                 <Button
                   onClick={() => {
-                    console.log("openig model..");
                     setContentEditId(droplet_id);
                     setContentToEdit(content);
                     setContentToEditType("Droplet");
@@ -375,7 +374,6 @@ const Droplet = ({
           <div className="flex items-center gap-1">
             <Button
               onClick={() => {
-                console.log("Droplet id", droplet_id);
                 setIsRippleInitiated(true);
                 setIsRippleDrawerOpen(true);
                 setRippleDrawerDropletId(droplet_id);
@@ -406,7 +404,6 @@ const Droplet = ({
           </div>
           <Button
             onClick={() => {
-              console.log("openig model..");
               setDropletIdToShare(droplet_id);
               setDropletContentToShare(content);
               setIsShareOptionsModalOpen(true);

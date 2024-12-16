@@ -27,7 +27,6 @@ const UsernameSelectionPage = () => {
     setIsSubmitted(true);
     setIsSubmiting(true);
     const isUsernameUpdated = await UpdateUsername(username);
-    console.log("Username submitted:", username);
     if (isUsernameUpdated) {
       setIsSubmiting(false);
       redirect.push("create-profile");
@@ -41,7 +40,6 @@ const UsernameSelectionPage = () => {
       setUsernameStatus("");
     } else if (value.length >= 3) {
       const isUserNameTaken = await CheckTakenUsernames(value);
-      console.log(isUserNameTaken);
       if (isUserNameTaken) {
         setUsernameStatus("error");
       } else {

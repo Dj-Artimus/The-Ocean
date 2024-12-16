@@ -6,16 +6,11 @@ export const setInfiniteScroll =
     const element = ref.current;
     if (element) {
       const { scrollTop, scrollHeight, clientHeight } = element;
-      //   console.log("scrollTop", scrollTop);
-      //   console.log("scrollHeight", scrollHeight);
-      //   console.log("clientHeight", clientHeight);
-
       if (
         hasMore &&
         clientHeight + 100 < scrollHeight &&
         scrollTop + clientHeight >= scrollHeight - 100
       ) {
-        console.log("Fetch more data!", page);
         if (page > 1 && !isLoading) await dataFetcher();
       }
     }
@@ -41,8 +36,6 @@ export const fetchDataForInfiniteScroll = async (isLoading, setIsLoading, hasMor
   setIsLoading(true);
   try {
     const newData = await dataFetcher(page, limit);
-    console.log("Fetched Droplets:", newData);
-
     if (newData?.length > 0) {
       if (newData.length < limit) setHasMore(false); // Stop fetching
       else setPage((prev) => prev + 1); // Increment only if fetch is valid

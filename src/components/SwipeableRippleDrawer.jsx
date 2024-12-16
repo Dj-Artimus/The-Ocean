@@ -47,7 +47,6 @@ const RippleDrawer = () => {
         await GetRipples();
         unsubscribe = await setupSubscriptionsForRipplesData(); // Fetch and subscribe
       } else {
-        // console.log("Ripple drawer closed.");
         setDropletRipples([]); // Clear ripple state when the drawer is closed
         if (unsubscribe) unsubscribe(); // Cleanup subscription
       }
@@ -131,7 +130,6 @@ const RippleDrawer = () => {
         clientHeight + 100 < scrollHeight &&
         scrollTop + clientHeight >= scrollHeight - 100
       ) {
-        console.log("Fetch more data!");
         if (page > 1) await GetRipples();
       }
     }

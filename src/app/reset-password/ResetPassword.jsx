@@ -47,8 +47,6 @@ const ResetPassword = () => {
     setPasswordError(error);
 
     if (password.trim() !== confirmPassword.trim() || error ) {
-      console.log('password', password)
-      console.log('confirmPassword', confirmPassword)
       setConfirmPasswordError("Password did not match with confirm password");
       return
     }

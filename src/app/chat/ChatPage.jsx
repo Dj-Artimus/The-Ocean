@@ -26,6 +26,11 @@ import { UserStore } from "@/store/UserStore";
 import { errorToast } from "@/components/ToasterProvider";
 import { debounce } from "lodash";
 
+/**
+ * The main chat page for the app.
+ * Handles the main chat window, messages, and attachments.
+ * The main chat page element.
+ */
 export default function ChatPage() {
   const router = useRouter();
   const {
@@ -80,11 +85,6 @@ export default function ChatPage() {
   const messagesBottomRef = useRef(null);
   const selectImages = useRef();
   const selectVideos = useRef();
-
-  const handleClick = () => {
-    console.log("communicatorId", communicatorId);
-    console.log("communicatorDetails", communicatorDetails);
-  };
 
   const revokeURLs = () => {
     if (messageImages) {
@@ -150,7 +150,6 @@ export default function ChatPage() {
   };
 
   const handleMoreOptionsClick = (msg) => {
-    console.log("opening modal..");
     setContentEditId(msg.id);
     setContentToEdit(msg.content);
     setContentToEditType("Message");
@@ -163,16 +162,9 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (communicatorId) {
-      console.log(
-        "communicatorId , starting the  fetching of the messages from the chat page ",
-        communicatorId
-      );
       const handleMsgs = async () => {
         await MarkMessagesAsRead(communicatorId);
-        return console.log(
-          await FetchCommunicationMessages(),
-          "messages from the chat page after initial fetching"
-        );
+        return await FetchCommunicationMessages();
       };
       handleMsgs();
     }
@@ -184,15 +176,11 @@ export default function ChatPage() {
   ]);
 
   const scrollToBottom = useCallback(() => {
-    messagesBottomRef.current?.scrollTo({
-      top: messagesBottomRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, []);
+    messagesBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [communicatorId, messagesBottomRef]);
 
   useEffect(() => {
     if (communicatorId && communicatorDetails[communicatorId]?.messages) {
-      console.log("scrolling to the bottom...");
       scrollToBottom();
     }
   }, [communicatorId, communicatorDetails, scrollToBottom]);
@@ -201,31 +189,23 @@ export default function ChatPage() {
     debounce(async () => {
       const element = messagesRef.current;
       if (element) {
-        const { scrollTop, scrollHeight, clientHeight } = element;
-        console.log("scrollTop", scrollTop);
-        console.log("scrollHeight", scrollHeight);
-        console.log("clientHeight", clientHeight);
+        const { scrollTop } = element;
 
         if (scrollTop === 0 && !isLoadingOlderMessages && hasMore) {
-          console.log(
-            "fetching older messages from the handle scroll and also handling scrolling"
-          );
           setIsLoadingOlderMessages(true);
 
           const olderMessages = await FetchCommunicationMessages();
 
           if (olderMessages?.length) {
             const currentHeight = messagesRef.current.scrollHeight;
-            console.log("Current Height Before Fetch:", currentHeight);
 
             setTimeout(() => {
               const newScrollHeight = messagesRef.current.scrollHeight;
               messagesRef.current.scrollTop = newScrollHeight - currentHeight;
-              console.log("New Scroll Height:", newScrollHeight);
-            }, 50); // Adjust the delay if necessary
+            }, 100); // Adjust the delay if necessary
           }
           // Update pagination state
-          if (olderMessages.length < 12) setHasMore(false); // No more older messages
+          if (olderMessages?.length < 12) setHasMore(false); // No more older messages
 
           setIsLoadingOlderMessages(false);
         }
@@ -242,17 +222,13 @@ export default function ChatPage() {
       return;
     }
 
-    const listener = debounce(handleScroll, 300);
+    const listener = debounce(handleScroll, 1000);
     element.addEventListener("scroll", listener);
 
     return () => {
       element.removeEventListener("scroll", listener);
     };
   }, [handleScroll]);
-
-  useEffect(() => {
-    console.log("messagesRef.current:", messagesRef.current);
-  }, []);
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -498,14 +474,13 @@ export default function ChatPage() {
                         alt="attached img"
                         src={messageImages[0]?.source}
                         onClick={() => {
-                          console.log(messageImages);
                           const images = messageImages.map((img) => {
                             return img.source;
                           });
                           setImgViewerSources(images);
                           setImgViewerIndex(0);
                         }}
-                        className=" absolute rounded-md h-10 sm:bottom-10 sm:h-12 bottom-14 right-1/2 translate-x-1/2"
+                        className=" absolute rounded-md h-10 bottom-12 right-1/2 translate-x-1/2"
                       />
                     )}
                     <ImageRounded
@@ -539,7 +514,7 @@ export default function ChatPage() {
                           setVidViewerIndex(0);
                         }}
                         controls={false}
-                        className=" absolute rounded-lg h-10 sm:bottom-10 sm:h-12 bottom-14 right-1/2 translate-x-1/2"
+                        className=" absolute rounded-lg h-10 bottom-12 right-1/2 translate-x-1/2"
                       />
                     )}
                     <Movie
@@ -566,7 +541,11 @@ export default function ChatPage() {
                   className="text-blue-500"
                   onClick={() => {
                     setIsMediaAttacherOpen(!isMediaAttacherOpen);
-                    isMediaAttacherOpen && revokeURLs();
+                    if (isMediaAttacherOpen) {
+                      revokeURLs();
+                      setMessageImages([]);
+                      setMessageVideos([]);
+                    }
                   }}
                 >
                   <AddCircle

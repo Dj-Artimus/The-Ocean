@@ -98,11 +98,11 @@ const Anchorings = () => {
           ref={oceanitesRef}
           className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px] overflow-y-auto customScrollbar"
         >
-          {/* OCEANITES STARTS HERE */}
+          {/* ANCHORINGS STARTS HERE */}
 
           <div className="lg:mt-3 mt-2 max-w-3xl mx-auto">
             <InputTextarea
-              placeholder={"Search Oceanite..."}
+              placeholder={"Search Anchoring..."}
               input={searchKeyword}
               setInput={setSearchKeyword}
               handleSubmit={handleSubmit}
@@ -148,11 +148,11 @@ const Anchorings = () => {
           {!hasMore && (
             <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
               <CrisisAlertRounded className="size-6 animate-spin" />
-              No more Oceanites, we are still Growing...
+              No more Anchorings...
             </div>
           )}
 
-          {/* OCEANITES ENDS HERE */}
+          {/* ANCHORINGS ENDS HERE */}
 
           <div className="h-1 w-full my-20"></div>
         </div>

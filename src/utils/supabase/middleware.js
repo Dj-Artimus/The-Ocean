@@ -13,7 +13,6 @@ export async function updateSession(request) {
     // Check for an authenticated session
     const { data: { user } } = await supabase.auth.getUser();
 
-    // console.log(user)
 
     if (!user) {
       // If there's no user, redirect to login
@@ -35,6 +34,6 @@ export async function updateSession(request) {
       errorToast("Something went wrong. Please try again.");
       console.log("Something went wrong. Please try again.");
     }
-    console.log( 'this is error from supabse folder', error)
+    console.log( 'Error updating session', error)
   }
 }

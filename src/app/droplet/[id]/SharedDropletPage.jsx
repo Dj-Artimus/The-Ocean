@@ -16,7 +16,6 @@ const SharedDropletPage = ({ id }) => {
   const router = useRouter();
   const { GetSingleDroplet, sharedDropletData } = DropletStore();
   const { setIsShareOptionsModalOpen } = UIStore();
-  console.log("id from react share", id);
 
   useEffect(() => {
     setIsShareOptionsModalOpen(false);

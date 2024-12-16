@@ -1,13 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Cyclone, Facebook, Instagram, LinkedIn, X, YouTube } from "@mui/icons-material";
+import {
+  Cyclone,
+  Facebook,
+  Instagram,
+  LinkedIn,
+  X,
+  YouTube,
+} from "@mui/icons-material";
 
 const options = [
-  { name: "ocean", icon: <Cyclone className="size-8 sm:size-10" /> },
-  { name: "linkedin", icon: <LinkedIn className="size-8 sm:size-10" /> },
-  { name: "facebook", icon: <Facebook className="size-8 sm:size-10" /> },
-  { name: "instagram", icon: <Instagram className="size-8 sm:size-10" /> },
-  { name: "x", icon: <X className="size-7 sm:size-9" /> },
-  { name: "youtube", icon: <YouTube className="size-8 sm:size-10" /> },
+  { name: "ocean", icon: <Cyclone className="!size-8 sm:!size-10" /> },
+  { name: "linkedin", icon: <LinkedIn className="!size-8 sm:!size-10" /> },
+  { name: "facebook", icon: <Facebook className="!size-8 sm:!size-10" /> },
+  { name: "instagram", icon: <Instagram className="!size-8 sm:!size-10" /> },
+  { name: "x", icon: <X className="!size-7 sm:!size-9" /> },
+  { name: "youtube", icon: <YouTube className="!size-8 sm:!size-10" /> },
 ];
 
 const PlatformSelector = ({ dropletPlatform, setDropletPlatform }) => {
@@ -42,7 +49,9 @@ const PlatformSelector = ({ dropletPlatform, setDropletPlatform }) => {
   }, [isOpen]);
 
   // Find the selected platform's icon for display
-  const selectedPlatform = options.find((option) => option.name === dropletPlatform)?.icon;
+  const selectedPlatform = options.find(
+    (option) => option.name === dropletPlatform
+  )?.icon;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -51,13 +60,15 @@ const PlatformSelector = ({ dropletPlatform, setDropletPlatform }) => {
         onClick={toggleDropdown}
         className="transition-transform transform hover:scale-110 flex items-center gap-2"
       >
-        {selectedPlatform || <Cyclone className="size-8 sm:size-10" />}
+        {selectedPlatform || <Cyclone className="!size-8 sm:!size-10" />}
       </button>
 
       {/* Dropdown List */}
       <div
         className={`absolute bottom-full bg-transparent backdrop-blur-lg rounded-lg mb-2 flex flex-col items-center gap-2 left-0 z-10 transition-all duration-500 ease-in-out ${
-          isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+          isOpen
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-3 pointer-events-none"
         }`}
       >
         {options.map((option, index) => (

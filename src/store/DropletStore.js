@@ -56,7 +56,6 @@ export const DropletStore = create(
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Droplet is Dropped');
                     successToast('Dropped the Droplet 🤟');
                     refreshDroplet(Math.random())
                     return true;
@@ -73,11 +72,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from('Star').insert({ droplet_id, 'user_id': user_id })
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Droplet is stared.');
                     return true;
                 }
             } catch (error) {
@@ -92,11 +89,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from('Star').delete().eq('droplet_id', droplet_id).eq('user_id', user_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Droplet is unstared.');
                     return true;
                 }
             } catch (error) {
@@ -109,11 +104,9 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").from('Star').select('id').eq('droplet_id', droplet_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    // console.log('Droplet Stars:', data);
                     return data;
                 }
             } catch (error) {
@@ -128,11 +121,9 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").from('Star').select('id').eq('droplet_id', droplet_id).eq('user_id', user_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    // console.log('Droplet Stars:', data);
                     return data.length === 0 ? false : true;
                 }
             } catch (error) {
@@ -147,11 +138,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from('Gem').insert({ droplet_id, 'user_id': user_id })
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Marked Droplet as Gem.');
                     return true;
                 }
             } catch (error) {
@@ -166,11 +155,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from('Gem').delete().eq('droplet_id', droplet_id).eq('user_id', user_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Unmarked Droplet as Gem.');
                     return true;
                 }
             } catch (error) {
@@ -185,11 +172,9 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").from('Gem').select('id').eq('droplet_id', droplet_id).eq('user_id', user_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    // console.log('Droplet Stars:', data);
                     return data.length === 0 ? false : true;
                 }
             } catch (error) {
@@ -205,11 +190,9 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").from('Ripple').insert({ "droplet_id": droplet_id, 'user_id': user_id, content }).select();
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log('Ripple Added to Droplet successfully.');
                     successToast('Ripple Added to Droplet successfully.');
                     return data[0].id;
                 }
@@ -225,11 +208,9 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").from('Ripple').select('id').eq('droplet_id', droplet_id).eq('user_id', user_id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    // console.log('Droplet Stars:', data);
                     return data.length === 0 ? false : true;
                 }
             } catch (error) {
@@ -245,11 +226,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from(contentType).update({ 'content': content }).eq('id', id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log(` ${contentType} Content edited successfully.`);
                     successToast(` ${contentType} Content edited successfully.`);
                     return Math.random();
                 }
@@ -265,11 +244,9 @@ export const DropletStore = create(
                 const { error } = await supabase.schema("Ocean").from(contentType).delete().eq('id', id);
 
                 if (error) {
-                    console.log('Something Went Wrong : ', error);
                     errorToast('Something Went Wrong');
                     return null;
                 } else {
-                    console.log(` ${contentType} deleted successfully.`);
                     successToast(` ${contentType} deleted successfully.`);
                     return true;
                 }
@@ -281,18 +258,15 @@ export const DropletStore = create(
         GetRipples: async () => {
             set({ isDropletRipplesFetched: false })
             const droplet_id = UIStore.getState().rippleDrawerDropletId
-            console.log(droplet_id)
             if (UIStore.getState().isRippleDrawerOpen) {
                 try {
                     const { data, error } = await supabase.schema("Ocean").from('Ripple').select('*,user_id(*)').eq('droplet_id', droplet_id).order('created_at', { ascending: false })
 
                     if (error) {
-                        console.log('Something Went Wrong to get ripples : ', error);
                         errorToast('Something Went Wrong');
                         return null;
                     } else {
                         set({ dropletRipples: data });
-                        return console.log('droplets ripple fetched successfully', data)
                     }
                 } catch (error) {
                     return console.log(error);
@@ -306,14 +280,11 @@ export const DropletStore = create(
             const user_id = userId ? userId : user.id;
             try {
                 const { data, error } = await supabase.schema("Ocean").from("Droplet").select('*,user_id(*)').eq('user_id', user_id).order('created_at', { ascending: false });
-                console.log(data)
                 if (error || !data) {
-                    console.log('No droplets found', error);
                     return null;
                 }
                 set({ userDroplets: [...data], dropletsData: data });
                 // get().setDropletsData(data);
-                return console.log('user droplets fetched successfully', data)
             } catch (error) {
                 return console.log(error);
             }
@@ -326,7 +297,6 @@ export const DropletStore = create(
             const user_id = userId ? userId : user.id;
             try {
                 const { data, error } = await supabase.schema("Ocean").from("Star").select('*,droplet_id(*,user_id(*))').eq('user_id', user_id).not('droplet_id', 'is', null).order('created_at', { ascending: false });
-                console.log(data)
                 if (error || !data) {
                     console.log('No Profile found');
                     return null;
@@ -336,7 +306,6 @@ export const DropletStore = create(
                 });
                 set({ userStaredDroplets: staredDropletData, dropletsData: staredDropletData });
                 // get().setDropletsData(staredDropletData);
-                return console.log('user stared droplets fetched successfully', data)
             } catch (error) {
                 return console.log(error);
             }
@@ -353,7 +322,6 @@ export const DropletStore = create(
                     console.log('No Profile found', error);
                     return null;
                 }
-                console.log('GetUserGemmedDroplets', data)
                 const gemmedDropletData = data?.map((droplet) => {
                     return droplet.droplet_id;
                 })
@@ -361,8 +329,6 @@ export const DropletStore = create(
                     userGemmedDroplets: gemmedDropletData,
                     dropletsData: gemmedDropletData
                 });
-                // get().setDropletsData(gemmedDropletData);
-                return console.log('user Gemmed droplets fetched successfully', data)
             } catch (error) {
                 return console.log(error);
             }
@@ -389,13 +355,10 @@ export const DropletStore = create(
                     userRippledDroplets: rippledDropletData,
                     dropletsData: rippledDropletData
                 });
-                // get().setDropletsData(rippledDropletData);
-                return console.log('userRippled droplets fetched successfully', data)
             } catch (error) {
                 console.error('Unexpected error:', error);
                 return null;
             }
-            // } else { return get().userRippledDroplets }
         },
 
         GetTreasureDroplets: async (user_id) => {
@@ -457,7 +420,6 @@ export const DropletStore = create(
                         isFeedDropletsFetched: true,
                     });
 
-                    console.log('feed droplets fetched successfully', data)
                     return data;
                 }
 
@@ -486,7 +448,6 @@ export const DropletStore = create(
                     const offset = (page - 1) * limit;
                     const { data: videoData, error } = await supabase.schema("Ocean").from('Droplet').select('*,user_id(*)').not('videos', 'is', null).gt('videos', '{}').not('id', 'is', null).order('created_at', { ascending: false }).range(offset, lastDroplet ? lastDroplet : (offset + limit - 1));;
                     if (error || !videoData) {
-                        console.log('No Videos found', error);
                         return null;
                     }
                     // get().setDropletsData(data)
@@ -520,8 +481,6 @@ export const DropletStore = create(
                     // Shuffle the organizedData array
                     const shuffledVideos = shuffleVideos(organizedData);
                     set({ feedVideos: [...get().feedVideos, ...shuffledVideos], dropletsData: videoData });
-                    console.log('feed videos shuffled successfully', shuffledVideos)
-                    console.log('feed videos fetched successfully', videoData)
                     return videoData;
                 }
 
@@ -544,7 +503,7 @@ export const DropletStore = create(
                     .select("*, user_id(*)")
                     .eq("id", droplet_id)
                     .single();
-                if (error) return console.log("error to fetch single droplet", error)
+                if (error) return;
                 if (data) return set({ sharedDropletData: data });
             } catch (error) {
                 console.log('error from get single droplet', error)
@@ -694,8 +653,6 @@ export const DropletStore = create(
                 }
             }
             const dropletsUpdateFunction = (payload, dropletDataType) => {
-                console.log('droplettype:', dropletDataType);
-
                 switch (dropletDataType) {
                     case 'feedDroplets':
                         return set((state) => {
@@ -752,8 +709,6 @@ export const DropletStore = create(
                             return { treasureDroplets: [...updatedDroplets] };
                         });
                     case 'userDroplets':
-                        console.log('user');
-
                         return set((state) => {
                             const updatedDroplets = state.userDroplets.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -772,7 +727,6 @@ export const DropletStore = create(
                             return { userDroplets: [...updatedDroplets] };
                         });
                     case 'userStaredDroplets':
-                        console.log('stared');
                         return set((state) => {
                             const updatedDroplets = state.userStaredDroplets.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -791,8 +745,6 @@ export const DropletStore = create(
                             return { userStaredDroplets: [...updatedDroplets] };
                         });
                     case 'userGemmedDroplets':
-                        console.log('gemmed');
-
                         return set((state) => {
                             const updatedDroplets = state.userGemmedDroplets.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -811,7 +763,6 @@ export const DropletStore = create(
                             return { userGemmedDroplets: [...updatedDroplets] };
                         });
                     case 'userRippledDroplets':
-                        console.log('rippled');
                         return set((state) => {
                             const updatedDroplets = state.userRippledDroplets.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -830,8 +781,6 @@ export const DropletStore = create(
                             return { userRippledDroplets: [...updatedDroplets] };
                         });
                     case 'userReDroppedDroplets':
-                        console.log('redropped');
-
                         return set((state) => {
                             const updatedDroplets = state.userReDroppedDroplets.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -919,8 +868,6 @@ export const DropletStore = create(
                     "postgres_changes",
                     { event: "INSERT", schema: "Ocean", table: "Droplet", filter: `user_id=in.(${anchorings.toLocaleString()})` },
                     async (payload) => {
-                        console.log("Droplet INSERT event received:", payload);
-
                         // Fetch the new droplet details with user info
                         const { data: newDroplet, error } = await supabase
                             .schema("Ocean")
@@ -963,7 +910,6 @@ export const DropletStore = create(
 
                             return state; // No changes if duplicate
                         })
-                        console.log('get().dropletDataType', get().dropletDataType)
                         // dropletsInsertFunction(newDroplet,dataType);
                         dropletsInsertFunction(newDroplet, get().dropletDataType);
                     }
@@ -972,10 +918,6 @@ export const DropletStore = create(
                     "postgres_changes",
                     { event: "UPDATE", schema: "Ocean", table: "Droplet", filter: `id=eq.${droplet_id}` },
                     (payload) => {
-                        console.log("Droplet UPDATE event received:", payload);
-
-                        // dropletsUpdateFunction(payload,dataType)
-
                         set((state) => {
                             const updatedDroplets = state.dropletsData.map((droplet) => {
                                 if (droplet.id === payload.new.id) {
@@ -1004,10 +946,6 @@ export const DropletStore = create(
                     "postgres_changes",
                     { event: "DELETE", schema: "Ocean", table: "Droplet", filter: `id=eq.${droplet_id}` },
                     (payload) => {
-                        console.log("Droplet DELETE event received:", payload);
-
-                        // dropletsDeleteFunction(payload,dataType);
-
                         set((state) => {
                             const updatedDroplets = state.dropletsData.filter(
                                 (droplet) => droplet.id !== payload.old.id
@@ -1015,7 +953,6 @@ export const DropletStore = create(
 
                             return { dropletsData: [...updatedDroplets] };
                         });
-                        console.log('get().dropletDataType', get().dropletDataType)
                         dropletsDeleteFunction(payload, get().dropletDataType);
 
                     }
@@ -1024,9 +961,6 @@ export const DropletStore = create(
             channel.on('error', (error) => {
                 console.error('Real-time channel error:', error);
             });
-
-            console.log(channel.state); // Should log 'subscribed'
-
             return () => supabase.removeChannel(channel); // Clean up subscription
         },
 
@@ -1037,8 +971,6 @@ export const DropletStore = create(
                     "postgres_changes",
                     { event: "*", schema: "Ocean", table: "Ripple", filter: `droplet_id=eq.${droplet_id}` },
                     async (payload) => {
-                        console.log("Ripple real-time update received:", payload);
-
                         if (payload.eventType === "INSERT" || payload.eventType === "UPDATE") {
                             // Fetch the ripple with user details
                             const { data: rippleWithUser, error } = await supabase

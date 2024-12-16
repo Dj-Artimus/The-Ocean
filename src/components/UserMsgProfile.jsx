@@ -25,10 +25,10 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
   }, [profile_id, subscribeToOnlineStatus, communicatorId]);
 
   useEffect(() => {
-    FetchUnreadMessagesCount(profile_id).then((count) => {
+    !communicatorId && FetchUnreadMessagesCount(profile_id).then((count) => {
       setUnreadMsgCount(count);
     });
-  }, [FetchUnreadMessagesCount, setUnreadMsgCount, profile_id, subscribeToMessages, unreadMsgsCountRefresher]);
+  }, [FetchUnreadMessagesCount, setUnreadMsgCount, profile_id, subscribeToMessages, unreadMsgsCountRefresher, communicatorId]);
 
   return (
     <div
@@ -43,10 +43,6 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
       className="flex px-3 py-1 items-center w-full justify-between hover:bg-primary dark:hover:bg-d_foreground"
     >
       <div
-        onClick={() => {
-          
-          console.log("profile_id clicked from the usermsgprofile", profile_id);
-        }}
         className="flex gap-2 items-center cursor-pointer"
       >
         <CustomizedBadges count={unreadMsgCount}>

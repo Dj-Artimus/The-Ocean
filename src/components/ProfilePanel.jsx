@@ -155,7 +155,7 @@ const ProfilePanel = ({
           <div onClick={() => {router.push("/anchors")}} className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
             <h1>{formatCount(anchors)}</h1>
             <AnchorIcon className="size-6" />
-            <h1>Anchors</h1>
+            <h1>Anchorers</h1>
           </div>
           <span className="text-slate-500 -mx-2 xs4:mx-0 hidden xs3:block">
             •

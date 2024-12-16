@@ -23,11 +23,7 @@ export const CommunicationStore = create(
                 if (!userId || !communicatorId) return null;
 
                 const messages = communicatorDetails?.[communicatorId]?.messages || [];
-                console.log(' current messages from fetch message ', messages)
                 const lastMessageCreatedAt = messages?.[messages?.length - 1]?.created_at;
-                console.log("Last message timestamp:", lastMessageCreatedAt);
-
-
 
                 const query = supabase
                     .schema("Ocean")
@@ -48,9 +44,6 @@ export const CommunicationStore = create(
 
                 if (!data || data.length === 0) return null;
 
-                console.log("Last message timestamp:", lastMessageCreatedAt);
-                console.log("Fetched messages:", data);
-
 
                 const updatedMessages = [
                     ...new Map(
@@ -60,7 +53,7 @@ export const CommunicationStore = create(
                         ].map((msg) => [msg.id, msg])
                     ).values(),
                 ];
-                console.log("Updated messages state:", updatedMessages);
+
 
                 // Update communicator details
                 const updateCommunicatorData = {

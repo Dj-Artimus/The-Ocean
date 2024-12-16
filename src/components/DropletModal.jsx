@@ -207,7 +207,6 @@ const DropletModal = () => {
                       alt="attached img"
                       src={dropletImages[0]?.source}
                       onClick={() => {
-                        console.log(dropletImages);
                         const images = dropletImages.map((img) => {
                           return img.source;
                         });
@@ -221,7 +220,7 @@ const DropletModal = () => {
                     onClick={() => {
                       selectImages.current.click();
                     }}
-                    className="size-8 sm:size-10"
+                    className="!size-8 sm:!size-10"
                   />
                   <input
                     ref={selectImages}
@@ -252,7 +251,7 @@ const DropletModal = () => {
                     onClick={() => {
                       selectVideos.current.click();
                     }}
-                    className="size-8 sm:size-10"
+                    className="!size-8 sm:!size-10"
                   />
                   <input
                     ref={selectVideos}
