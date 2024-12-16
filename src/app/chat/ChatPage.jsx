@@ -13,6 +13,8 @@ import {
   AddCircle,
   ArrowBack,
   CycloneRounded,
+  Forum,
+  Houseboat,
   ImageRounded,
   Movie,
 } from "@mui/icons-material";
@@ -299,7 +301,28 @@ export default function ChatPage() {
 
       <div className="h-full relative overflow-x-hidden bg-background dark:bg-d_background lg:bg-transparent flex flex-col w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 pt-0 lg:pt-[6px] ">
         {!communicatorId ? (
-          <div className="my-3 border flex flex-col min-h-[50%] h-full bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar"></div>
+          <div className="my-3 border flex flex-col justify-center min-h-[50%] h-full bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar">
+            {/* Empty State */}
+
+            <div
+              className="left-1/2 -translate-x-1/2  absolute top-10"
+              onClick={() => router.push("/")}
+            >
+              <Houseboat className="!w-12 !h-12 hover:text-blue-500 hover:scale-105 active:scale-95 transition-transform duration-300 " />
+            </div>
+
+            <div className="flex flex-col items-center animate-pulse justify-center text-center text-gray-500 dark:text-gray-300">
+              <div className="mb-4">
+                <Forum className="!w-48 !h-48" />
+              </div>
+              <p className="text-lg font-medium">
+                Select a HarborMate to start chatting
+              </p>
+              <p className="text-sm mt-2 text-gray-400">
+                Pick a conversation from the left to begin.
+              </p>
+            </div>
+          </div>
         ) : (
           <>
             <div className="my-3 border flex flex-col min-h-[50%] h-[90%] bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar">
