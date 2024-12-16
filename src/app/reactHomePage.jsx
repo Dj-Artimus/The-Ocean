@@ -8,6 +8,7 @@ import RightSideBar from "@/components/RightSideBar";
 import "./globals.css";
 import {
   ArrowBack,
+  Close,
   ConnectWithoutContactRounded,
   CrisisAlertRounded,
   CycloneRounded,
@@ -165,6 +166,7 @@ export default function ReactHomePage() {
             {/* DROPLET DROPER GREETING ENDS HERE */}
           </div>
           {/* GREETINGS SECTIONS ENDS HERE */}
+
           {/* DROPLETS START HERE */}
           <div>
             {feedDroplets?.map((droplet) => {

@@ -94,7 +94,7 @@ const Navbar = ({ navStyle }) => {
             setIsOCardOpen(false);
             setUnreadMsgsCountRefresher(new Date().getTime())
           } catch (error) {}
-          router?.push("/chat");
+          // router?.push("/chat");
         }}
       >
         <ForumRounded

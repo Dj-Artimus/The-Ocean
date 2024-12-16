@@ -6,7 +6,6 @@ import { UIStore } from "@/store/UIStore";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
 import CustomizedBadges from "./CustomizedBadge";
-import Image from "next/image";
 
 const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
   const { setIsMsgsOpen, oceanVision } = UIStore();
@@ -35,10 +34,10 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
     <div
       onClick={() => {
         setTimeout(() => {
-          setCommunicatorId(profile_id);
           setIsMsgsOpen(false);
           setUnreadMsgCount(0);
-        }, 500);
+        }, 2000);
+        setCommunicatorId(profile_id);
         redirect("/chat");
       }}
       className="flex px-3 py-1 items-center w-full justify-between hover:bg-primary dark:hover:bg-d_foreground"

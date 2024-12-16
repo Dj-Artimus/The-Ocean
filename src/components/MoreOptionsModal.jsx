@@ -139,7 +139,7 @@ const MoreOptionsModal = () => {
                   setInput={setContentToEdit}
                   minRows={2}
                   submitBtn={
-                    <EditRounded className="absolute right-3 bottom-[18px] size-7 rounded-lg border border-slate-600 shado w-sm shadow-blue-500 p-[2px] -mb-1 -me-1 " />
+                    <EditRounded className="absolute right-3 bottom-[18px] !size-7 rounded-lg border border-slate-600 shado w-sm shadow-blue-500 p-[2px] -mb-1 -me-1 " />
                   }
                 />
               )}

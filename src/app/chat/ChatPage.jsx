@@ -22,7 +22,6 @@ import { UIStore } from "@/store/UIStore";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { UserStore } from "@/store/UserStore";
 import { errorToast } from "@/components/ToasterProvider";
-import { setScrollListener } from "@/utils/InfiniteScrollSetUp";
 import { debounce } from "lodash";
 
 export default function ChatPage() {
@@ -49,10 +48,8 @@ export default function ChatPage() {
   const {
     communicatorId,
     setCommunicatorId,
-    setCommunicatorDetails,
     communicatorDetails,
     MarkMessagesAsRead,
-    subscribeToMessages,
     SendMessage,
     FetchCommunicationMessages,
     setUnreadMsgsCountRefresher,
@@ -158,8 +155,8 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    setIsMsgsOpen(true);
-  }, [setIsMsgsOpen]);
+    !communicatorId && setIsMsgsOpen(true);
+  }, [setIsMsgsOpen, communicatorId]);
 
   useEffect(() => {
     if (communicatorId) {
@@ -206,7 +203,7 @@ export default function ChatPage() {
         console.log("scrollHeight", scrollHeight);
         console.log("clientHeight", clientHeight);
 
-        if (scrollTop === 0 && !isLoadingOlderMessages) {
+        if (scrollTop === 0 && !isLoadingOlderMessages && hasMore) {
           console.log(
             "fetching older messages from the handle scroll and also handling scrolling"
           );
@@ -220,22 +217,39 @@ export default function ChatPage() {
 
             setTimeout(() => {
               const newScrollHeight = messagesRef.current.scrollHeight;
-              console.log("New Scroll Height After Fetch:", newScrollHeight);
               messagesRef.current.scrollTop = newScrollHeight - currentHeight;
-              console.log("Scroll Top set to:", messagesRef.current.scrollTop);
-            }, 0);
+              console.log("New Scroll Height:", newScrollHeight);
+            }, 50); // Adjust the delay if necessary
           }
+          // Update pagination state
+          if (olderMessages.length < 12) setHasMore(false); // No more older messages
 
           setIsLoadingOlderMessages(false);
         }
       }
     }, 300),
-    [FetchCommunicationMessages, isLoadingOlderMessages]
+    [FetchCommunicationMessages, isLoadingOlderMessages, hasMore]
   );
 
   useEffect(() => {
-    setScrollListener(messagesRef, handleScroll);
+    const element = messagesRef.current;
+
+    if (!element) {
+      console.warn("messagesRef is not yet initialized.");
+      return;
+    }
+
+    const listener = debounce(handleScroll, 300);
+    element.addEventListener("scroll", listener);
+
+    return () => {
+      element.removeEventListener("scroll", listener);
+    };
   }, [handleScroll]);
+
+  useEffect(() => {
+    console.log("messagesRef.current:", messagesRef.current);
+  }, []);
 
   useEffect(() => {
     if (!communicatorId) return;
@@ -244,13 +258,6 @@ export default function ChatPage() {
       if (unsubscribe) unsubscribe();
     };
   }, [communicatorId, subscribeToOnlineStatus]);
-
-  useEffect(() => {
-    const messagesChannel = subscribeToMessages();
-    return () => {
-      if (messagesChannel) messagesChannel.unsubscribe();
-    };
-  }, [subscribeToMessages]);
 
   return (
     <div className="w-screen flex h-screen relative overflow-hidden">
@@ -408,15 +415,10 @@ export default function ChatPage() {
                 {communicatorDetails[communicatorId]?.messages?.length ===
                 (0 || undefined) ? (
                   <div className=" w-full text-center text-2xl mt-10 text-slate-600 animate-pulse">
-                    Say hi 👋 to start the conversation.{" "}
+                    Say hi 👋 to start the conversation.
                   </div>
                 ) : (
-                  <div className="flex flex-col w-full">
-                    {isLoadingOlderMessages && (
-                      <div className="animate-pulse w-full flex justify-center items-center">
-                        <CycloneRounded className="animate-spin size-8" />
-                      </div>
-                    )}
+                  <div className="flex flex-col-reverse w-full">
                     {communicatorDetails[communicatorId]?.messages?.map((msg) =>
                       msg.sender_id === profileData.id ? (
                         <MessageSent
@@ -442,12 +444,17 @@ export default function ChatPage() {
                         />
                       )
                     )}
+                    {isLoadingOlderMessages && (
+                      <div className="animate-pulse w-full flex justify-center items-center">
+                        <CycloneRounded className="animate-spin size-8" />
+                      </div>
+                    )}
                   </div>
                 )}
                 {/* MESSAGES END HERE  */}
 
                 <div
-                  ref={messagesRef}
+                  // ref={messagesRef}
                   className="h-3 w-full my-4 float-start"
                 ></div>
               </div>

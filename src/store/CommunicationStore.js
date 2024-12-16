@@ -20,60 +20,67 @@ export const CommunicationStore = create(
                 const { communicatorId, communicatorDetails } = get();
                 const userId = UserStore.getState().profileData?.id;
 
-                console.log('userId', userId)
-                console.log('fetching the communication messages...')
-
                 if (!userId || !communicatorId) return null;
 
-                console.log('communicatorId from the fetch communication messages', communicatorId);
-                console.log('communicatorDetails from the fetch communication messages', communicatorDetails);
+                const messages = communicatorDetails?.[communicatorId]?.messages || [];
+                console.log(' current messages from fetch message ', messages)
+                const lastMessageCreatedAt = messages?.[messages?.length - 1]?.created_at;
+                console.log("Last message timestamp:", lastMessageCreatedAt);
 
-                const lastMessageCreatedAt = communicatorDetails?.[communicatorId]?.messages?.[0]?.created_at;
 
-                console.log('lastMessageCreatedAt', lastMessageCreatedAt)
 
                 const query = supabase
                     .schema("Ocean")
-                    .from('Message')
-                    .select('*')
+                    .from("Message")
+                    .select("*")
                     .or(
                         `and(sender_id.eq.${userId},receiver_id.eq.${communicatorId}),and(sender_id.eq.${communicatorId},receiver_id.eq.${userId})`
                     )
-                    .order('created_at', { ascending: true })
-                // .limit(12);
+                    .order("created_at", { ascending: false })
+                    .limit(12);
 
                 if (lastMessageCreatedAt) {
-                    query.gt('created_at', lastMessageCreatedAt);
+                    query.lt("created_at", lastMessageCreatedAt); // Fetch older messages
                 }
 
                 const { data, error } = await query;
                 if (error) throw error;
 
-                if (!data) return null;
+                if (!data || data.length === 0) return null;
 
-                console.log('data from fetching the messages ', data)
+                console.log("Last message timestamp:", lastMessageCreatedAt);
+                console.log("Fetched messages:", data);
 
+
+                const updatedMessages = [
+                    ...new Map(
+                        [
+                            ...(communicatorDetails[communicatorId]?.messages || []),
+                            ...data,
+                        ].map((msg) => [msg.id, msg])
+                    ).values(),
+                ];
+                console.log("Updated messages state:", updatedMessages);
+
+                // Update communicator details
                 const updateCommunicatorData = {
                     ...communicatorDetails,
                     [communicatorId]: {
                         ...communicatorDetails[communicatorId],
-                        messages: [
-                            ...new Map([
-                                ...(communicatorDetails[communicatorId]?.messages || []),
-                                ...data
-                            ].map(msg => [msg.id, msg]))
-                                .values()
-                        ]
-                    }
+                        messages: updatedMessages,
+                    },
                 };
 
                 set({ communicatorDetails: updateCommunicatorData });
-                return updateCommunicatorData[communicatorId].messages;
+
+
+                return data;
             } catch (error) {
-                console.error('Error fetching messages:', error);
-                errorToast('Error fetching messages', error.message);
+                console.error("Error fetching messages:", error);
+                errorToast("Error fetching messages", error.message);
             }
         },
+
         SendMessage: async (msgData) => {
             if (!msgData) return false;
             const communicatorId = get().communicatorId;
@@ -93,7 +100,7 @@ export const CommunicationStore = create(
 
                 // Optimistic UI update
                 set((state) => {
-                    const updatedMessages = [...state.communicatorDetails[communicatorId]?.messages || [], data[0]];
+                    const updatedMessages = [data[0], ...state.communicatorDetails[communicatorId]?.messages || []];
                     return {
                         communicatorDetails: {
                             ...state.communicatorDetails,
@@ -134,7 +141,7 @@ export const CommunicationStore = create(
                     currentCommunicatorDetails[currentCommunicatorId] = {
                         ...currentCommunicatorDetails[currentCommunicatorId],
                         messages: eventType === 'INSERT'
-                            ? [...messages.filter(msg => msg.id !== newMessage.id), { ...newMessage, is_read }]
+                            ? [{ ...newMessage, is_read }, ...messages.filter(msg => msg.id !== newMessage.id)]
                             : messages.map(msg => msg.id === newMessage.id ? newMessage : msg),
                     };
                 } else if (eventType === 'DELETE') {
@@ -159,7 +166,7 @@ export const CommunicationStore = create(
                     newMessage?.sender_id !== communicatorId && // Sender is not the current communicator
                     newMessage?.receiver_id !== communicatorId // Receiver is not the current communicator (not actively chatting)
                 ) {
-                    msgToast(
+                    msgToast(currentCommunicatorId,
                         currentCommunicatorDetails[currentCommunicatorId]?.name,
                         currentCommunicatorDetails[currentCommunicatorId]?.avatar,
                         newMessage?.content

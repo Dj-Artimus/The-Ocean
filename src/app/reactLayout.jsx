@@ -19,7 +19,7 @@ import { UserStore } from "@/store/UserStore";
 import PageLoader from "@/components/PageLoader";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
-
+import { CommunicationStore } from "@/store/CommunicationStore";
 
 const ReactLayout = ({ children }) => {
   const {
@@ -36,6 +36,8 @@ const ReactLayout = ({ children }) => {
     isProfileDataFetched,
     updateOnlineStatus,
   } = UserStore();
+
+  const {    subscribeToMessages,} = CommunicationStore()
 
   useEffect(() => {
     const originalConsoleError = console?.error;
@@ -99,6 +101,13 @@ const ReactLayout = ({ children }) => {
     // Update to offline when user disconnects
     window.addEventListener("beforeunload", () => updateOnlineStatus(false));
   }, [updateOnlineStatus]);
+
+  useEffect(() => {
+    const messagesChannel = subscribeToMessages();
+    return () => {
+      if (messagesChannel) messagesChannel.unsubscribe();
+    };
+  }, [subscribeToMessages]);
 
   return (
     <ErrorBoundary>
