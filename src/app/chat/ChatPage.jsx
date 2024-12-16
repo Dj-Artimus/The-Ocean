@@ -77,6 +77,7 @@ export default function ChatPage() {
   const [isOnline, setIsOnline] = useState(false);
 
   const messagesRef = useRef(null);
+  const messagesBottomRef = useRef(null);
   const selectImages = useRef();
   const selectVideos = useRef();
 
@@ -183,8 +184,8 @@ export default function ChatPage() {
   ]);
 
   const scrollToBottom = useCallback(() => {
-    messagesRef.current?.scrollTo({
-      top: messagesRef.current.scrollHeight,
+    messagesBottomRef.current?.scrollTo({
+      top: messagesBottomRef.current.scrollHeight,
       behavior: "smooth",
     });
   }, []);
@@ -477,7 +478,7 @@ export default function ChatPage() {
                 {/* MESSAGES END HERE  */}
 
                 <div
-                  // ref={messagesRef}
+                  ref={messagesBottomRef}
                   className="h-3 w-full my-4 float-start"
                 ></div>
               </div>
