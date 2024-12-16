@@ -36,7 +36,7 @@ const Anchorings = () => {
     return null;
   }, []);
 
-  const getAnchorings = () =>
+  const getAnchorings = useCallback(() =>
     fetchDataForInfiniteScroll(
       isLoading,
       setIsLoading,
@@ -46,7 +46,7 @@ const Anchorings = () => {
       setPage,
       10,
       GetAnchorings
-    );
+    ),[isLoading, setIsLoading, hasMore, setHasMore, page, setPage, GetAnchorings]);
 
   const handleScroll = () =>
     setInfiniteScroll(oceanitesRef, hasMore, page, isLoading, getAnchorings);

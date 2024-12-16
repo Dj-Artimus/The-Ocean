@@ -36,17 +36,20 @@ const Anchors = () => {
     return null;
   }, []);
 
-  const getAnchors = () =>
-    fetchDataForInfiniteScroll(
-      isLoading,
-      setIsLoading,
-      hasMore,
-      setHasMore,
-      page,
-      setPage,
-      10,
-      GetAnchors
-    );
+  const getAnchors = useCallback(
+    () =>
+      fetchDataForInfiniteScroll(
+        isLoading,
+        setIsLoading,
+        hasMore,
+        setHasMore,
+        page,
+        setPage,
+        10,
+        GetAnchors
+      ),
+    [isLoading, setIsLoading, hasMore, setHasMore, page, setPage, GetAnchors]
+  );
 
   const handleScroll = () =>
     setInfiniteScroll(oceanitesRef, hasMore, page, isLoading, getAnchors);
