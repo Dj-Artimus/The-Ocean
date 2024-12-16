@@ -152,7 +152,7 @@ export default function ReactHomePage() {
             <div className="bg-ternary dark:bg-d_ternary w-full  p-3 px-4  items-center rounded-2xl flex justify-between">
               <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
                 <h1>Whats Happening ?</h1>
-                <h1>Whats on your mind!</h1>
+                <h1>Whats in your mind!</h1>
               </div>
               <Button
                 onClick={() => {
