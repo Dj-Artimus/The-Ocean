@@ -326,6 +326,13 @@ const ReactLandingPage = () => {
             journey that&apos;s just beginning, but I believe it&apos;s one
             worth taking. 🚀
           </p>
+          <p className="mb-4">
+            Although the current version of The Ocean doesn&apos;t yet integrate data
+            from all social media platforms due to technical limitations, the
+            vision remains intact. What I&apos;ve built is a platform that showcases
+            the potential of a unified feed and already supports real-time
+            messaging 💬 , meaningful connections 🔗, and intuitive UI design 📱 .
+          </p>
         </div>
       </section>
 
