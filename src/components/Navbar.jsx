@@ -8,6 +8,7 @@ import {
   Notifications,
   OndemandVideo,
 } from "@mui/icons-material";
+import { Badge } from "@mui/material";
 import ProfileMenu from "./ProfileMenu";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
@@ -17,10 +18,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { CommunicationStore } from "@/store/CommunicationStore";
 
 const Navbar = ({ navStyle }) => {
-  const { setIsMsgsOpen, setIsOCardOpen, setIsCreateDropletModalOpen, setIsProfileEditModalOpen } =
-    UIStore();
+  const {
+    setIsMsgsOpen,
+    setIsOCardOpen,
+    setIsCreateDropletModalOpen,
+    setIsProfileEditModalOpen,
+  } = UIStore();
   const { profileData } = UserStore();
-  const { setUnreadMsgsCountRefresher } = CommunicationStore();
+  const { setUnreadMsgsCountRefresher, msgsCount, setMsgsCount } =
+    CommunicationStore();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -28,12 +34,17 @@ const Navbar = ({ navStyle }) => {
   const getActiveClass = (path) =>
     pathname === path ? "text-blue-500" : "text-inherit";
 
+  useEffect(() => {
+    pathname === "/chat" && setMsgsCount(false);
+  }, [router, pathname]);
+
   return (
     <div className={`${navStyle} bg-primary dark:bg-d_primary`}>
       {/* HOME NAVIGATION STARTS HERE */}
       <div
         onClick={() => {
           router?.push("/");
+          setIsMsgsOpen(false);
         }}
         className={`dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
           "/"
@@ -84,6 +95,7 @@ const Navbar = ({ navStyle }) => {
       {/* CREATE DROPLET ENDS HERE */}
 
       {/* MESSAGES NAVIGATION STARTS HERE */}
+
       <div
         className={` lg:hidden dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
           "/chat"
@@ -92,17 +104,27 @@ const Navbar = ({ navStyle }) => {
           try {
             setIsMsgsOpen(true);
             setIsOCardOpen(false);
-            setUnreadMsgsCountRefresher(new Date().getTime())
+            setMsgsCount(false);
+            setUnreadMsgsCountRefresher(new Date().getTime());
           } catch (error) {}
           // router?.push("/chat");
         }}
       >
-        <ForumRounded
-          sx={{
-            width: { xs: "32px", lg: "40px" },
-            height: { xs: "32px", lg: "40px" },
+        <Badge
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
           }}
-        />
+          color="error"
+          variant={msgsCount && "dot"}
+        >
+          <ForumRounded
+            sx={{
+              width: { xs: "32px", lg: "40px" },
+              height: { xs: "32px", lg: "40px" },
+            }}
+          />
+        </Badge>
       </div>
       {/* MESSAGES NAVIGATION ENDS HERE */}
 

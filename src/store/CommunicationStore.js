@@ -9,7 +9,9 @@ export const CommunicationStore = create(
     (set, get) => ({
         communicatorId: '',
         communicatorDetails: {},
-        unreadMsgsCountRefresher: {},
+        unreadMsgsCountRefresher: '',
+        msgsCount: false,
+        setMsgsCount: (count) => set({ msgsCount: count }),
 
         setCommunicatorId: (id) => set({ communicatorId: id }),
         setCommunicatorDetails: (data) => set({ communicatorDetails: data }),
@@ -164,6 +166,7 @@ export const CommunicationStore = create(
                         currentCommunicatorDetails[currentCommunicatorId]?.avatar,
                         newMessage?.content
                     );
+                    set({msgsCount: true});
                 }
 
             };

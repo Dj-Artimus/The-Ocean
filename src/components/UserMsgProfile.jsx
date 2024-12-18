@@ -36,7 +36,7 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
         setTimeout(() => {
           setIsMsgsOpen(false);
           setUnreadMsgCount(0);
-        }, 2000);
+        }, 3000);
         setCommunicatorId(profile_id);
         redirect("/chat");
       }}
