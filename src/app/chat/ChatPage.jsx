@@ -278,7 +278,7 @@ export default function ChatPage() {
 
       <div className="h-full relative overflow-x-hidden bg-background dark:bg-d_background lg:bg-transparent flex flex-col w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 pt-0 lg:pt-[6px] ">
         {!communicatorId ? (
-          <div className="my-3 border flex flex-col justify-center min-h-[50%] h-full bg-foreground overflow-x-hidden dark:bg-d_foreground shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar">
+          <div className="my-3 border flex flex-col justify-center min-h-[50%] h-full bg-background overflow-x-hidden dark:bg-d_background shadow-sm shadow-blue-600 rounded-xl border-slate-700 customScrollbar">
             {/* Empty State */}
 
             <div
@@ -393,7 +393,7 @@ export default function ChatPage() {
                           title="VideoChat"
                           className="size-7 hidden xs2:block hover:text-blue-500 cursor-pointer"
                         />
-                        <div onClick={handleClick}>
+                        <div>
                           <MoreVertRoundedIcon
                             title="VideoChat"
                             className="size-7 hover:text-blue-500 mb-1 cursor-pointer"
