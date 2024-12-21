@@ -8,7 +8,7 @@ export const setInfiniteScroll =
       const { scrollTop, scrollHeight, clientHeight } = element;
       if (
         hasMore &&
-        scrollTop + clientHeight >= scrollHeight - 200 &&
+        scrollTop + clientHeight >= scrollHeight - 250 &&
         !isLoading
       ) {
         await dataFetcher();
