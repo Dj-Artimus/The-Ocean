@@ -68,7 +68,7 @@ const OceaniteCard = ({
               <img
                 src={avatar_url}
                 alt="profile"
-                className="size-14 my-2 rounded-2xl border-2 border-slate-500"
+                className="!size-14 !object-cover my-2 rounded-2xl border-2 border-slate-500"
               />
             </div>
             <div className="mx-1 leading-snug mt-1 hidden xs:block max-w-96">

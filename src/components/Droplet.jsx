@@ -220,7 +220,7 @@ const Droplet = ({
           {/* HEADING BAR STARTS HERE */}
           <div className="flex items-center w-full justify-between">
             <div className="flex gap-2">
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 my-2 ">
                 <Image
                   width={56}
                   height={56}
@@ -230,7 +230,7 @@ const Droplet = ({
                     e.target.src = "/images/jellyfishFallback.png";
                   }}
                   alt="profile"
-                  className="my-2 rounded-2xl border-2 border-slate-500"
+                  className="!size-14 !object-cover rounded-2xl border-2 border-slate-500"
                 />
               </div>
               <div className="mx-1 leading-snug mt-1 hidden xs:block max-w-96">

@@ -77,7 +77,7 @@ const ProfilePanel = ({
               e.target.onerror = null;
               e.target.src = "/images/jellyfishFallback.png";
             }}
-            className="size-[22%] min-w-14 m-2 rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
+            className="size-20 xs6:size-24 sm:size-30 lg:size-40 object-cover m-2 rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
           />
         </div>
         {user_id === profileData.id ? (
@@ -95,7 +95,7 @@ const ProfilePanel = ({
             onClick={() => {
               handleAnchor(user_id);
             }}
-            className="p-1 px-4 flex text-sm items-center gap-1 border backdrop-blur-md bg-opacity-50 dark:bg-opacity-70 border-slate-600 shadow-sm shadow-blue-600 rounded-2xl hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 xs6:-bottom-14 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
+            className="p-1 px-4 flex text-sm items-center gap-1 border backdrop-blur-md bg-opacity-50 dark:bg-opacity-70 border-slate-600 shadow-sm shadow-blue-600 rounded-2xl hover:bg-foreground dark:hover:bg-d_foreground absolute right-4 bottom-4 bg-primary dark:bg-d_primary cursor-pointer z-10 scale-75 xs1:scale-100"
           >
             {anchoringsIds.includes(user_id) ? (
               <Button
