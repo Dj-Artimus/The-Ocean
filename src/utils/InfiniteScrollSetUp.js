@@ -8,7 +8,7 @@ export const setInfiniteScroll =
       const { scrollTop, scrollHeight, clientHeight } = element;
       if (
         hasMore &&
-        scrollTop + clientHeight >= scrollHeight - 150 &&
+        scrollTop + clientHeight >= scrollHeight - 200 &&
         !isLoading
       ) {
         console.log('infinite scroll data fetching');
