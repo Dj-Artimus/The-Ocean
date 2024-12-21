@@ -25,6 +25,7 @@ import {
   setInfiniteScroll,
   setScrollListener,
 } from "@/utils/InfiniteScrollSetUp";
+import { UserStore } from "@/store/UserStore";
 
 export default function ReactHomePage() {
   const router = useRouter();
@@ -45,6 +46,7 @@ export default function ReactHomePage() {
     setDropletDataType,
     dropletsData,
   } = DropletStore();
+  const { anchoringsIds } = UserStore();
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -58,16 +60,7 @@ export default function ReactHomePage() {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     try {
-      if (!hasMoreUnFeedDroplets) {
-        const newData = await GetFeedDroplets(page, limit);
-        if (newData?.length > 0) {
-          if (newData.length < limit) {
-            setPage(1); // Reset page after last fetch
-            setHasMoreUnFeedDroplets(true);
-          } // Stop fetching
-          else setPage((prev) => prev + 1); // Increment only if fetch is valid
-        }
-      } else {
+      if (hasMoreUnFeedDroplets || anchoringsIds.length === 0) {
         const newData = await GetUnFeedDroplets(page, limit);
         if (newData?.length > 0) {
           if (newData.length < limit) {
@@ -78,6 +71,16 @@ export default function ReactHomePage() {
         } else {
           setHasMore(false);
           setHasMoreUnFeedDroplets(false);
+        }
+      } else {
+        console.log("anchorings ids", anchoringsIds);
+        const newData = await GetFeedDroplets(page, limit);
+        if (newData?.length > 0) {
+          if (newData.length < limit) {
+            setPage(1); // Reset page after last fetch
+            setHasMoreUnFeedDroplets(true);
+          } // Stop fetching
+          else setPage((prev) => prev + 1); // Increment only if fetch is valid
         }
       }
     } catch (error) {
