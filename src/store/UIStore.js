@@ -1,160 +1,157 @@
 
-import { useRouter } from 'next/router';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export const UIStore = create(
     persist((set) => ({
-        darkModeOn: false,
-        toggleDarkMode: (mode) => {
-            set({ darkModeOn: mode })
-        },
+    darkModeOn: false,
+    toggleDarkMode: (mode) => {
+        set({ darkModeOn: mode })
+    },
 
-        searchParams: useRouter().query,
+    oceanVision: false,
+    setOceanVision: (state) => {
+        set({ oceanVision: state })
+    },
 
-        oceanVision: false,
-        setOceanVision: (state) => {
-            set({ oceanVision: state })
-        },
+    isOceanVisionModalOpen: false,
+    setIsOceanVisionModalOpen: (state) => {
+        set({ isOceanVisionModalOpen: state })
+    },
+    
 
-        isOceanVisionModalOpen: false,
-        setIsOceanVisionModalOpen: (state) => {
-            set({ isOceanVisionModalOpen: state })
-        },
+    isUILoading: true,
+    setIsUILoading: (state) => {
+        set({ isUILoading: state })
+    },
 
+    isPageLoading: false,
+    setIsPageLoading: (state) => {
+        set({ isPageLoading: state })
+    },
 
-        isUILoading: true,
-        setIsUILoading: (state) => {
-            set({ isUILoading: state })
-        },
+    isMediaFileUploading: false,
+    setIsMediaFileUploading: (state) => {
+        set({ isMediaFileUploading: state })
+    },
 
-        isPageLoading: false,
-        setIsPageLoading: (state) => {
-            set({ isPageLoading: state })
-        },
+    isProcessing: false,
+    setIsProcessing: (state) => {
+        set({ isProcessing: state })
+    },
 
-        isMediaFileUploading: false,
-        setIsMediaFileUploading: (state) => {
-            set({ isMediaFileUploading: state })
-        },
+    isMsgsOpen: false,
+    setIsMsgsOpen: (state) => {
+        set({ isMsgsOpen: state })
+    },
 
-        isProcessing: false,
-        setIsProcessing: (state) => {
-            set({ isProcessing: state })
-        },
+    isOCardOpen: false,
+    setIsOCardOpen: (state) => {
+        set({ isOCardOpen: state })
+    },
 
-        isMsgsOpen: false,
-        setIsMsgsOpen: (state) => {
-            set({ isMsgsOpen: state })
-        },
+    profileTreasureTabIndex: 1,
+    setProfileTreasureTabIndex: (index) => {
+        set({ profileTreasureTabIndex: index })
+    },
 
-        isOCardOpen: false,
-        setIsOCardOpen: (state) => {
-            set({ isOCardOpen: state })
-        },
+    isRippleDrawerOpen: false,
+    setIsRippleDrawerOpen: (state) => {
+        set({ isRippleDrawerOpen: state })
+    },
 
-        profileTreasureTabIndex: 1,
-        setProfileTreasureTabIndex: (index) => {
-            set({ profileTreasureTabIndex: index })
-        },
+    rippleDrawerDropletId: '',
+    setRippleDrawerDropletId: (id) => {
+        set({ rippleDrawerDropletId: id })
+    },
 
-        isRippleDrawerOpen: false,
-        setIsRippleDrawerOpen: (state) => {
-            set({ isRippleDrawerOpen: state })
-        },
+    dropletsRefreshId: '',
+    setDropletsRefreshId: (id) => {
+        set({ dropletsRefreshId: id })
+    },
 
-        rippleDrawerDropletId: '',
-        setRippleDrawerDropletId: (id) => {
-            set({ rippleDrawerDropletId: id })
-        },
+    ripplesRefreshId: '',
+    setRipplesRefreshId: (id) => {
+        set({ ripplesRefreshId: id })
+    },
 
-        dropletsRefreshId: '',
-        setDropletsRefreshId: (id) => {
-            set({ dropletsRefreshId: id })
-        },
+    isMoreOptionsModalOpen: false,
+    setIsMoreOptionsModalOpen: (state) => {
+        set({ isMoreOptionsModalOpen: state })
+    },
 
-        ripplesRefreshId: '',
-        setRipplesRefreshId: (id) => {
-            set({ ripplesRefreshId: id })
-        },
+    contentEditId: '',
+    setContentEditId: (id) => {
+        set({ contentEditId: id })
+    },
 
-        isMoreOptionsModalOpen: false,
-        setIsMoreOptionsModalOpen: (state) => {
-            set({ isMoreOptionsModalOpen: state })
-        },
+    contentToEdit: '',
+    setContentToEdit: (content) => {
+        set({ contentToEdit: content })
+    },
 
-        contentEditId: '',
-        setContentEditId: (id) => {
-            set({ contentEditId: id })
-        },
+    contentToEditType: '',
+    setContentToEditType: (type) => {
+        set({ contentToEditType: type })
+    },
 
-        contentToEdit: '',
-        setContentToEdit: (content) => {
-            set({ contentToEdit: content })
-        },
+    isCreateDropletModalOpen: false,
+    setIsCreateDropletModalOpen: (state) => {
+        set({ isCreateDropletModalOpen: state })
+    },
 
-        contentToEditType: '',
-        setContentToEditType: (type) => {
-            set({ contentToEditType: type })
-        },
+    isProfileEditModalOpen: false,
+    setIsProfileEditModalOpen: (state) => {
+        set({ isProfileEditModalOpen: state })
+    },
 
-        isCreateDropletModalOpen: false,
-        setIsCreateDropletModalOpen: (state) => {
-            set({ isCreateDropletModalOpen: state })
-        },
+    isContentExpanded: false,
+    setIsContentExpanded: (state) => {
+        set({ isContentExpanded: state })
+    },
 
-        isProfileEditModalOpen: false,
-        setIsProfileEditModalOpen: (state) => {
-            set({ isProfileEditModalOpen: state })
-        },
+    imgViewerSources: [],
+    setImgViewerSources: (img) => {
+        set({ imgViewerSources: img })
+    },
 
-        isContentExpanded: false,
-        setIsContentExpanded: (state) => {
-            set({ isContentExpanded: state })
-        },
+    vidViewerSources: [],
+    setVidViewerSources: (vid) => {
+        set({ vidViewerSources: vid })
+    },
 
-        imgViewerSources: [],
-        setImgViewerSources: (img) => {
-            set({ imgViewerSources: img })
-        },
+    imgViewerIndex: 0,
+    setImgViewerIndex: (index) => {
+        set({ imgViewerIndex: index })
+    },
 
-        vidViewerSources: [],
-        setVidViewerSources: (vid) => {
-            set({ vidViewerSources: vid })
-        },
+    vidViewerIndex: 0,
+    setVidViewerIndex: (index) => {
+        set({ vidViewerIndex: index })
+    },
 
-        imgViewerIndex: 0,
-        setImgViewerIndex: (index) => {
-            set({ imgViewerIndex: index })
-        },
+    isVideoMuted: true,
+    setIsVideoMuted: (state) => {
+        set({ isVideoMuted: state })
+    },
+    isShareOptionsModalOpen: false,
+    setIsShareOptionsModalOpen: (state) => {
+        set({ isShareOptionsModalOpen: state })
+    },
+    dropletIdToShare: '',
+    setDropletIdToShare: (id) => {
+        set({ dropletIdToShare: id })
+    },
 
-        vidViewerIndex: 0,
-        setVidViewerIndex: (index) => {
-            set({ vidViewerIndex: index })
-        },
+    dropletContentToShare: '',
+    setDropletContentToShare: (content) => {
+        set({ dropletContentToShare: content })
+    },
 
-        isVideoMuted: true,
-        setIsVideoMuted: (state) => {
-            set({ isVideoMuted: state })
-        },
-        isShareOptionsModalOpen: false,
-        setIsShareOptionsModalOpen: (state) => {
-            set({ isShareOptionsModalOpen: state })
-        },
-        dropletIdToShare: '',
-        setDropletIdToShare: (id) => {
-            set({ dropletIdToShare: id })
-        },
+    notificationsCount : 0,
+    setNotificationsCount: (count) => { set({notificationsCount: count}) },
 
-        dropletContentToShare: '',
-        setDropletContentToShare: (content) => {
-            set({ dropletContentToShare: content })
-        },
-
-        notificationsCount: 0,
-        setNotificationsCount: (count) => { set({ notificationsCount: count }) },
-
-    }), {
-        name: 'ui-store', // Storage key in localStorage
-        getStorage: () => localStorage, // You can replace with sessionStorage
-    }))
+}), {
+    name: 'ui-store', // Storage key in localStorage
+    getStorage: () => localStorage, // You can replace with sessionStorage
+} ))
