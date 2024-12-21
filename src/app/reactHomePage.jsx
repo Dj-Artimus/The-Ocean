@@ -54,7 +54,6 @@ export default function ReactHomePage() {
   const feedRef = useRef();
 
   const fetchFeedData = () => {
-    console.log("hasMore", hasMore);
     if (hasMore)
       fetchDataForInfiniteScroll(
         isLoading,

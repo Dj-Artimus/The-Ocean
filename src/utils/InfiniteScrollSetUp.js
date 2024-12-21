@@ -11,8 +11,6 @@ export const setInfiniteScroll =
         scrollTop + clientHeight >= scrollHeight - 200 &&
         !isLoading
       ) {
-        console.log('infinite scroll data fetching');
-
         await dataFetcher();
       }
 
