@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import "./globals.css";
 import UILoader from "@/components/UILoader";
 import DropletModal from "@/components/DropletModal";
@@ -171,7 +171,7 @@ const ReactLayout = ({ children }) => {
 
   return (
     <ErrorBoundary>
-      <>
+      <Suspense fallback={<UILoader />} >
         <CssBaseline />
         <ToasterProvider />
         <DropletModal />
@@ -184,7 +184,7 @@ const ReactLayout = ({ children }) => {
         <MoreOptionsModal />
         <ShareOptionsModal />
         {isPageLoading && <PageLoader />}
-      </>
+      </Suspense>
     </ErrorBoundary>
   );
 };
