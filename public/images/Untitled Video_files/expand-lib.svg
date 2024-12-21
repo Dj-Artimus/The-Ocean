@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g id="Group_63909" data-name="Group 63909" transform="translate(-2236 -7901)">
+    <g id="Group_63908" data-name="Group 63908" transform="translate(1919 7834)">
+      <rect id="Rectangle_9618" data-name="Rectangle 9618" width="32" height="32" rx="4" transform="translate(317 67)" fill="#f7f7f7"/>
+      <g id="Rectangle_18442" data-name="Rectangle 18442" transform="translate(323 73)" fill="none" stroke="#8796c1" stroke-width="1.5">
+        <rect width="20" height="20" rx="2" stroke="none"/>
+        <rect x="0.75" y="0.75" width="18.5" height="18.5" rx="1.25" fill="none"/>
+      </g>
+      <path id="Union_63" data-name="Union 63" d="M6.875,22V15.125H0V6.875H6.875V0h8.25V6.875H22v8.25H15.125V22Z" transform="translate(322 72)" fill="#f7f7f7"/>
+    </g>
+    <path id="Path_83211" data-name="Path 83211" d="M0,6,6,0" transform="translate(2243.5 7919.5)" fill="none" stroke="#8796c1" stroke-width="1.5"/>
+    <path id="Path_83212" data-name="Path 83212" d="M6,6,0,0" transform="translate(2254.5 7919.5)" fill="none" stroke="#8796c1" stroke-width="1.5"/>
+    <path id="Path_83210" data-name="Path 83210" d="M0,0,6,6" transform="translate(2243.5 7908.5)" fill="none" stroke="#8796c1" stroke-width="1.5"/>
+    <path id="Path_83209" data-name="Path 83209" d="M6,0,0,6" transform="translate(2254.5 7908.5)" fill="none" stroke="#8796c1" stroke-width="1.5"/>
+  </g>
+</svg>

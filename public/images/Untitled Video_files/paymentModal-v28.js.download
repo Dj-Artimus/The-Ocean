@@ -1,0 +1,3450 @@
+var csrfToken = getCookie('csrftoken');
+var languageCode = getCookie('django_language');
+if (languageCode == null) {
+    languageCode = "en"
+}
+var staticUrl = 'https://static.animaker.com'
+var siteUrl = location.protocol + '//' + location.host;
+
+var planValues = ["free", "starter", "growth", "startup", "personal", "pro", "biz", "enterprise", "basic", "voice pro", "slides pro"]
+var source
+let downgradeTooltipMsg = 'Cannot choose monthly plan, Please choose yearly plan';
+let prorateTooltipMsg = 'Difference amount subtracted From the previous payment';
+// DUMMY VALUES FOR TESTING
+var totalBillAmount=0;
+var proration = false;
+var pccObj = {};
+var currentTeamPlan;
+var currentTeamPlanCycle;
+var currentTeamDefaultCycle;
+var cardflag;
+var ThreeDSnonce;
+var threeDSbin;
+var teamId
+// var ALLOWED_PAYMENT_METHODS = ['razorpay', 'card','paypal'];
+var ALLOWED_PAYMENT_METHODS = [];
+var strikeOffPrice;
+var pastdueamount=0
+var pastdueblocked
+var defaultcycle
+var checkcardflag = false
+var activePaymentMethod;
+
+
+function ajaxCall(url, data, uid, callbackchannelsget) {
+
+    return new Promise(function (resolve, reject) {
+        var xHttp;
+        xHttp = new XMLHttpRequest();
+        xHttp.open("POST", url, true);
+        xHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+        xHttp.setRequestHeader("Access-Control-Allow-Credentials", "true");
+        xHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xHttp.setRequestHeader("X-csrfToken", csrfToken);
+        xHttp.send(data);
+        xHttp.onreadystatechange = function () {
+            if (this.readyState == 4) {
+
+                if (this.status == 200) {
+
+                    if (uid == null) {
+                        resolve(xHttp.responseText);
+                    } else {
+                        callbackchannelsget(uid).then(function (result) {
+                            resolve(result);
+                        })
+                    }
+
+                }else if (this.status == 512){
+                                    
+                    resultjson = JSON.parse(this.responseText)
+                    if (resultjson.message ==  "Oauth Authentication Required"){
+                          sessionExpired();
+                    }
+        
+                }else if(this.status == 513){
+                    // OLD LOGOUT FLOW
+                    window.location.href = siteurl+"/logout"; 
+                }else {
+                    var errMsg;
+                    if (this.status == 0) {
+                        errMsg = pgettext("NetworkError-NoticationMessage", "Please check your internet connection and retry.")
+                    } else if (this.status == 500) {
+                        errMsg = pgettext("NetworkError-NoticationMessage", "Internal server error. Please try again later.")
+                    } else if (this.status == 400 || this.status == 408) {
+                        errMsg = pgettext("NetworkError-NoticationMessage", "Something went wrong. Please try again")
+                    } else if (this.status == 403) {
+                        errMsg = pgettext("NetworkError-NoticationMessage", "Something went wrong. Try logging in again.")
+                    }
+
+                    reject(errMsg)
+                }
+            }
+
+        };
+
+    });
+
+}
+
+
+function ajaxCallCardCheck(url, data, uid, callbackchannelsget) {
+
+    return new Promise(function (resolve, reject) {
+        var xHttp;
+        xHttp = new XMLHttpRequest();
+        xHttp.open("POST", url, true);
+        xHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+        xHttp.setRequestHeader("Access-Control-Allow-Credentials", "true");
+        xHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xHttp.setRequestHeader("X-csrfToken", csrfToken);
+        xHttp.send(data);
+        xHttp.onreadystatechange = function () {
+            if (this.readyState == 4) {
+
+                resolve(xHttp);
+
+                // if (this.status == 200) {
+
+                //     if (uid == null) {
+                //         resolve(xHttp);
+                //     } else {
+                //         callbackchannelsget(uid).then(function (result) {
+                //             resolve(result);
+                //         })
+                //     }
+
+                // }else if (this.status == 512){
+                                    
+                //     resultjson = JSON.parse(this.responseText)
+                //     if (resultjson.message ==  "Oauth Authentication Required"){
+                //           sessionExpired();
+                //     }
+        
+                // }else if(this.status == 513){
+                //     // OLD LOGOUT FLOW
+                //     window.location.href = siteurl+"/logout"; 
+                // }else {
+                //     var errMsg;
+                //     if (this.status == 0) {
+                //         errMsg = pgettext("NetworkError-NoticationMessage", "Please check your internet connection and retry.")
+                //     } else if (this.status == 500) {
+                //         errMsg = pgettext("NetworkError-NoticationMessage", "Internal server error. Please try again later.")
+                //     } else if (this.status == 400 || this.status == 408) {
+                //         errMsg = pgettext("NetworkError-NoticationMessage", "Something went wrong. Please try again")
+                //     } else if (this.status == 403) {
+                //         errMsg = pgettext("NetworkError-NoticationMessage", "Something went wrong. Try logging in again.")
+                //     }
+
+                //     reject(errMsg)
+                // }
+            }
+
+        };
+
+    });
+
+}
+
+
+var countDownTimer, planDropdownLister, paymentListener, cycleChangeListener, applyCouponListener;
+var paymentTimeoutInterval;
+var popupPayData = {};
+var popupFtData = {};
+var allow_proration = null;
+
+var currency_code = '';
+
+function add_or_remove_input_error(label,status)
+{
+    //status == 1 add
+    //status == 0 remove 
+    var form_input_error={
+        'cn-label':"paymentCardNumber",
+        'expiry-label':"paymentExpiryDate",
+        'cvv-label':"paymentCvv",
+        'zc-label':"paymentZipcode",
+    };
+    //below line not needed for braintree
+    //document.getElementById(form_input_error[label]).classList.remove('input_error'); 
+    if(status)
+    {
+        document.getElementById(form_input_error[label]).classList.add('input_error');
+    }
+
+}
+
+function validations_check(label,text)
+{
+    document.getElementById(label).innerHTML=text;
+    document.getElementById(label).classList.add('display-error');
+    add_or_remove_input_error(label,1)
+}
+function reset_validations_check(label,text)
+{
+    document.getElementById(label).innerHTML=text;
+    document.getElementById(label).classList.remove('display-error');
+    add_or_remove_input_error(label,0)
+}
+function validate_expire(elm)
+{
+    var elm_value=elm.value
+    if(elm_value!="")
+    {
+        var today=new Date();
+        var given=elm_value.split('/');
+        var someday = new Date();
+        if (given.length = 2)
+        {
+            given[1]="20"+given[1];
+            someday.setFullYear(given[1], given[0], 1);
+            if (someday < today)    
+            {
+                validations_check('expiry-label',pgettext("Validation-Error",'Expiration Date was wrong'));
+                // elm.value="";
+            }
+        }
+        else
+        {
+            validations_check('expiry-label',pgettext("Validation-Error",'Expiration Date Invalid'));
+            // elm.value="";
+        }
+    }
+    else
+    {
+        // validations_check('expiry-label',pgettext("Validation-Error",'Expiration Date required'));
+        elm.value="";
+    } 
+}
+function resetPaymentForm()
+{
+    var form_input={
+        'cn-label':pgettext("Validation-Error","Card Number"),
+        'expiry-label':pgettext("Validation-Error","Expiration Date (MM/YY)"),
+        'cvv-label':pgettext("Validation-Error","Security code"),
+        'zc-label':pgettext("Validation-Error","Zip Code"),
+    };
+    for (var key in form_input)
+    {
+        reset_validations_check(key,form_input[key]);	
+    }
+    document.querySelector(".credit-card-err-section").style.display = 'none';
+    document.querySelector(".credit-card-err-section span").innerHTML = "";
+                        
+}
+
+function clearPaymentPopupListeners(){
+    clearInterval(paymentTimeoutInterval);
+    // remove  plan change Listeners
+    document.querySelector('.plan-dropdown-container').removeEventListener("click", planDropdownLister, false);
+    // remove  payment Listeners
+    try {
+    document.querySelector("#payment-pay-button").removeEventListener("click", paymentListener, false);
+    }
+    catch(err) {}
+
+    // remove  coupon Listeners
+    document.querySelector('.pricing-summary .discount-section .discount').removeEventListener("click", applyCouponListener, false);
+    // remove  cycle change Listeners
+    document.querySelector('.plan-cycle-card-container').removeEventListener("change", cycleChangeListener, false);
+    updateCardDetails(undefined, 'clear');
+}
+
+async function newPlanUpgrade(teamId, type, plan, ext1, ext2, selPlan, cycle, source, cplantypecycle, cpecd, discountType, trial) {
+    //console.log(teamId, type, plan, ext1, ext2, selPlan, cycle, source, cplantypecycle, cpecd, discountType, trial)
+    nounceurl = siteurl+"/payments/p/bt/gct/"
+    
+    
+     
+    // getajaxCall(nounceurl, null).then(function (result) {
+    //     var res =  JSON.parse(result)
+    //     ////console.log('res',res)
+
+    //     if(!result['error']){
+                            
+    //         authorizationtoken = res['client_token']
+    //         braintreeCreate(authorizationtoken)
+    //         ////console.log('authorizationtoken',authorizationtoken)
+            
+
+    //     }
+
+    // })
+    
+
+    return new Promise(async function (resolve, reject) {
+
+        var popupData = [];
+
+        result = await getajaxCall(nounceurl, null);
+        var res =  JSON.parse(result)
+        ////console.log('res',res)
+
+        if(!result['error']){
+                            
+            authorizationtoken = res['client_token']
+            braintreeCreate(authorizationtoken)
+            ////console.log('authorizationtoken',authorizationtoken)
+            
+
+        }
+
+        async function gnewtoken(){
+            nounceurl = siteurl+"/payments/p/bt/gctrn/"
+            result = await getajaxCall(nounceurl, null)
+            //console.log('result',result)
+            var res =  JSON.parse(result)
+            if(!result['error']){
+                    
+            authorizationtoken = res['client_token']
+            braintreeCreate(authorizationtoken)
+            ////console.log('authorizationtoken',authorizationtoken)
+            
+
+            }
+        }
+
+        function braintreeCreate(authorizationtoken){
+
+            braintree.client.create({
+                authorization: authorizationtoken
+              }, function (clientErr, clientInstance) {
+                //console.log('clientInstance',clientInstance)
+                if (clientErr) {
+                  console.log(clientErr);
+                  gnewtoken()
+                  return;
+                }
+            
+                // This example shows Hosted Fields, but you can also use this
+                // client instance to create additional components here, such as
+                // PayPal or Data Collector.
+            
+                braintree.hostedFields.create({
+                  client: clientInstance,
+                  styles: {
+                    'input': {
+                      'font-size': '14px'
+                    },
+                    'input.invalid': {
+                      'color': 'red'
+                    },
+                    'input.valid': {
+                      'color': 'green'
+                    }
+                  },
+                  fields: {
+                    number: {
+                      container: '#card-number',
+                      placeholder: '1234 1234 1234 1234'
+                    },
+                    cvv: {
+                      container: '#cvv',
+                      placeholder: 'CVV'
+                    },
+                    expirationDate: {
+                      container: '#expiration-date',
+                      placeholder: 'MM/YY'
+                    },
+                    postalCode: {
+                        selector: '#postal-code',
+                        placeholder: '12345'
+                    }
+                  }
+                }, function (hostedFieldsErr, hostedFieldsInstance) {
+                  //console.log('hostedFieldsInstance',hostedFieldsInstance)
+                  if(hostedFieldsInstance){
+                  hostedFieldsInstance.on('focus', function (event) {
+                    document.querySelector("#paymentCardbraintreePay").disabled = false;
+                    document.getElementById("cn-label").classList.remove('display-error');
+                    document.getElementById("cn-label").innerHTML='Card Number';
+
+                  });
+                  }
+                  if (hostedFieldsErr) {
+                    console.error(hostedFieldsErr);
+                    return;
+                  }
+
+                  hostedFieldsInstancee = hostedFieldsInstance;
+
+                  hostedFieldsInstance.on('validityChange', function (event) {
+                    var field = event.fields[event.emittedBy];
+                    var id_name="braintree-hosted-field-"+event.emittedBy;
+                    if (field.isValid) {
+                      console.log(event.emittedBy, 'is fully valid');
+                      try{
+                        document.getElementById(id_name).classList.remove('braintree-hosted-invalid');
+                        }catch(error) {}
+                    } 
+                  });
+                  //submit.removeAttribute('disabled');
+            
+                  document.addEventListener('click',function(e){
+                    if(e.target && e.target.id == 'paymentCardbraintreePay'){
+                        document.querySelector("#paymentCardbraintreePay").disabled = true;
+                        var apiurl = siteurl+"/payments/bt/ctc/"
+                        ajaxCallCardCheck(apiurl, null, null).then(function (result) {
+                            console.log('result',result)
+                            // res = JSON.parse(result);
+                            if (result["status"] != 200) {
+                                $(".anim-new-modal-overlay").fadeOut();                                                
+                                document.querySelector(".credit-card-err-section").style.display = 'flex'
+                                document.querySelector(".credit-card-err-section span").innerHTML = 'Too many requests. Please Try again later.';
+                                document.querySelector("#paymentCardbraintreePay").disabled = false;
+                                checkcardflag = true
+                                return;
+                            }
+                        },function (error) {
+                            reject(error);
+                        });
+                    //$(document.body).on('click',"#paymentCardbraintreePay",function(){
+                      //console.log('in tokenize error')
+                    //event.preventDefault();
+
+                    var x = document.getElementById("card-number");
+                    totalamount = document.getElementById("selected-plan-total-price").innerHTML
+                    totalamount = totalamount.slice(1,totalamount.length);
+
+                    if (window.getComputedStyle(x).display === "none") {
+                        ////console.log('braintree block none')
+                        ce = 1
+                        nouncetk = ThreeDSnonce
+                        bin = ThreeDSbin
+                        // ThreeDSverify()
+                        // console.log('withoutbin')
+                        showPaymentPopupLoader('processing')
+                        if (!checkcardflag){
+                            initBtVerify(nouncetk,bin)
+                        }
+                        
+                        // brainTreePaymentListener(e)
+                    }
+                    else{
+                        ce = 0
+
+                        hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+                            //console.log('payload',payload)
+                            if (tokenizeErr) {
+                                var Errmsg="";
+                                if (tokenizeErr.code) {
+                                    switch (tokenizeErr.code) {
+                                        case 'HOSTED_FIELDS_FIELDS_EMPTY':
+                                        Errmsg=pgettext("host-Validation-Error",'Please give a valid Card Information');
+                                        break;
+                                        case 'HOSTED_FIELDS_FIELDS_INVALID':
+                                        Errmsg=pgettext("host-Validation-Error",'Please give a valid Card Information');
+                                        var id_name="";
+                                        try{
+                                            document.getElementsByClassName('braintree-hosted-invalid').classList.remove('braintree-hosted-invalid');
+                                        }catch(error) {}
+                                        for (var i=0;i<tokenizeErr.details.invalidFieldKeys.length;i++)
+                                        {
+                                            id_name="braintree-hosted-field-"+tokenizeErr.details.invalidFieldKeys[i];
+                                            document.getElementById(id_name).classList.add('braintree-hosted-invalid');
+                                        }
+                                        break;
+                                        case 'HOSTED_FIELDS_TOKENIZATION_CVV_VERIFICATION_FAILED':
+                                        Errmsg=pgettext("host-Validation-Error",'Please Enter a Valid CVV');
+                                        break;
+                                        case 'HOSTED_FIELDS_FAILED_TOKENIZATION':
+                                        Errmsg=pgettext("host-Validation-Error",'Something went wrong, please try again');
+                                        break;
+                                        default:
+                                        Errmsg=pgettext("host-Validation-Error",'Something went wrong, please try again');
+                                    }
+                                }
+                                validations_check("cn-label", Errmsg);
+                                //validations_check("cn-label",pgettext("Validation-Error", Errmsg));
+                                return;
+                            }
+                  
+                            // If this was a real integration, this is where you would
+                            // send the nonce to your server.
+                            //console.log('Got a nonce: ' + payload.nonce);
+                            nouncetk = payload.nonce
+                            bin=payload.details.bin
+                            if (!checkcardflag){
+                                initBtVerify(nouncetk,bin)
+                            }
+                            
+                            // brainTreePaymentListener(e)
+      
+                            
+                            //reset_validations_check('cn-label','Card Number')
+                  
+                            //btp = brainTreePaymentListener(e)
+                            //return nouncetk
+                  
+                          });
+
+                    }
+                    function successfade(){
+                        setTimeout(function() {
+                              $(".Notification_popupbar").fadeOut(3000);
+                         },5000);
+                      }
+                    function verifyErr(e, res){
+                        
+                        closePaymentPopupLoader()
+                        $(".anim-new-modal-overlay").fadeOut();   
+                        errorMsg = 'Something went wrong.'
+                        try {
+                              errorMsg = e.details.originalError.details.originalError.error.message;
+                        } catch {
+                              errorMsg = e.details.originalError.code;
+                              errorMsg += ': ' + e.details.originalError.description;
+                        }
+                        if (errorMsg.includes('1050')) {
+                              errorMsg = 'Card authentication failed. Please try with different card or payment mode. '
+                        } else if (errorMsg.includes('Unsupported card type')) {
+                            errorMsg = 'Your card is not supported. Please try again with different payment mode.'
+                        }
+                        try {
+                              $("#NotificationbarMessage").html(errorMsg);
+                              $('.Notification_popupbar').fadeIn();
+                              document.querySelector(".paynow-button").disabled = false;
+                              document.querySelector(".credit-card-err-section span").innerHTML =errorMsg;
+                              document.querySelector(".credit-card-err-section").style.display = 'flex'
+                              successfade()
+                        } catch { }
+                        
+                        
+                    }
+                    function initBtVerify(nonce, bin){
+                        // s(".anim-new-modal").fadeOut();
+                        console.log('IN3DS')
+                        showPaymentPopupLoader('processing')
+                            threeDS.verifyCard({
+                                onLookupComplete: function (data) {
+                                    threeDS.initializeChallengeWithLookupResponse(data).then(function (payload) {
+                                        var verifyStatus = payload. threeDSecureInfo.status;
+                                        var enrolled = payload. threeDSecureInfo. enrolled;
+                                        nouncetk = payload.nonce;
+                                        if (enrolled == 'Y'){
+                                            if (payload.liabilityShifted){
+                                                // Liability has shifted
+                                                brainTreePaymentListener(e);
+                                            } else {
+                                                // Liability has not shifted and will not shift
+                                                var e={'details':{'originalError':{'details':{'originalError':{'error':{'message':"1050"}}}}}}
+                                                verifyErr(e);
+                                                
+                                                successfade();
+                                                threeDS.cancelVerifyCard(function (err, verifyPayload) {
+                                                    if (err) {
+                                                        console. log(err.message); // No verification payload available
+                                                        return;}
+                                                    });
+                                                  
+                                            }
+                                        } else{
+                                            brainTreePaymentListener(e);
+                                        }
+                                        });
+                                    },
+                                    amount:$('#selected-plan-total-price').text().replace(/\s+/g, '').replace('$', '').replace(',','.'),
+                                    nonce:nonce,
+                                    bin:bin,
+                                    challengeRequested:true
+                                },function(e,res){verifyErr(e,res)});
+                                }
+                            
+
+
+                    function brainTreePaymentListener(e) {
+      
+      
+                        // return new Promise(function (resolve, reject) {
+        
+                        url = siteUrl + '/payments/p/bt/cbts/'
+                        // idVal = document.getElementsByClassName("selected-plan")[0].getAttribute("id")    
+                        cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+                        selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+                        var trial = (document.querySelector(".plan-picker.active").getAttribute('data-trial') === 'true');
+                        // get coupencode
+                        if(document.getElementById('coupon-code')){
+                            if(document.querySelector(".coupon-code.applied")!=null){
+                                ccode = document.querySelector(".coupon-code.applied").value.trim();
+                            }
+                            else{
+                                ccode = ""
+                            }
+                        }else{
+                            ccode="";
+                        }
+        
+                        data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&b=" + btoa(cycle) + "&g=" + btoa(source)+"&n=" +btoa(nouncetk)+"&ce="+btoa(ce)+"&cc="+btoa(ccode)+"&da="+btoa(pastdueamount)+"&t="+btoa(trial);
+                        if(totalamount > costlimit){
+                            document.querySelector(".credit-card-err-section span").innerHTML = pgettext("transaction-limit-error", "You have exceeded the transaction limit of $6000. Please contact support team to complete the payment.")
+                            document.querySelector(".credit-card-err-section").style.display = 'flex'
+                            return;
+                       }
+                        
+                        
+        
+                        document.getElementsByClassName("payment-popup-upgrade-overlay")[0].style.display = "block";
+                        showPaymentPopupLoader('processing')
+                        ajaxCall(url, data, null).then(function (result) {
+                            document.querySelector("#paymentCardbraintreePay").disabled = false;
+        
+                            document.getElementsByClassName("payment-popup-upgrade-overlay")[0].style.display = "none";
+                            
+        
+                            res = JSON.parse(result);
+        
+                            if (!res["error"]) {
+                                if (res['redirect_url']) {
+                                    window.location = res['redirect_url'];
+                                    showPaymentPopupLoader('three-ds-section')
+                                    paymentTimeoutInterval = setInterval(countDownTimer, 500);
+                                }else{
+                                    paymentSuccessStage(res['pa'], res['tr'])
+                                }
+        
+        
+                                var findsidemenu = document.getElementById("#sidemenuplan")
+                                if(findsidemenu){
+                                if(res['a'] != undefined){
+                                    
+                                    var sidemenuplan = atob(res['a'])
+                                    if(sidemenuplan.includes("biz")){
+                                        sidemenuplan = 'business'
+                                    }
+                                
+                                    currentPlanInSideMenu = sidemenuplan
+                                    
+                                    
+                                    $("#sidemenuplan").replaceWith("<button class='free_btn "+sidemenuplan+"_btn' id='sidemenuplan' data-val='"+sidemenuplan+"'><img src='"+static+"icons/whitestar.svg' %}' style='width:15px;height:15px;'><span style='padding-left:10px'>"+plan_details["plans_"+language_code][sidemenuplan]+"</span></button>")
+        
+                                    $('#'+selectedTeam).next().replaceWith("<a class='teamplandisplay "+sidemenuplan+"'><span style='vertical-align: text-bottom;'><img src='"+static+"icons/whitestar.svg' class='business_icon' style='width: 11px;height: 11px;float:none;margin-right:2px;padding-bottom: 1px;'></span>"+plan_details["plans_"+language_code][sidemenuplan]+"</a>")
+                                
+                                    if(window.location.href.includes("myteam")){
+                                        teamplan = sidemenuplan
+                                    }
+                                    $('.profilecurrentplan .teamplandisplay').replaceWith(`<p style="display:inline-block;" class="teamplandisplay ${sidemenuplan}">                             
+                                        <span style="vertical-align: middle;">
+                                                <img src="${static}icons/whitestar.svg" class="business_icon" style="width: 11px;height: 11px;float:none;margin-right:2px;padding-bottom: 1px;vertical-align:revert;">
+                                        </span>
+                                        <span class="currentplanname" data-val="${sidemenuplan}">${plan_details["plans_"+language_code][sidemenuplan]}</span></p>`)
+                                
+                                }
+                            }
+                            
+                                resolve(result);
+                                //return result;
+                                
+        
+                            } else {
+                                threeDS.cancelVerifyCard(function (err, verifyPayload) {
+                                    if (err) {
+                                        console. log(err.message); // No verification payload available
+                                        return;}
+                                    });
+
+                                closePaymentPopupLoader()
+                                document.querySelector("#paymentCardbraintreePay").disabled = false;
+                                
+                                    document.querySelector(".credit-card-err-section").style.display = 'flex'
+                                    document.querySelector(".credit-card-err-section span").innerHTML = res["message"];
+                                }
+        
+                        }, function (error) {
+        
+                            reject(error);
+                            closeUpgradePaymentPlan();
+                    });
+        
+                        // });
+                    }
+            
+                    
+                }
+                }, false);
+            
+                });
+                // console.log('3dcalled')
+                braintree.threeDSecure.create({
+                    version: 2, // Will use 3DS2 whenever possible
+                    client: clientInstance
+                  }, function (threeDSecureErr,threeDSecureInstance){
+                        if (threeDSecureErr){
+                            // console.log('3d',threeDSecureErr)
+                        }
+                        threeDS = threeDSecureInstance;
+                        // console.log(threeDS)
+                
+                });
+            });
+            
+        }
+        
+
+        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+        document.getElementsByClassName("payment-popup-bg")[0].style.display = "none";
+
+        url = siteUrl + '/payments/p/popup';
+        data = 'teamId=' + teamId + '&pgType=' + type
+        data += (ext1 != undefined) ? ('&pgProp=' +ext1) : "";
+        data += (ext2 != undefined) ? ('&pgExProp=' +ext2) : "";
+        data += (source != undefined) ? ('&pgSrc=' +source) : "";
+        data += (selPlan != undefined) ? ('&selPlan=' +selPlan) : "";
+        source = (source == undefined) ? getSource(type, ext1) : source;
+        ajaxCall(url, data, null).then(function (result) {
+            // document.getElementById('newPlanUpgradePopup').style.display = "block";
+            // //document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+            // document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+            response = JSON.parse(result);
+            if(response['mobilesubscription']){
+
+                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                document.getElementsByClassName("anim-new-modal-overlay")[0].style.display = "none";
+                document.getElementById("mobile-subscription-popup").style.display = "block";
+                return true;
+
+            }
+
+            if(response['contact_support']) {
+                try {
+                    $('.contact-support-popup').fadeIn()
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+
+            if ((response["error"] && !response['data']) || response["cancelled"]) {
+                // document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                if(response["msg"]){
+                    document.getElementById("NotificationbarMessage").innerHTML = response["msg"];
+                }
+                else{
+                    document.getElementById("NotificationbarMessage").innerHTML = response["message"];
+                }
+                
+                document.getElementsByClassName("Notification_popupbar")[0].style.display = "block";
+                setTimeout(function(){
+                    document.getElementsByClassName("Notification_popupbar")[0].style.display = "none";
+                },3000)
+                resolve(result);
+
+            }
+            // pastdue
+            if(response["error"] && response['data'] && response['data']['pastdue'] == true && ext1 != 'brand'){
+                var pastduetype = (source.includes('pricingpage')) ? "changeplan": "upgrade" ;
+                var section = (source.includes('pricingpage')) ? "trynow": ext1 ;
+                pastduepopup(teamId, pastduetype, source, section).then(function(result){
+
+                      resolve(result)
+
+                }, function(error) {
+
+                      reject(error)
+                })
+              }
+              else if(response["error"]){
+                document.getElementById("NotificationbarMessage").innerHTML = response["message"];
+                document.getElementsByClassName("Notification_popupbar")[0].style.display = "block";
+                setTimeout(function(){
+                    document.getElementsByClassName("Notification_popupbar")[0].style.display = "none";
+                },3000)
+                resolve(result);
+              }
+
+              else{
+                
+                if (response['data'] && response['data']['popup']) {
+                    document.getElementById('newPlanUpgradePopup').style.display = "block";
+                    //document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+                    document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+
+                    popupData = JSON.parse(JSON.stringify(response['data']['popup']));
+                    costlimit = response['transaction_limit']
+                    country_code = response["country_code"];
+                    if (response["data"]["popup"].length > 1){
+                        allow_proration = response["data"]["popup"][1]["allow_proration"];
+                        refund_amount = response["data"]["popup"][1]["refund_amount"];
+                    }
+                    else{
+                        allow_proration = response["data"]["popup"][0]["allow_proration"];
+                        refund_amount = response["data"]["popup"][0]["refund_amount"];
+                    }
+
+                    if(refund_amount) {
+                        proration = false;
+                    }
+
+
+
+                    if(country_code == "IN") {
+                        const sel = document.querySelector('.paynow-button');
+                        sel.setAttribute('id', 'paymentRazorPay');
+                        currency_code = "INR";
+
+                    }
+
+                    if (response['data']['popup'].length > 1) {
+                        popupFtData = JSON.parse(JSON.stringify(response['data']['popup'][0]));
+                        popupPayData = JSON.parse(JSON.stringify(response['data']['popup'][1]));
+                        currentTeamPlan = popupPayData['currentPlan']['planName'];
+                        currentTeamPlanCycle = popupPayData['currentPlan']['cycle'];
+                        ALLOWED_PAYMENT_METHODS = popupPayData["allowedPaymentMethods"];
+                        console.dir(ALLOWED_PAYMENT_METHODS)
+                        activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS); 
+                        console.log('ActivePaymentMethod : '+activePaymentMethod)
+                        createFeatureStage(response['data']['popup'][0], source);
+                    } else {
+
+                        if( response['data']['popup'][0]['type']== 'newSubscriptionFeaturePopup'){
+                            popupFtData = JSON.parse(JSON.stringify(response['data']['popup'][0]));
+                            createFeatureStage(response['data']['popup'][0], source);
+                        }else{
+                            popupPayData = JSON.parse(JSON.stringify(response['data']['popup'][0]));
+                            document.getElementsByClassName("pricing-comparison")[0].style.display = "none";
+                            document.getElementsByClassName("pricing-summary")[0].style.display = "block";
+                            currentTeamPlan = popupPayData['currentPlan']['planName'];
+                            currentTeamPlanCycle = popupPayData['currentPlan']['cycle'];
+                            // document.getElementById('newPlanUpgradePopup').style.maxHeight = "none";
+                            // document.getElementById('newPlanUpgradePopup').style.height = "97vh";
+                            try{
+                                pastdueamount=parseFloat(response['pastduedata']['pastdueamount'])
+                            }
+                            catch{}
+                            createPaymentStage(response['data']['popup'][0], selPlan);
+                            // ajaxCallPccToggle(e, teamId, type, plan, ext1, ext2, e.target.parentNode.getAttribute('data-plan'), e.target.parentNode.getAttribute('data-cycle'), source, cplantypecycle, cpecd, discountType, trial)
+                        }
+                    }
+                }
+
+                try{
+                    if(response["pastduedata"]){
+                    pastdueblocked=true
+                    document.getElementsByClassName("anim-row pastdue-row ")[0].style.display = "flex";
+                    $('#pastduemonths').html(response['pastduedata']['pastduemonths']) 
+                    $('#countdata').html(response['pastduedata']['countdata'])
+                    $('#selected-plan-pastdue-price').html('$'+response['pastduedata']['pastdueamount'])
+                    pastdueamount=parseFloat(response['pastduedata']['pastdueamount'])
+                    document.querySelector('.order-summary .prorated-price').style.display = 'none';
+                    document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = defaultCurrency + (memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']);
+                    totalafterpastdue=pastdueamount+parseFloat($('#selected-plan-total-price').html().replace(/[$₹]/g, '')) 
+                    $('#selected-plan-total-price').html(defaultCurrency+totalafterpastdue.toString()) 
+    
+    
+    
+                }}
+                catch{}
+                
+
+                cycleChangeListener = function (e) {
+
+                    if(e.target.className == 'toggle-subscription-type'){
+                        if (e.target.disabled) {
+                            return;
+                        }
+                        try{
+                        document.querySelector("#paymentCardbraintreePay").disabled = false;
+                        } catch(error) {}
+                        try{
+                            document.querySelector(".common-payment-error").style.display = 'none'
+                        } catch(error) {}
+                        
+        
+                        document.querySelector('.plan-cycle-card-container div.plan-picker.active').classList.remove("active");
+        
+                        if (!e.target.disabled && !e.target.parentNode.parentNode.classList.contains('active')) {
+                            e.target.parentNode.parentNode.classList.add('active');
+                        }
+        
+                        updateAutoRenewNote(e.target.value);
+                        const activePaymentMethod =  getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);  
+
+                        if(!$('.discount').hasClass('apply')){
+                            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(activePaymentMethod))){
+                                updatePaymentSummary(popupPayData, e.target.parentNode.parentNode.getAttribute('data-plan'), e.target.value ,e.target.parentNode.parentNode.getAttribute('data-trial'), 'apply');
+                            }else{
+                                updatePaymentSummary(popupPayData, e.target.parentNode.parentNode.getAttribute('data-plan'), e.target.value ,e.target.parentNode.parentNode.getAttribute('data-trial'), 'invalid');
+                            }
+                        }
+                        else{
+
+                            updatePaymentSummary(popupPayData, e.target.parentNode.parentNode.getAttribute('data-plan'), e.target.value ,e.target.parentNode.parentNode.getAttribute('data-trial'), '', currency_code);
+                            // updatePricingCard(popupPayData, e.target.parentNode.parentNode.getAttribute('data-plan'), currency_code);
+
+                        }
+                    }
+                    changeWidth()
+                    currencyconverter()
+
+                }
+
+                applyCouponListener = function (e){
+                    var cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+                    var selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+                    var trial = document.querySelector(".plan-picker.active").getAttribute('data-trial');
+                    updateCoupon(selPlan).then(function(discounts){
+                        popupPayData['discount']=discounts
+                        if(e.target.classList.contains('apply')){
+                            const activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);
+                            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(activePaymentMethod))){
+                                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'apply')
+                            }else{
+                                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'invalid')
+                            }
+                        }else if (e.target.classList.contains('remove')){
+                            const activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);
+                            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(activePaymentMethod))){
+                                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'remove')
+                            }else{
+                                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'invalid')
+                            }
+                        }
+                    }, function (error) {
+                        //return {}
+                        //reject(error);
+                
+                    });
+                }
+                
+                paymentListener = function(e){
+
+                    const selPayMeth = document.querySelector('input[name=toggle-payment-mode-popup]:checked').value
+
+                    if(e.target.id == 'paymentCardPay' && selPayMeth == 'card'){
+                        cardPaymentListener(e)
+                    }else if (e.target.id == 'paymentPaypalPay' && selPayMeth == 'paypal'){
+                        totalamount = document.getElementById("selected-plan-total-price").innerHTML
+                        totalamount = totalamount.slice(1,totalamount.length);
+                        if(totalamount > costlimit){
+                            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                            document.querySelector(".common-payment-error").innerHTML = pgettext("transaction-limit-error", "You have exceeded the transaction limit of $6000. Please contact support team to complete the payment.")
+                            document.querySelector(".common-payment-error").style.display = 'block'
+                            return;
+                        }
+                        else{
+                            paypalPaymentListener(e)
+                        }
+                    }else if(e.target.id == 'paymentRazorPay' && (selPayMeth == 'razorpay') ){
+                        totalamount = document.getElementById("selected-plan-total-price").innerHTML
+                        totalamount = totalamount.slice(1,totalamount.length);
+                        if(totalamount > 100000){
+                            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                            document.querySelector(".common-payment-error").innerHTML = pgettext("transaction-limit-error", "You have exceeded the transaction limit. Please contact support team to complete the payment.")
+                            document.querySelector(".common-payment-error").style.display = 'block'
+                            closePaymentPopupLoader()
+                            return;
+                        }
+                        else {
+                            razorpayPaymentListener(e)
+                        }
+                    }
+                }
+
+                planDropdownLister = function(e){
+
+
+                    if(e.target.parentNode.className == "plan-dropdown-block"){
+
+                        document.querySelector(".paynow-button").disabled = false;
+
+                        document.querySelector('.plan-dropdown-container .plan-dropdown-block.selected').classList.remove('selected');
+
+                        if(!e.target.parentNode.classList.contains('selected')){
+                            e.target.parentNode.classList.add('selected')
+                        }
+                        selCycle = cycle
+                        //createPaymentStage(popupPayData, e.target.parentNode.getAttribute('data-plan'), true);
+                        ajaxCallPccToggle(e, teamId, type, plan, ext1, ext2, e.target.parentNode.getAttribute('data-plan'), e.target.parentNode.getAttribute('data-cycle'), source, cplantypecycle, cpecd, discountType, trial)
+                    }
+                }
+
+                countDownTimer = function () {
+                    var d = new Date();
+                    var seconds = d.getMinutes() * 60 + d.getSeconds(); 
+                    var fiveMin = 60 * 5; //five minutes is 300 seconds!
+                    var timeLeft = fiveMin - seconds % fiveMin; 
+                    var min = parseInt(timeLeft / 60)
+                    var sec = timeLeft % 60
+                    var result = pad(min, 2) + ':' +pad(sec, 2);   //format seconds into 00:00 
+                    document.getElementById('test').innerHTML = result;
+                    if(min == 0 && sec == 0){
+                        // clear the timer
+                        clearInterval(paymentTimeoutInterval);
+                    }
+                
+                }
+
+                if (response['data']['popup'].length > 1) {
+                    document.getElementById('newPlanUpgradePopup').style.display = "block";
+                    //document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+                    document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+                    var upgradeBtn = document.querySelector('#newPlanUpgradePopup #planFeatureStage');
+
+                    upgradeBtn.addEventListener("click", function cardUpgradeListener(e) {
+
+                        if(e.target.className == 'upgrade-btn' && e.target.getAttribute('data-plan') == 'enterprise'){
+                            closeUpgradePaymentPlan();
+                            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                            document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+                            looptochoosedplan(teamId, type, 'enterprise', plan,source);
+                            document.querySelector('#newPlanUpgradePopup #planFeatureStage').removeEventListener("click", cardUpgradeListener, false )
+                        }
+                        else if(e.target.className == 'upgrade-btn'){
+                            if(currentTeamPlan == 'free' || (ALLOWED_PAYMENT_METHODS.includes('razorpay') && allow_proration == false) ){
+                                document.getElementsByClassName("pricing-comparison")[0].style.display = "none";
+                                document.getElementsByClassName("pricing-summary")[0].style.display = "block";
+                                // document.getElementById('newPlanUpgradePopup').style.maxHeight = "none";
+                                // document.getElementById('newPlanUpgradePopup').style.height = "97vh";
+                                createPaymentStage(popupPayData, e.target.getAttribute('data-plan'));
+                                //upgradeBtn[i].removeEventListener("click", cardUpgradeListener, false);
+
+                                // listen for coupon changes
+                                var couponBtn = document.querySelector('.pricing-summary .discount-section .discount');
+                                couponBtn.addEventListener("click", applyCouponListener, false);
+            
+                                // listen for unselected plan cycle
+                                var cycleBtn = document.querySelector('.plan-cycle-card-container');
+                                cycleBtn.addEventListener("change", cycleChangeListener, false);
+            
+                                document.querySelector('#newPlanUpgradePopup #planFeatureStage').removeEventListener("click", cardUpgradeListener, false )
+                            }else{
+                                // PCC CALL HERE
+                                ////console.log('PCC call here')
+                                ////console.log(teamplan);
+                                if(!selPlan){
+                                    if(e && e.target.getAttribute('data-plan')){
+                                        selPlan = e.target.getAttribute('data-plan')
+                                    }   
+                                }
+                                if(!cycle){
+                                    selCycle = 'yearly'
+                                }
+                                ////console.log(selPlan);
+                                document.querySelector('#newPlanUpgradePopup #planFeatureStage').removeEventListener("click", cardUpgradeListener, false )
+                                ajaxCallPcc(e, teamId, type, plan, ext1, ext2, selPlan, selCycle, source, cplantypecycle, cpecd, discountType, trial);
+                                
+                            }
+                        }
+
+                    });
+                    
+                } else {
+                    document.getElementById('newPlanUpgradePopup').style.display = "block";
+                    //document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+                    document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+
+                    if(response['data']['popup'][0]['type']== 'newSubscriptionFeaturePopup'){
+
+                        var upgradeBtn = document.querySelector('#newPlanUpgradePopup #planFeatureStage');
+
+                        upgradeBtn.addEventListener("click", function cardUpgradeListener(e) {
+                            if(e.target.className == 'upgrade-btn' && e.target.getAttribute('data-plan') == 'enterprise'){
+                                closeUpgradePaymentPlan();
+                                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                                document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+                                looptochoosedplan(teamId, type, 'enterprise', plan,source);
+                                document.querySelector('#newPlanUpgradePopup #planFeatureStage').removeEventListener("click", cardUpgradeListener, false )
+                            }
+
+                        });
+                    }else if ( response['data']['popup'][0]['type'] == "subscriptionPaymentPopup"){
+                        document.getElementById('newPlanUpgradePopup').style.display = "block";
+                        //document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+                        document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+                        // listen for coupon changes
+                        var couponBtn = document.querySelector('.pricing-summary .discount-section .discount');
+                        couponBtn.addEventListener("click", applyCouponListener, false);
+    
+                        // listen for unselected plan cycle
+                        var cycleBtn = document.querySelector('.plan-cycle-card-container');
+                        cycleBtn.addEventListener("change", cycleChangeListener, false);
+                    }
+                }
+
+                if(document.getElementById("enterprise_contact_us")){
+                    document.getElementById("enterprise_contact_us").addEventListener("click",function enterpriseListener (e){
+
+                        closeUpgradePaymentPlan();
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                        document.getElementsByClassName("payment-popup-bg")[0].style.display = "block";
+                        looptochoosedplan(teamId, type, 'enterprise', plan,source);
+                        document.getElementById("enterprise_contact_us").removeEventListener("click", enterpriseListener, false )
+                    },false)
+                }
+                function cardPaymentListener(e) {
+
+                    url = siteUrl + '/p/pcs'
+                    
+                    var cardNo = document.querySelector(".cc-body input#paymentCardNumber").value;
+                    var expiry = document.querySelector(".cc-body input#paymentExpiryDate").value;
+                    var cvv = document.querySelector(".cc-body input#paymentCvv").value;
+                    var zipcode = document.querySelector(".cc-body input#paymentZipcode").value;
+
+                    cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+                    selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+                    var trial = document.querySelector(".plan-picker.active").getAttribute('data-trial');
+
+                    var ccPayAllowed = null;
+                    document.querySelector(".credit-card-err-section").style.display = 'none';
+                    document.querySelector(".credit-card-err-section span").innerHTML = "";
+                    if (document.querySelector(".popup_change_credit_card span").classList.contains('undo') || document.querySelector(".popup_change_credit_card div.card-brand").style.display != "none") {
+                        if(cardNo.trim()=="")
+                        {
+                            validations_check("cn-label",pgettext("Validation-Error","Card Number required"));
+                        }
+                        if(expiry.trim() == "")
+                        {
+                            validations_check("expiry-label",pgettext("Validation-Error","Expiration Date required"));
+                        }
+                        if(cvv.trim() == "")
+                        {
+                            validations_check("cvv-label",pgettext("Validation-Error","Security code required"));
+                        }
+                        if(zipcode.trim() == "")
+                        {
+                            validations_check("zc-label",pgettext("Validation-Error","Zip Code required"));
+                        }
+                        
+                        if (cardNo.trim() == "" || expiry.trim() == "" || cvv.trim() == "" || zipcode.trim() == "") {
+                            // document.querySelector(".credit-card-err-section").style.display = 'flex';
+                            // document.querySelector(".credit-card-err-section span").innerHTML = pgettext("Validation-Error", "Card details cannot be empty");
+                            document.querySelector("#paymentPaypalPay").disabled = false;
+                            ccPayAllowed = false;
+                        } else {
+                            data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&b=" + btoa(cycle) + '&c=' + btoa(cardNo) + '&d=' + btoa(expiry) + "&e=" + btoa(cvv) + "&f=" + btoa(zipcode) + "&g=" + btoa(source) + "&i=" + btoa(trial)
+                            ccPayAllowed = true;
+                            document.querySelector(".credit-card-err-section span").innerHTML = "";
+                            document.querySelector(".credit-card-err-section").style.display = 'none';
+                        }
+                    } else {
+                        data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&b=" + btoa(cycle) + "&g=" + btoa(source);
+                        ccPayAllowed = true;
+                    }
+
+                    if (ccPayAllowed) {
+
+                        if(trial == true || trial == "true"){
+                            data += '&i='+btoa('true')
+                        }
+
+                        if(document.querySelector('.discount-section .coupon-code.applied')){
+                            data += '&cc='+btoa(document.querySelector('.discount-section .coupon-code.applied').innerText.trim())
+                        }
+
+                        document.getElementsByClassName("payment-popup-upgrade-overlay")[0].style.display = "block";
+                        showPaymentPopupLoader('processing')
+                        ajaxCall(url, data, null).then(function (result) {
+                            document.querySelector("#paymentCardPay").disabled = false;
+                            document.getElementsByClassName("payment-popup-upgrade-overlay")[0].style.display = "none";
+
+                            res = JSON.parse(result);
+
+                            if (!res["error"]) {
+                                if (res['redirect_url']) {
+                                    window.location = res['redirect_url'];
+                                    showPaymentPopupLoader('three-ds-section')
+                                    paymentTimeoutInterval = setInterval(countDownTimer, 500);
+                                }else{
+                                    paymentSuccessStage(res['pa'], res['tr'])
+                                }
+                                resolve(result);
+
+                            } else {
+                                closePaymentPopupLoader()
+                                document.querySelector("#paymentCardPay").disabled = false;
+                                if(res['code']=="incorrect_cvc")
+                                {
+                                    validations_check("cvv-label",pgettext("Validation-Error", "Incorrect Security code"));
+                                }
+                                else if(res['code']=="incorrect_number")
+                                {
+                                    validations_check("cn-label",pgettext("Validation-Error", "Incorrect Card Number"));
+                                }
+                                else
+                                {
+                                    document.querySelector(".credit-card-err-section").style.display = 'flex'
+                                    document.querySelector(".credit-card-err-section span").innerHTML = res["msg"];
+                                }
+                            }
+
+                        }, function (error) {
+
+                            reject(error);
+                            closeUpgradePaymentPlan();
+
+                        })
+                    }
+                }
+
+                function paypalPaymentListener(e) {
+                        url = siteUrl + '/payments/p/paypal/subscription/'
+                        // idVal = document.getElementsByClassName("selected-plan")[0].getAttribute("id")    
+                        cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+                        selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+                        var trial = (document.querySelector(".plan-picker.active").getAttribute('data-trial') === 'true');
+                        data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&b=" + btoa(cycle) + "&g=" + btoa(source)+ "&t=" + btoa(trial)+"&da="+btoa(pastdueamount.toString());
+                        
+                        
+        
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+                        ajaxCall(url, data, null).then(function (result) {
+                            document.querySelector("#paymentPaypalPay").disabled = false;
+
+                            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+                            res = JSON.parse(result);
+
+                            if (!res["error"]) {
+                                if (res['redirect_url']) {
+                                    window.location = res['redirect_url'];
+                                }
+                                resolve(result);
+                                closeUpgradePaymentPlan();
+
+                            } else {
+                                document.querySelector(".credit-card-err-section").style.display = 'flex'
+                                document.querySelector(".credit-card-err-section span").innerHTML = res["msg"];
+                                document.querySelector("#paymentPaypalPay").disabled = false;
+                            }
+
+                        }, function (error) {
+
+                            reject(error);
+                            closeUpgradePaymentPlan();
+
+                        })
+                }
+
+                function razorpayPaymentListener(e) {
+                    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+                    $('.lds-animaker-overlay').css('z-index', '99999');
+                    var source = "pricingPopup";
+                    url =  siteUrl+'/payments/p/rp/create/'
+                    cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+                    selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+                
+                    data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&b=" + btoa(cycle) +"&g=" +btoa(source);
+                
+                    ajaxCall(url, data, null).then(function (result) {
+                        document.querySelector(".upgrade-now-btn").disabled = false;
+                
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                        $('.lds-animaker-overlay').css('z-index', '99997');
+                        
+                        res = JSON.parse(result);
+                        if (result["html_data"]) {
+                            document.body.innerHTML = result["html_data"];
+                        }
+
+                        else if (!res["error"]) {
+                
+                            var options = {
+                                "key": res['key_id'],
+                                "subscription_id": res['subscription_id'],
+                                "name": "Animaker Inc.",
+                                "description": res['plan_name'],
+                                "image": "https://dev-static.animaker.com/icons/animaker-logo-new1.png",
+                                "callback_url": res["url"],
+                                "modal": { 
+                                    "escape": false, 
+                                    "ondismiss": function(){
+                                        document.querySelector("#paymentRazorPay").disabled = false;
+                                        $('#razorpay-overlay').css("display", "none");
+                                    }
+                                },
+                                "prefill": {
+                                    "name": res["name"],
+                                    "email": res["email"]
+                                }
+                            };
+                            var rzp = new Razorpay(options);
+                            rzp.open();
+                            $('#razorpay-overlay').css("display", "block");
+                            e.preventDefault();
+                            
+                
+                                            
+                        } else {
+                            closePaymentPopupLoader()
+                            
+                            updateErrorMsg('show', res["message"])
+                            
+                            document.querySelector("#paymentRazorPay").disabled = false;
+                        }
+                
+                    }, function (error) {
+                
+                        reject(error);
+                        closeUpgradePaymentPlan();
+                
+                    })
+                
+                }
+
+
+                function looptochoosedplan(teamId,type,selplan,plan,source){
+
+                    choosedPlan(teamId,type,selplan,plan,source).then(function(result) {
+                        resolve(result)
+                    }, function(error) {
+
+                        reject(error)
+                    })
+                }
+                
+                //, 500) //calling it every 0.5 second to do a count down
+
+                document.querySelector('.plan-dropdown-container').addEventListener("click", planDropdownLister, false);
+                document.querySelector("#payment-pay-button").addEventListener("click", paymentListener, false);
+
+            }// if not pastdue
+
+        }).catch(function(error){
+            reject(error)
+            closeUpgradePaymentPlan();
+            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+            document.getElementById("notification_text").innerHTML = "Something went wrong. Please try again later";
+            document.getElementsByClassName("notification_bar")[0].style.display = "block";
+            setTimeout(() => {document.getElementsByClassName("notification_bar")[0].style.display = "none";}, 3000);
+        });;
+    });
+}
+
+function openEnterprisePopup(){
+
+}
+
+function getSource(type, ext1) {
+
+    let source="";
+
+    if (["music", "stock", "quality", "videoformatsupgrade"].includes(type)) source = type;
+    else if (type == "ccb"){
+        if(ext1 == 'wbcharacterbuilder'){
+            source = ext1
+        }else{
+            source = (ext1 == 'kids') ? type + ext1 : type;
+        }
+    }else if (["upgrade","voiceapp","autosubtitle","autotranslatelang","uploadfileto20gb","downloadsrtfile","manualsubtitles","commonsubtitle","upgradewatermarksubtitle","export","aibackgrounds","aiimages","aiproperties","upgradetodownloadst"].includes(type)) source = ext1;
+    else if (["upgradInapp", "deckupgrade", "deckapp", "planUpgrade","pdfdownload"].includes(type)) source = type + ext1;
+
+    return source
+}
+
+function createPlanIcon(pn) {
+
+    const ic = document.createElement('div');
+    ic.classList.add('plan-icon-container');
+    var pnArray = pn.split(' ');
+    for(var i = 0; i < pnArray.length; i++) {
+        // Trim the excess whitespace.
+        pnArray[i] = pnArray[i].replace(/^\s*/, "").replace(/\s*$/, "");
+        ic.classList.add(pnArray[i]);
+    }
+
+    const pi = document.createElement('img');
+    pi.alt = pn + "-icon"
+    pi.classList.add('plan-icon');
+    pi.src = staticUrl + '/icons/whitestar.svg'
+    if (pn == 'free') {
+        pi.src = staticUrl + '/icons/free_icon_star.svg';
+        
+    }
+
+    ic.appendChild(pi)
+    return ic;
+}
+
+function createPlanDropdown(data,lang){
+    const pi = createPlanIcon(data['planname']);
+    const ph = document.createElement('div');
+    ph.classList.add('plan-dropdown-block');
+    ph.setAttribute('data-plan', data['planname']);
+    ph.appendChild(pi);
+    ph.insertAdjacentHTML('beforeend', `<p>${data['planDisplayName']}</p><span class="tick ${lang}"></span><span class="cover"></span>`)
+    return ph;
+}
+
+function createCardPlanHeader(data) {
+    const pi = createPlanIcon(data['planname']);
+    const ph = document.createElement('div');
+    ph.classList.add('card-planheader-container');
+    ph.appendChild(pi);
+    ph.insertAdjacentHTML('beforeend', `<h3>${data['planHeader']}</h3>`)
+    return ph;
+}
+
+function createCardPlanPrice(data,lang) {
+    const pd = data['priceDetails'];
+    if(pd  && Object.keys(pd).length > 0 && Object.getPrototypeOf(pd) === Object.prototype){
+        const pp = document.createElement('h2');
+        pp.classList.add('price');
+        pp.classList.add(lang);
+        pp.insertAdjacentHTML('beforeend', `<sup class="currency-symbol" style="font-family: Arial;">${pd['currency']['symbol']}</sup> <span class="amount">${pd['price']}</span> <sub>${pd['seperator']} ${pd['interval']}</sub>`)
+        return pp;
+    }else{
+        if(data['planname'] == 'free'){
+            const pp = document.createElement('h2');
+            pp.classList.add('price');
+            pp.classList.add(lang);
+            pp.insertAdjacentHTML('beforeend', `<sup class="currency-symbol" style="font-family: Arial;">$</sup><span class="amount"> 0 </span><sub>/ mo</sub>`)
+            return pp
+        }
+        // else if(data['planname'] == 'enterprise'){
+        //     const pp = document.createElement('h2');
+        //     pp.classList.add('price');
+        //     pp.classList.add(lang);
+        //     pp.insertAdjacentHTML('beforeend', `Custom Pricing`)
+        //     return pp
+
+        // }
+        else{
+          return "";
+        }
+        
+    }
+    
+    
+}
+
+function createCardFeatureList(data,lang) {
+
+    const ft = data['features'];
+    const pf = document.createElement('ul');
+    for (let i in ft) {
+        pf.insertAdjacentHTML('beforeend', `<li class="`+lang+`">${ft[i]}</li>`);
+    }
+    return pf;
+}
+
+function createCardUpgradeButton(data, lang, cls = 'upgrade-btn') {
+    const bt = data['button'];
+    if (data['planname'] == planValues[0]) {
+
+        return 0
+    }
+
+    const pb = document.createElement('button');
+    pb.setAttribute('id', 'testplanbutton2');
+    pb.classList.add(cls);
+    pb.setAttribute('data-plan', data['planname']);
+    // pb.setAttribute('onclick', `upgradePaymentPlan(this, '${data['planname']}')`);
+    pb.innerHTML = bt;
+    return pb;
+}
+
+function createCardSubHeader(data){
+    const ps = data['subHeader'];
+    if(data['subHeader'] != undefined){
+        const ps = document.createElement('p');
+        ps.innerHTML = data['subHeader']
+        return ps;
+    }else{
+        return "";
+    }
+}
+
+
+function createCard(data,lang) {
+
+    if (data['type'] == undefined || data['type'] == null) {
+        const cc = document.createElement('div');
+        cc.setAttribute('class', "anim-col md-50");
+        // [{'class': 'card'},{'class':"card-content"}, {'class': "anim-row"}]
+        
+        if(planValues[7] == data['planname']){
+            cc.insertAdjacentHTML('beforeend', `<div class='card enterprise'><div class='card-content'><div class='anim-row'></div></div>`);
+        }else{
+            cc.insertAdjacentHTML('beforeend', `<div class='card'><div class='card-content `+data['planname']+`'><div class='anim-row'></div></div>`);
+        }
+        
+        const cardDomFunc = {
+            'planHeader': createCardPlanHeader,
+            'priceDetails': createCardPlanPrice,
+            'subHeader': createCardSubHeader,
+            'features': createCardFeatureList,
+            'button': createCardUpgradeButton
+        }
+        const cb = document.createElement('div');
+        cb.setAttribute('class', "anim-col");
+        for (let i in data['order']) {
+            cardEle = cardDomFunc[data['order'][i]](data,lang)
+            if(cardEle != ""){
+                cb.appendChild(cardEle);
+            }
+            
+        }
+        cc.querySelector('.anim-row').appendChild(cb)
+        return cc
+    }
+}
+
+function createFeatureCards(data) {
+
+    const fc = document.querySelector("#planFeatureStage");
+    fc.innerHTML = '';
+
+    for (let i in data['cards']) {
+        fc.appendChild(createCard(data['cards'][i],data['locale']));
+    }
+
+    return fc
+
+}
+
+function seeOtherPlans(e, params_src, pricingtype) {
+    var url_name
+    if (pricingtype == planValues[9]) {
+        url_name = siteUrl + "/voice/pricing"
+    } else if (pricingtype == planValues[10]) {
+        url_name = siteUrl + "/deck/pricing"
+    } else {
+        url_name = siteUrl + "/pricing"
+    }
+    if (params_src) {
+        url_name = url_name + '?src=' + params_src
+    }
+    window.open(url_name, '_blank')
+}
+
+function createFeatureHeader(data, source) {
+
+    const fh = document.querySelector("#planFeatureHeader");
+    fh.innerHTML = '';
+
+    const ft = document.createElement('div');
+    ft.setAttribute('class', "anim-col md-67 md-80");
+    ft.insertAdjacentHTML('beforeend', `<h2>${data['header']}</h2>`)
+
+    fh.appendChild(ft);
+
+    const fp = document.createElement('div');
+    fp.setAttribute('class', "anim-col md-33 md-20 just-cont-end");
+
+    const fps = document.createElement('span');
+    fps.setAttribute('class', "compare-plans");
+    fps.setAttribute('onclick', `seeOtherPlans(this, '${source}')`);
+    fps.innerHTML = pgettext("paymentPopupMainContent",'Compare plans');
+    for (let i in data['cards']) {
+
+        if ([planValues[10], planValues[9]].includes(data['cards'][i]['planname'])) {
+            fps.setAttribute('onclick', `seeOtherPlans(this, '${source}','${data['cards'][i]['planname']}')`);
+        }
+
+        if( planValues[7] == data['cards'][i]['planname']){
+            fh.parentNode.classList.add('enterprise');
+        }else{
+            fh.parentNode.classList.remove('enterprise');
+        }
+    }
+    fp.appendChild(fps);
+    fh.appendChild(fp);
+
+    return fh;
+}
+
+function createFeatureFooter(data) {
+
+    const ff = document.querySelector(".enterprise-footer");
+    ff.innerHTML = '';
+    
+    if(data['footer'] == ""){
+        ff.style.display == 'none';
+    }else{
+        ff.style.display == 'flex';
+    }
+
+    const ft = document.createElement('div');
+    ft.setAttribute('class', "anim-col light-pink-bg just-cont-center");
+    ft.insertAdjacentHTML('beforeend', `<label class="foo ${data['locale']}">${data['footer']} <a id="enterprise_contact_us">`+pgettext("paymentPopupMainContent", "Contact Us")+`</a></label>`)
+
+    ff.appendChild(ft)
+
+    return ff
+}
+
+function createFeatureSidePromo(data,lang) {
+
+    const fsp = document.createElement('div');
+    fsp.setAttribute('class', "stock-grapic-section");
+    fsp.insertAdjacentHTML('beforeend', `<h1 class="graphic-header `+data['graphicFeature']+` `+lang+`">`+data['header']+`</h1>`)
+
+    const fgc = document.createElement('div');
+    fgc.setAttribute('class', "graphic-content");
+    fgc.classList.add(data['graphicFeature'])
+
+    if(data['type'] == 1 ){
+        const pb = document.createElement('img');
+        pb.alt = "pricing banner";
+        pb.classList.add('pricing-banner');
+        pb.classList.add(lang);
+        pb.src = data['image']['url'];
+        fgc.appendChild(pb);
+        fsp.appendChild(fgc);
+    
+    }
+    else if(data['type'] == 3){
+        const pb = document.createElement('img');
+        pb.alt = "pricing banner";
+        pb.classList.add('pricing-banner');
+        pb.classList.add(lang);
+        pb.src = data['image']['url'];
+        fgc.appendChild(pb);
+        fgc.insertAdjacentHTML('beforeend', `<div class="feature-more" style="text-align: center;"><p style="margin-top:20px">`+pgettext("paymentPopupMainContent", "Load more music...")+`</p></div>`)
+        fsp.appendChild(fgc);
+
+    }
+    else{
+        var featuresList = [{'icon': '/icons/bgr-feature-icon@2x.png', 'featureText':pgettext("paymentPopupMainContent", 'BG Removal')},
+            {'icon': '/icons/folder-feature-icon@2x.png', 'featureText':pgettext("paymentPopupMainContent", 'File management')}, 
+            {'icon': '/icons/comments-feature-icon@2x.png', 'featureText':pgettext("paymentPopupMainContent", 'Comments')}, 
+            {'icon': '/icons/2k-feature-icon@2x.png', 'featureText':pgettext("paymentPopupMainContent", '2K Video Downloads')}, 
+            {'icon': '/icons/resize-feature-icon@2x.png', 'featureText':pgettext("paymentPopupMainContent", 'Resize videos')}
+        ]
+
+        for (let ft = 0; ft < featuresList.length; ft++) {
+            fgc.insertAdjacentHTML('beforeend', `<div class="features-items"><img class="feature-icon" src="`+staticUrl+featuresList[ft]['icon']+`" alt="feature-icon"><p class="feature-text">`+featuresList[ft]['featureText']+`</p></div>`);
+        }
+
+        fgc.insertAdjacentHTML('beforeend', `<div class="feature-more" style="text-align: center;"><p>`+pgettext("paymentPopupMainContent", "And much more...")+`</p></div>`)
+        fsp.appendChild(fgc);
+    }
+   
+
+    return fsp
+
+}
+
+function createFeatureStage(data, source) {
+
+    const cardDomFunc = {
+        'header': createFeatureHeader,
+        'footer': createFeatureFooter,
+        'cards': createFeatureCards,
+    }
+
+    for (let i in data['order']) {
+        cardDomFunc[data['order'][i]](data, source);
+    }
+
+    if(data['includeExtraContent']['side']['graphicFeature'] == 'aipoweredanimationpro'){
+        const cspattr = document.querySelector(".stock-grapic-bg");
+        cspattr.classList.add("md-60")
+        cspattr.classList.remove("md-33")
+        cspattr.nextElementSibling.classList.remove("md-67")
+        cspattr.nextElementSibling.classList.add("md-40")
+        cspattr.classList.add("aipoweredanimationpro")
+        cspattr.classList.add("aipoweredanimationpro")
+        document.getElementById("planFeatureHeader").style.display = 'none'
+        document.getElementsByClassName("enterprise-footer")[0].style.display = 'none'
+        document.getElementsByClassName("card-content")[0].style.height = "600px"
+        document.getElementsByClassName("card")[0].style.height = "600px"
+        // document.getElementsByClassName("price")[0].innerHTML = "contact us to know more about customised plans"
+        // const cspaid = document.getElementById("planFeatureStage")
+        // cspaid.getElementsByClassName("price")[0].style.fontSize = "16px"
+        // cspaid.getElementsByClassName("price")[0].style.fontWeight = "500"
+
+
+
+    }
+
+    let graphicFeature = data['includeExtraContent']['side']['graphicFeature'];
+    let whiteboardGraphics = ['wbupgradedashboard','wbupgrademoment', 'wbupgradelibrary','wbupgradeproject', 'wbcharacterbuilder']
+    console.log(graphicFeature);
+
+    // POPUP GRAPHICS BACKGROUND CHANGE FOR WHITEBOARD
+    const cspattr = document.querySelector(".stock-grapic-bg");
+       
+    if(whiteboardGraphics.includes(graphicFeature)){
+        cspattr.classList.add(graphicFeature);
+    }else{
+        for(let i=0; i < whiteboardGraphics.length; i++){
+            if(cspattr.classList.contains(whiteboardGraphics[i])){
+                cspattr.classList.remove(whiteboardGraphics[i]);
+            }
+        }
+    }
+
+
+
+    if (data['includeExtraContent'] && data['includeExtraContent']['required']) {
+        const sp = document.querySelector(".stock-grapic-bg");
+        sp.innerHTML = '';
+        sp.appendChild(createFeatureSidePromo(data['includeExtraContent']['side'],data['locale']));
+    }
+    
+    // Adding custom pricing text for enterprise 
+    if(document.querySelector('.card.enterprise .card-planheader-container')){
+        a = document.createElement('h2')
+        a.classList.add('price');
+        // a.classList.add(lang);
+        if(data['includeExtraContent']['side']['graphicFeature'] == 'aipoweredanimationpro' || data['includeExtraContent']['side']['graphicFeature'] == 'aipoweredanimationstarter'){
+            a.innerText = pgettext("Enterprise-custom-price", "Contact us to know more about customised plans")
+            a.style.fontSize = "16px"
+            a.style.fontWeight = "500"
+
+        }
+        else{
+            a.innerText = pgettext("Enterprise-custom-price", "Custom Pricing")
+        }
+
+        
+        document.querySelector('.card.enterprise .card-planheader-container').insertAdjacentElement('afterend',a)
+    }
+
+
+    updatePopupCloseOptions('pricing-comparison')
+
+}
+
+function updateAutoRenewNote(cycle) {
+
+    if (cycle == 'yearly') {
+        document.querySelector('.subscription-note-container span').innerHTML = pgettext("NetworkError-NoticationMessage", "Your subscription will auto renew every year. You can unsubscribe anytime via My Plan.")
+    }else if (cycle == 'half-yearly') {
+        document.querySelector('.subscription-note-container span').innerHTML = pgettext("NetworkError-NoticationMessage", "Your subscription will auto renew every 6 month. You can unsubscribe anytime via My Plan.")
+    } else {
+        document.querySelector('.subscription-note-container span').innerHTML = pgettext("NetworkError-NoticationMessage", "Your subscription will auto renew every month. You can unsubscribe anytime via My Plan.")
+    }
+}
+
+function createPaymentCard(data, cycle, trial=false) {
+
+    const pc = data['cycles'][data["defaultCurrencyCode"]][cycle];
+    const ph = document.createElement('div');
+    ph.classList.add('plan-picker');
+    ph.setAttribute('data-plan', data['planname'])
+    ph.setAttribute('data-cycle', cycle)
+    if(trial == true || trial == 'true'){
+        ph.setAttribute('data-trial', "true")
+    }
+    
+
+    if (cycle == 'yearly') {
+        ph.insertAdjacentHTML('beforeend', `<span class="tag">`+pgettext("paymentPopupMainContent", "Best Value")+`</span>`);
+        
+    }else{
+        if(pc.cycleHeader == "Monthly plan"){
+            strikeOffPrice = pc['priceDetails']['monthly']['price']
+        }
+        console.log('strikeOffPrice : '+strikeOffPrice);
+    }
+    if (pc['allowed'] == false) {
+        ph.classList.add('"disabled');
+    }
+
+
+    const pd = pc['priceDetails']
+if(cycle =='yearly'){
+        let saveValue;
+        if(data['planname'] == 'basic'){
+            saveValue = '44.44%';
+        }else if(data['planname'] == 'starter'){
+            saveValue = '44.44%'
+        }else if(data['planname'] == 'pro'){
+            saveValue = '45.57%'
+        }else{
+            console.log('No save banner')
+        }
+        if(saveValue && saveValue.length > 0){
+            ph.insertAdjacentHTML('beforeend', `<h3>${pc['cycleHeader']}&nbsp;<tags class="save-banner">`+pgettext("paymentPopupMainContent", "Save")+` ${saveValue}</tags></h3>`)
+        }else{
+    ph.insertAdjacentHTML('beforeend', `<h3>${pc['cycleHeader']}</h3>`)
+        }
+    }else{
+        ph.insertAdjacentHTML('beforeend', `<h3>${pc['cycleHeader']}</h3>`)
+    }
+    const pp = document.createElement('h2');
+    pp.classList.add('price');
+    pp.insertAdjacentHTML('beforeend', `<sup class="currency-symbol" style="font-family: Arial;">${pd['currency']['symbol']}</sup><span class="monthly-amount">${pd['monthly']['price']}</span> <sub>${pd['monthly']['seperator']} ${pd['monthly']['interval']}</sub>`)
+    if (strikeOffPrice && cycle == 'yearly') {
+        pp.insertAdjacentHTML('beforeend',`&nbsp;<strikethrough id="save-value" style="font-family: Arial;">${pd['currency']['symbol']+strikeOffPrice}</strikethrough>`);
+    }
+    ph.appendChild(pp)
+    ph.insertAdjacentHTML('beforeend', `<label class="total-price-label" style="font-family: Arial;">${pd['currency']['symbol']}${pd['yearly']['price']} ${pd['yearly']['seperator']} ${pd['yearly']['interval']}</label>`)
+
+    const ctl = document.createElement('label');
+    ctl.setAttribute('for', `toggle-subscription-${cycle}-popup`);
+    ctl.classList.add('radio-clickable');
+    ctl.classList.add('payment-tooltip');
+    
+    // DISABLE SWITCHING FROM YEARLY TO MONTHLY
+    //console.log('currentTeamPlanCycle',currentTeamPlanCycle);
+    //console.log('cycle',cycle);
+    if(currentTeamPlanCycle == 'yearly' && cycle == 'monthly' && pc['disabled'] == true){
+        // ADD TOOLTIP ONLY FOR MONTHLY SECTION
+        ctl.classList.add('disabled');
+        const payToolTip = createPaymentTooltip(downgradeTooltipMsg);
+        ctl.appendChild(payToolTip)
+    }
+    
+    // DISABLE SWITCHING FROM MONTHLY TO YEARLY
+    if(currentTeamPlanCycle == 'monthly' && cycle == 'yearly' && pc['disabled'] == true  &&  !data["defaultPaymentActive"].includes('razorpay')){
+        // ADD TOOLTIP ONLY FOR MONTHLY SECTION
+        ctl.classList.add('disabled');
+        const payToolTip = createPaymentTooltip('Cannot choose yearly plan, Please choose monthly plan');
+        ctl.appendChild(payToolTip)
+    }
+    if (data["defaultPaymentActive"].includes('razorpay') && data['planname'] == currentTeamPlan && currentTeamPlanCycle == 'monthly' && cycle == 'monthly') {
+        ctl.classList.add('disabled');
+        const payToolTip = createPaymentTooltip('Cannot choose monthly plan, Please choose yearly plan');
+        ctl.appendChild(payToolTip)
+    }
+
+    else if(data['planname'] == currentTeamPlan && currentTeamPlanCycle == 'monthly' && cycle == 'monthly' && pc['disabled'] == true){
+        // ADD TOOLTIP ONLY FOR MONTHLY SECTION FOR SAME PLAN 
+        ctl.classList.add('disabled');
+        const payToolTip = createPaymentTooltip('Cannot choose monthly plan, Please choose yearly plan');
+        ctl.appendChild(payToolTip)
+    }
+
+    const cti = document.createElement('input');
+    cti.setAttribute('type', 'radio');
+    cti.setAttribute('value', cycle);
+    cti.setAttribute('id', `toggle-subscription-${cycle}-popup`);
+    cti.setAttribute('name', "toggle-subscription-type-popup");
+    cti.classList.add('toggle-subscription-type');
+
+    // DISABLE SWITCHING FROM YEARLY TO MONTHLY RADIO BUTTON
+    //console.log(currentTeamPlanCycle);
+    if(currentTeamPlanCycle == 'yearly' && cycle == 'monthly' && pc['disabled'] == true ){
+        
+        cti.classList.add('disabled');
+    }
+
+
+    if(currentTeamPlanCycle == 'monthly' && cycle == 'yearly' && pc['disabled'] == true && !data["defaultPaymentActive"].includes('razorpay')){
+        
+        cti.classList.add('disabled');
+    }
+
+    if(data["defaultPaymentActive"].includes('razorpay') && data['planname'] == currentTeamPlan && currentTeamPlanCycle == 'monthly' && cycle == 'monthly' ){
+        // ADD FOR MONTHLY SECTION FOR SAME PLAN 
+        cti.classList.add('disabled');
+    }
+
+    else if(data['planname'] == currentTeamPlan && currentTeamPlanCycle == 'monthly' && cycle == 'monthly' && pc['disabled'] == true){
+        // ADD FOR MONTHLY SECTION FOR SAME PLAN 
+        cti.classList.add('disabled');
+
+    }
+
+
+
+    if (pc['default'] == true && pc['allowed'] == true && pc['disabled'] == false) {
+        currentTeamDefaultCycle = cycle
+        ph.classList.add('active');
+        cti.setAttribute('checked', true);
+        updateAutoRenewNote(cycle);
+    }
+
+    ctl.appendChild(cti)
+
+    ph.appendChild(ctl)
+
+    const pcc = document.createElement('div');
+    pcc.setAttribute('class', "anim-col md-50");
+    pcc.appendChild(ph)
+
+    return pcc
+}
+
+function roundoff(amount){
+
+    a = Math.floor(amount*100)
+    b = a/100
+
+    return b
+
+}
+
+function updatePaymentSummary(data, selPlan, selCycle, trial=false, discount, currency_code="USD") {
+    let pccObjLen = Object.keys(pccObj).length;
+
+    if(currency_code){
+        currency_code = currency_code;
+    }else{
+        currency_code = data["defaultCurrencyCode"]
+    }
+    
+    document.querySelector('.order-summary').classList.remove(data['locale']);
+    document.querySelector('.order-summary').classList.add(data['locale']);
+    var i = 0;
+    for (i in data['plans']) {
+        if (selPlan == data['plans'][i]['planname']) {
+            break
+        }
+    }
+
+    const selPlanObj = data['plans'][i];
+    // update order summery
+
+
+    const selPlanCycleObj = selPlanObj['cycles'][currency_code][selCycle];
+    // console.log("iokwpwkdgjkdgdg", selPlanCycleObj);
+    const memberCount = data['currentPlan']['memberCount'];
+    const defaultCurrency = selPlanCycleObj['priceDetails']['currency']['code'];
+    const selPlanCyclePrice = selPlanCycleObj['priceDetails'][selCycle]['price']
+    const totalPrice = floatProperly((memberCount * selPlanCyclePrice), 2)
+
+    updatePlanBanner(selPlanObj['planname'], selPlanObj['planDisplayName']);
+
+   // PRORATED AMOUNT FOR YEARLY & MONTHLY IN PCC OBJECT
+    if (proration && pccObjLen > 0 && currentTeamPlan !='free') {
+        if(selCycle == 'yearly'){
+            totalBillAmount = pccObj['r_year_cost'];
+        }else{
+            totalBillAmount = pccObj['r_month_cost'];
+        }
+        //console.log('memberCount',memberCount)
+        //console.log('priceDetails',selPlanCycleObj['priceDetails'][selCycle]['price'])
+        //console.log('totalBillAmount',totalBillAmount)
+        
+        //let proratedAmount = ((memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']) - totalBillAmount);
+        let proratedAmount = memberCount * (selPlanCycleObj['priceDetails'][selCycle]['price'] - totalBillAmount);
+        //console.log('proratedAmount',proratedAmount)
+        
+        document.querySelector('.order-summary label#selected-plan-prorate-price').innerHTML = '-' + selPlanCycleObj['priceDetails']['currency']['symbol'] + roundoff(parseFloat(proratedAmount))
+        document.querySelector('.order-summary .prorated-price').style.display = 'flex';
+        document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + roundoff((memberCount * totalBillAmount))
+        //document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = defaultCurrency + (Math.round(totalBillAmount)*100 / 100).toFixed(2);
+    } 
+    else if (data["refund_amount"] > 0){
+            
+            
+            
+        let proratedAmount = data["refund_amount"];
+        //console.log('proratedAmount',proratedAmount)
+        document.querySelector('.prorate-description').innerHTML = 'Prorated Price (Refundable)'
+        document.querySelector('.prorate-tooltiptext').innerHTML = 'Amount will be refunded after upgrade.'
+        document.querySelector('.order-summary label#selected-plan-prorate-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + roundoff(parseFloat(proratedAmount))
+        document.querySelector('.order-summary .prorated-price').style.display = 'flex';
+        document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + (memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']);
+        
+
+    }
+
+    else {
+        // document.querySelector('.order-summary .prorated-price').style.display = 'none';
+        // Adding timeout because content is not loaded fully
+        setTimeout(function() {
+            document.querySelector('.order-summary .prorated-price').style.display = 'none';
+        }, 100);
+
+        document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + (memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']);
+    //document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = defaultCurrency + (Math.round(memberCount * selPlanCycleObj['priceDetails'][selCycle]['price'])*100 / 100).toFixed(2);
+    }
+
+// document.querySelector('.order-summary label#selected-plan-name').innerHTML = selPlanObj['planDisplayName'];
+document.querySelector('.order-summary label#team-member-count').innerHTML = memberCount;
+    document.querySelector('.order-summary label#team-member-count-price').innerHTML = memberCount + ' x ' + selPlanCycleObj['priceDetails']['currency']['symbol'] + selPlanCycleObj['priceDetails'][selCycle]['price'];
+    document.querySelector('.order-summary label#selected-plan-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + (memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']);
+    document.querySelector('.order-summary label#selected-plan-discount-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + selPlanCycleObj['priceDetails'][selCycle]['price'];
+//document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = defaultCurrency + (memberCount * selPlanCycleObj['priceDetails'][selCycle]['price']);
+
+
+
+    if(trial == true || trial == "true"){
+        document.querySelector('.order-summary label#selected-plan-price').style.display = 'block';
+        document.querySelector('.order-summary label#selected-plan-price').innerHTML = defaultCurrency + totalPrice;
+        document.querySelector('.order-summary label#selected-plan-discount-price').innerHTML = defaultCurrency + totalPrice;
+        document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = defaultCurrency + 0;
+    }
+
+    // show coupon and apply discount price
+    if(discount == 'apply'){
+        const applyCoupon = validateCoupon(data, selPlan, selCycle);
+        if(applyCoupon == true){
+            const discountObj = data['discount'];
+            if(discountObj['type'] == 'amount'){
+
+                if(trial){ // trial not available for discount now
+                    document.querySelector('.order-summary label#selected-plan-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - discountObj['rate']), 2);
+                    document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + 0;
+                }else{
+                    document.querySelector('.order-summary label#selected-plan-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + totalPrice;
+                    document.querySelector('.order-summary label#selected-plan-discount-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - discountObj['rate']), 2);
+                    document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - discountObj['rate']), 2);
+                }
+            }else{  // percentage discount
+
+                if(trial){ // trial not available for discount now
+                    document.querySelector('.order-summary label#selected-plan-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - ((totalPrice/100)*discountObj['rate'])), 2);
+                    document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + 0;
+                }else{
+                    document.querySelector('.order-summary label#selected-plan-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + totalPrice;
+                    document.querySelector('.order-summary label#selected-plan-discount-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - ((totalPrice/100)*discountObj['rate'])), 2);
+                    document.querySelector('.order-summary label#selected-plan-total-price').innerHTML = selPlanCycleObj['priceDetails']['currency']['symbol'] + floatProperly((totalPrice - ((totalPrice/100)*discountObj['rate'])), 2);
+                }
+            }
+            getcountry('true')
+           
+        
+
+            strikeRegularPrice(true)
+            couponVisibility('show')
+
+        }
+    }else if(discount == 'invalid'){
+        strikeRegularPrice()
+        getcountry('true')
+        setCoupon('invalid')
+    }else if(discount == 'remove'){
+        strikeRegularPrice()
+        getcountry('true')
+        setCoupon('remove')
+    }
+    else{
+        strikeRegularPrice()
+        getcountry('true')
+        setCoupon('')
+    }
+    getcountry('true')    
+    try{
+        totalafterpastdue=pastdueamount+parseFloat($('#selected-plan-total-price').html().replace(/[$₹]/g, '')) 
+
+        $('#selected-plan-total-price').html(selPlanCycleObj['priceDetails']['currency']['symbol']+totalafterpastdue.toString()) }
+    catch (err){
+        console.log("ERRRR", err);
+    }
+}
+
+function updateCoupon(selPlan){
+    return new Promise(function(resolve, reject) {
+
+        var counpon_code=document.getElementById('coupon-code').value.trim();
+        if(counpon_code!="")
+        {
+            document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+            source = "pricingPage";
+            url = siteUrl + '/payments/p/validate/coupon'
+            data = 'h=' + btoa(teamId) + '&a=' + btoa(selPlan) + "&c=" + btoa(counpon_code);
+            ajaxCall(url, data, null).then(function (result) {
+                res = JSON.parse(result);
+                if (res["status"]==200) {
+                    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                    resolve(res['discount'])
+                    //resolve(result);
+                } 
+            }, function (error) {
+                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                resolve({})
+                //reject(error);
+
+            })
+        }
+    }).catch(function(error){
+        reject(error)
+  });
+    //return updated_discount
+}
+
+function allowedPaymentMethod(data){
+    const pm = document.querySelectorAll("input[name=toggle-payment-mode-popup]")
+    const payCls = {
+        'razorpay': 'razorpay',
+        'card': 'card',
+        'paypal': 'paypal'
+    }
+    const allowedPaymentMethods = data['allowedPaymentMethods'];
+
+    for (i = 0; i < pm.length; i++) {
+        if (!allowedPaymentMethods.includes(pm[i].value)) {
+            pm[i].checked = false;
+            pm[i].setAttribute('disabled', true);
+            pm[i].parentNode.classList.add('disabled');
+            pm[i].parentNode.classList.remove('active');
+            document.querySelector(`.credit-card-section.${payCls[pm[i].value]} .cc-header`).classList.add('disabled');
+            document.querySelector(`.credit-card-section.${payCls[pm[i].value]} .cc-header`).classList.remove('active');
+        } else {
+            pm[i].removeAttribute('disabled');
+            pm[i].parentNode.classList.remove('disabled');
+            document.querySelector(`.credit-card-section.${payCls[pm[i].value]} .cc-header`).classList.remove('disabled');
+            document.querySelector(`.credit-card-section.${payCls[pm[i].value]} .cc-header`).parentNode.classList.remove('disabled');
+
+            if(allowedPaymentMethods.length == 1){
+                pm[i].checked = true;
+                collapsePaymentmethod(undefined, pm[i].value)
+            }
+
+            // MAKE 1ST ELEMENT ACTIVE BY DEFAULT
+            if(allowedPaymentMethods[0] == pm[i].value){
+                pm[i].checked = true;
+                pm[i].parentNode.classList.add('active');
+                document.querySelector(`.credit-card-section.${payCls[pm[i].value]} .cc-header`).classList.add('active');
+                // OPEN DOCK FOR CARD
+                if(allowedPaymentMethods[0] == 'card'){
+                    collapsePaymentmethod(undefined, pm[i].value)
+                }
+            }
+        }
+
+
+    }
+
+    // IF PAYMENTMETHOD NOT HAVE RAZORPAY, HIDE RAZORPAY  
+    if(!allowedPaymentMethods.includes('razorpay')){
+        $('.anim-row.razorpay-payment-container').hide();
+        $('.anim-row.subscription-header-container.rp-header').hide();
+        $('.anim-row.subscription-header-container.ic-header').hide();
+        $('.anim-row.credit-card-payment-container').css('margin-top','20px');
+    }
+
+    if (data["trial"]) {
+        document.querySelector('.credit-card-section.paypal').style.display = 'none';
+    }
+}
+
+
+function createPaymentStage(data, selPlan,pastdueblocked=false,defaultCycle='yearly',ignorePM, currency_code=null) {
+
+    if(currency_code){
+        currency_code = currency_code;
+    }else{
+        currency_code = data["defaultCurrencyCode"]
+    }
+
+    const dropCon = document.querySelector('.plan-dropdown-container');
+    dropCon.classList.remove(data['locale']);
+    dropCon.classList.add(data['locale']);
+    dropCon.classList.remove('show')
+    dropCon.innerHTML =""
+    updatePopupCloseOptions('pricing-summary')
+
+    for (let i in data['plans']) {
+        if (selPlan == data['plans'][i]['planname']) {
+
+            const selPlanObj = data['plans'][i];
+
+            console.log("DATA", data);
+            console.log("SELPLANOBJ", selPlanObj);
+
+            // update cycle cards
+            const cardBlock = document.querySelector('.plan-cycle-card-container')
+            cardBlock.innerHTML = '';
+
+            var defaultCycle = 'yearly';
+
+            for (let x in selPlanObj['cycles']['order']) {
+                cardBlock.appendChild(createPaymentCard(selPlanObj, selPlanObj['cycles']['order'][x], false))
+
+                if (selPlanObj['cycles'][currency_code][selPlanObj['cycles']['order'][x]]['default'] == true) {
+                    defaultCycle = selPlanObj['cycles']['order'][x];
+                }
+            }
+
+            // update dropdown
+            const dropOpt = createPlanDropdown(data['plans'][i],data['locale'])
+            dropOpt.classList.add('selected')
+            dropCon.appendChild(dropOpt)
+
+            // select default payment method
+            // allowedPaymentMethod(selPlanObj)
+
+            if(ignorePM != true){
+            // select default payment method
+            allowedPaymentMethod(selPlanObj)
+
+                // update card details
+                if (data['card'] && data['card'].constructor === Object && Object.keys(data['card']).length > 0) {
+                    cardflag = 1
+                    if(cardflag == 1){
+                        document.getElementById("paymentCardNumber").style.display = "block"
+                        document.getElementById("paymentExpiryDate").style.display = "block"
+                        document.getElementById("paymentCvv").style.display = "block"
+                        document.getElementById("paymentZipcode").style.display = "block"
+
+                        document.getElementById("postal-code").style.display = "none"
+                        document.getElementById("cvv").style.display = "none"
+                        document.getElementById("expiration-date").style.display = "none"
+                        document.getElementById("card-number").style.display = "none"
+                        
+                    }
+                    else{
+
+                        document.getElementById("paymentCardNumber").style.display = "none"
+                        document.getElementById("paymentExpiryDate").style.display = "none"
+                        document.getElementById("paymentCvv").style.display = "none"
+                        document.getElementById("paymentZipcode").style.display = "none"
+
+                        document.getElementById("postal-code").style.display = "block"
+                        document.getElementById("cvv").style.display = "block"
+                        document.getElementById("expiration-date").style.display = "block"
+                        document.getElementById("card-number").style.display = "block"
+                    }
+
+                    document.querySelector('.popup_change_credit_card .change').style.display ='block'
+                    document.querySelector('.popup_change_credit_card .card-brand').style.display ='none'
+
+                    const ci = document.querySelectorAll('.cc-body input');
+                    for (i = 0; i < ci.length; i++) {
+
+                        if (ci[i].id == 'paymentCardNumber') {
+
+                            ci[i].value = '****  ****  **** ' + data['card']["last4"];
+                            ci[i].setAttribute('data-sc', ci[i].value)
+                            ci[i].disabled = true;
+
+                        } else if (ci[i].id == 'paymentExpiryDate') {
+
+                            ci[i].value = pad(data['card']["exp_month"], 2) + '/' + data['card']["exp_year"].toString().substring(2)
+                            ci[i].setAttribute('data-sc', ci[i].value)
+                            ci[i].disabled = true;
+
+                        } else if (ci[i].id == 'paymentCvv') {
+
+                            ci[i].value = '***'
+                            ci[i].setAttribute('data-sc', ci[i].value)
+                            ci[i].disabled=true;
+
+                        } else if (ci[i].id == 'paymentZipcode') {
+
+                            ci[i].value = data['card']["zipcode"];
+                            ci[i].setAttribute('data-sc', ci[i].value)
+                            ci[i].disabled=false;
+
+                        }
+                        ThreeDSnonce=data['card']["nonce"]
+                        ThreeDSbin=data['card']["bin"]
+                        
+                    }
+                }
+                else{
+
+                    document.getElementById("paymentCardNumber").style.display = "none"
+                    document.getElementById("paymentExpiryDate").style.display = "none"
+                    document.getElementById("paymentCvv").style.display = "none"
+                    document.getElementById("paymentZipcode").style.display = "none"
+
+                    document.getElementById("postal-code").style.display = "block"
+                    document.getElementById("cvv").style.display = "block"
+                    document.getElementById("expiration-date").style.display = "block"
+                    document.getElementById("card-number").style.display = "block"
+                }
+
+            }
+            
+            // check free trial
+            if(selPlanObj['trial'] == true){
+                document.querySelector('.payment-upgrade-section button.paynow-button').innerHTML = `<img src="`+staticUrl+`/icons/trust-icon.svg" alt="trust-icon" class="trust-icon">`+ pgettext('paymentPopupMainContent',"Start Free Trial") ;
+            }else{
+                document.querySelector('.payment-upgrade-section button.paynow-button').innerHTML = `<img src="`+staticUrl+`/icons/trust-icon.svg" alt="trust-icon" class="trust-icon">`+ pgettext('paymentPopupMainContent',"Pay now") ;
+            }
+
+            // update order summery
+            const activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);
+
+            if(data && data['discount'] && Object.keys(data['discount']).length > 0 && (data['discount']['paymentMethod'].includes(activePaymentMethod)) && data['discount']['expired'] == false){
+                updatePaymentSummary(data, selPlan, defaultCycle,selPlanObj['trial'], 'apply')
+            }else{
+                updatePaymentSummary(data, selPlan, defaultCycle,selPlanObj['trial'], '', currency_code)
+            }
+            
+
+        }
+        else{
+            dropCon.appendChild(createPlanDropdown(data['plans'][i],data['locale']))
+        }
+    }
+}
+
+function collapsePaymentmethod(input_id, pm){
+
+    const payClsToggle = {
+        'card': ['paypal', 'razorpay'],
+        'paypal': ['card', 'razorpay'],
+        'razorpay': ['card', 'paypal']
+    }
+        
+    const payCls = {
+        'card': 'card',
+        'paypal': 'paypal',
+        'razorpay': 'razorpay',
+    }
+
+    let e = document.getElementById(input_id)
+
+    if(e && e.checked == false && e.parentElement.getAttribute('class').includes('disabled') == false){
+        // MAKE CURRENT INPUT CHECKED & OTHER INPUT FALSE
+        
+        e.checked = true; 
+        if(input_id == 'toggle-payment-mode-popup-razorpay'){
+
+            currency_code = "INR"
+            // document.getElementsByClassName("credit-card-payment-container").style.display = "none";
+            // document.getElementsByClassName("paypal-payment-container").style.display = "none";
+
+            document.getElementById('toggle-payment-mode-popup-cc').checked = false;
+            document.getElementById('toggle-payment-mode-popup-pp').checked = false;
+        }
+        else if(input_id == 'toggle-payment-mode-popup-pp'){
+            currency_code = "USD"
+            document.getElementById('toggle-payment-mode-popup-razorpay').checked = false;
+            document.getElementById('toggle-payment-mode-popup-cc').checked = false;
+        }else if (input_id == 'toggle-payment-mode-popup-cc'){
+            currency_code = "USD"
+            document.getElementById('toggle-payment-mode-popup-razorpay').checked = false;
+            document.getElementById('toggle-payment-mode-popup-pp').checked = false;
+        }else{
+            console.log('payment mode input id not matched');
+        }
+       
+        for (let i = 0; i < payClsToggle[e.value].length; i++) {
+            console.log(payClsToggle[e.value]);
+            console.log(payClsToggle[e.value][i]);
+            document.querySelector(`.credit-card-section.${payClsToggle[e.value][i]} .cc-header`).classList.remove('active');
+        }
+        document.querySelector(`.credit-card-section.${payCls[e.value]} .cc-header`).classList.add('active');
+        
+
+        if(e.value == 'paypal'){
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentPaypalPay');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+        }
+        else if(e.value == 'razorpay'){
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentRazorPay');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+            
+        }
+
+
+        else{
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentCardbraintreePay');
+            document.querySelector(`.credit-card-section.${payCls[e.value]} .cc-body`).classList.remove('collapse-content');
+        }
+        document.querySelector(".paynow-button").disabled = false;
+        document.querySelector(".common-payment-error").style.display = 'none'
+
+        if(document.querySelector('.plan-picker.active')){
+
+            const activeCycle = document.querySelector('.plan-picker.active')
+
+            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(e.value))){
+                updatePaymentSummary(popupPayData, activeCycle.getAttribute('data-plan'), activeCycle.getAttribute('data-cycle'), activeCycle.getAttribute('data-trial'), 'apply');
+            }else{
+                updatePaymentSummary(popupPayData, activeCycle.getAttribute('data-plan'), activeCycle.getAttribute('data-cycle'), activeCycle.getAttribute('data-trial'), 'invalid', currency_code);
+            }
+
+
+            updatePricingCard(popupPayData, activeCycle.getAttribute('data-plan'), currency_code);
+            // try{
+            // totalafterpastdue=pastdueamount+parseFloat($('#selected-plan-total-price').html().replace('$','')) 
+            // $('#selected-plan-total-price').html("$"+totalafterpastdue.toString()) }
+            // catch(error){
+            // }
+        }
+
+    }else if(pm){
+
+        for (let i = 0; i < payClsToggle[pm].length; i++) {
+
+            document.querySelector(`.credit-card-section.${payClsToggle[pm][i]} .cc-header`).classList.remove('active');
+        }
+
+        document.querySelector(`.credit-card-section.${payCls[pm]} .cc-header`).classList.add('active');
+
+
+        if(pm == 'paypal'){
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentPaypalPay');
+            document.querySelector(`.credit-card-section.${payClsToggle[pm]} .cc-body`).classList.add('collapse-content');
+        }
+        else if(pm == 'razorpay'){
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentRazorPay');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+        }
+        else{
+            const sel = document.querySelector('.paynow-button');
+            sel.setAttribute('id', 'paymentCardbraintreePay');
+            document.querySelector(`.credit-card-section.${payCls[pm]} .cc-body`).classList.remove('collapse-content');
+        }
+
+        if(document.querySelector('.plan-picker.active')){
+
+            const activeCycle = document.querySelector('.plan-picker.active')
+
+            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(pm))){
+                updatePaymentSummary(popupPayData, activeCycle.getAttribute('data-plan'), activeCycle.getAttribute('data-cycle'), activeCycle.getAttribute('data-trial'), 'apply');
+            }else{
+                updatePaymentSummary(popupPayData, activeCycle.getAttribute('data-plan'), activeCycle.getAttribute('data-cycle'), activeCycle.getAttribute('data-trial'), 'invalid', currency_code);
+            }
+        }
+
+    }
+
+}
+
+function updateCardDetails(e, state){
+    //document.querySelector("#paymentCardbraintreePay").disabled = false;
+
+    if( (e != undefined && e.className == 'change') || state == 'change' ){
+        if(e != undefined){
+            e.classList.remove("change");
+            e.innerHTML = 'Undo'
+            e.classList.add("undo");
+        }else{
+            const ccc = document.querySelector(".popup_change_credit_card span");
+            ccc.classList.remove("change");
+            ccc.innerHTML = 'Undo'
+            ccc.classList.add("undo");
+
+        }
+
+        document.getElementById("paymentCardNumber").style.display = "none"
+        document.getElementById("paymentExpiryDate").style.display = "none"
+        document.getElementById("paymentCvv").style.display = "none"
+        document.getElementById("paymentZipcode").style.display = "none"
+
+        document.getElementById("postal-code").style.display = "block"
+        document.getElementById("cvv").style.display = "block"
+        document.getElementById("expiration-date").style.display = "block"
+        document.getElementById("card-number").style.display = "block"
+
+        const ci = document.querySelectorAll('.cc-body input');
+        for (i = 0; i < ci.length; i++) {
+            ci[i].value = ''
+            ci[i].disabled=false;
+        }
+    }else if((e != undefined && e.className == 'undo') || state == 'undo' ){
+        if(e != undefined){
+            e.classList.remove("undo");
+            e.innerHTML = 'Change'
+            e.classList.add("change");
+        }else{
+            const ccc = document.querySelector(".popup_change_credit_card span");
+            ccc.classList.remove("undo");
+            ccc.innerHTML = 'Change'
+            ccc.classList.add("change");
+        }
+
+        document.getElementById("paymentCardNumber").style.display = "block"
+        document.getElementById("paymentExpiryDate").style.display = "block"
+        document.getElementById("paymentCvv").style.display = "block"
+        document.getElementById("paymentZipcode").style.display = "block"
+
+        document.getElementById("postal-code").style.display = "none"
+        document.getElementById("cvv").style.display = "none"
+        document.getElementById("expiration-date").style.display = "none"
+        document.getElementById("card-number").style.display = "none"
+        
+
+        const ci = document.querySelectorAll('.cc-body input');
+        for (i = 0; i < ci.length; i++) {
+            if (ci[i].id == 'paymentZipcode') {
+                ci[i].value = ci[i].getAttribute('data-sc') || ''
+                ci[i].disabled=false;
+
+            }else{
+                ci[i].value = ci[i].getAttribute('data-sc') || ''
+                ci[i].disabled=true;
+            }
+        }
+        resetPaymentForm();
+
+    }else if(state == 'clear'){
+        const ccc = document.querySelector(".popup_change_credit_card span");
+        ccc.classList.remove("undo");
+        ccc.innerHTML = 'Change'
+        ccc.classList.add("change");
+
+        const ci = document.querySelectorAll('.cc-body input');
+        for (i = 0; i < ci.length; i++) {
+            ci[i].value = ''
+            ci[i].disabled=false;
+        }
+    }
+}
+
+
+function changePaymentModalSize(reset){
+
+    if(reset == 'reset'){
+        document.getElementById('newPlanUpgradePopup').style.maxWidth='1230px';
+        document.getElementById('newPlanUpgradePopup').style.maxheight='720px';
+        document.getElementById('newPlanUpgradePopup').style.height='720px';
+    }else if (reset == 'paymentStatus'){
+        document.getElementById('newPlanUpgradePopup').style.maxWidth='560px';
+        document.getElementById('newPlanUpgradePopup').style.maxheight='auto';
+        document.getElementById('newPlanUpgradePopup').style.height='auto';
+    }else if (reset == 'changePlan'){
+        document.getElementById('newPlanUpgradePopup').style.maxWidth='625px';
+        document.getElementById('newPlanUpgradePopup').style.maxheight='auto';
+        document.getElementById('newPlanUpgradePopup').style.height='auto';
+    }
+    
+}
+
+
+function closeUpgradePopupListener(data){
+
+    let event = new CustomEvent('PAYMENTPOPUPCLOSE', {detail: data, bubbles: true, cancelable: true});
+    document.getElementById('newPlanUpgradePopup').dispatchEvent(event);
+
+}
+
+function closeUpgradePaymentPlan(e, state) {
+
+    if(hostedFieldsInstancee){
+        hostedFieldsInstancee.clear('number');
+        hostedFieldsInstancee.clear('cvv');
+        hostedFieldsInstancee.clear('expirationDate');
+        hostedFieldsInstancee.clear('postalCode');
+        $("iframe").removeClass('braintree-hosted-invalid')
+    }
+    
+    document.getElementsByClassName("payment-popup-bg")[0].style.display = "none";
+        if(ALLOWED_PAYMENT_METHODS && ALLOWED_PAYMENT_METHODS[0] == 'razorpay'){
+            document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+            document.getElementById("toggle-payment-mode-popup-cc").checked = false;
+            document.getElementById("toggle-payment-mode-popup-razorpay").checked = true;
+            document.getElementById('newPlanUpgradePopup').style.display = "none";
+            document.getElementById("enterprise_modal").style.display = "none";
+            // document.getElementsByClassName("credit-card-payment-container").style.display = "none";
+            // document.getElementsByClassName("paypal-payment-container").style.display = "none";
+            document.querySelector('.paynow-button').setAttribute('id', 'paymentRazorPay');
+            document.querySelector(`.credit-card-section.paypal .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.card .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+            document.querySelector(`.credit-card-section.razorpay .cc-header`).classList.add('active');    
+        }
+        
+        else if(ALLOWED_PAYMENT_METHODS && ALLOWED_PAYMENT_METHODS[0] == 'paypal'){
+            document.getElementById("toggle-payment-mode-popup-pp").checked = true;
+            document.getElementById("toggle-payment-mode-popup-cc").checked = false;
+            document.getElementById("toggle-payment-mode-popup-razorpay").checked = false;
+            document.getElementById('newPlanUpgradePopup').style.display = "none";
+            document.getElementById("enterprise_modal").style.display = "none";
+            document.getElementsByClassName("credit-card-payment-container").style.display = "none";
+            document.getElementsByClassName("paypal-payment-container").style.display = "none";
+            document.querySelector('.paynow-button').setAttribute('id', 'paymentPaypalPay');
+            document.querySelector(`.credit-card-section.card .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.add('collapse-content');
+            document.querySelector(`.credit-card-section.razorpay .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.paypal .cc-header`).classList.add('active');
+    }
+    else {
+        document.getElementById("toggle-payment-mode-popup-pp").checked = false;
+        document.getElementById("toggle-payment-mode-popup-razorpay").checked = false;
+        document.getElementById("toggle-payment-mode-popup-cc").checked = true;
+        document.getElementById('newPlanUpgradePopup').style.display = "none";
+        document.getElementById("enterprise_modal").style.display = "none";
+        if (ALLOWED_PAYMENT_METHODS && ALLOWED_PAYMENT_METHODS[0] == 'card'){
+            document.querySelector(`.credit-card-section.paypal .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.razorpay .cc-header`).classList.remove('active');
+            document.querySelector(`.credit-card-section.card .cc-header`).classList.add('active');
+            document.querySelector(`.credit-card-section.card .cc-body`).classList.remove('collapse-content');
+                            
+            }
+            document.querySelector('.paynow-button').setAttribute('id', 'paymentCardbraintreePay');
+            document.querySelector(".paynow-button").disabled = false;
+        }
+    $('#country_detect').val(0);
+    resetPaymentModalStages()
+    resetPaymentForm() // Adding to remove error msg on close popup
+    clearPaymentPopupListeners()
+
+    if(e !== undefined && (e.parentNode.className == 'payment-status' || e.id == 'activate-link' || e.classList.contains('payment-status-bg'))){
+        updatePopupCloseOptions('clear')
+
+        // decide to reload current page
+        let pagesToExclude = ['editproject', 'slides', 'voice'] // app paths
+        let pte = pagesToExclude.filter(function (e) {
+            return window.location.pathname.includes(e);
+        });
+        if(pte.length == 0){
+            location.reload();
+        } 
+        closeUpgradePopupListener({'payment': true})
+    }else{
+        updatePopupCloseOptions('clear')
+        closeUpgradePopupListener({'payment': false})
+    }
+}
+
+function updatePopupCloseOptions(state){
+
+    let ppb = document.querySelector('.payment-popup-bg');
+
+   if (ppb && state == 'payment-status'){
+
+    
+        ppb.classList.remove("pricing-summary-bg")
+        ppb.classList.remove("pricing-comparison-bg")
+        ppb.classList.add("payment-status-bg")
+    
+    }else if (ppb && state == 'pricing-summary'){
+
+        ppb.classList.remove("pricing-comparison-bg")
+        ppb.classList.remove("payment-status-bg")
+        ppb.classList.add("pricing-summary-bg")
+        
+    }else if (ppb && state == 'pricing-comparison'){
+
+        ppb.classList.remove("pricing-summary-bg")
+        ppb.classList.remove("payment-status-bg")
+        ppb.classList.add("pricing-comparison-bg")
+    }else if (ppb && state == 'clear'){
+        ppb.className = 'payment-popup-bg'
+    }
+}
+
+function paymentSuccessStage(amt, tr){
+    changePaymentModalSize('paymentStatus')
+    document.querySelector('.payment-status').style.display = 'block';
+    document.querySelector('.pricing-comparison').style.display = 'none';
+    document.querySelector('.pricing-summary').style.display = 'none';
+    // update update close event 
+    updatePopupCloseOptions('payment-status')
+    // close loading
+    closePaymentPopupLoader()
+    document.querySelector('span.transaction-reference').innerHTML=tr
+    document.querySelector('span.paid-amount').innerHTML=amt
+}
+
+function closePaymentPopupLoader(){
+    const plc = document.querySelector('.payment-loader-container');
+    plc.classList.remove('show')
+    for (var i = 0; i < plc.children.length; i++) {
+        plc.children[i].classList.remove('show')
+    }
+}
+
+function showPaymentPopupLoader(cls){
+    const plc = document.querySelector('.payment-loader-container');
+    plc.classList.add('show')
+    for (var i = 0; i < plc.children.length; i++) {
+        if(plc.children[i].classList.contains(cls)){
+            plc.children[i].classList.add('show');
+        }else{
+            plc.children[i].classList.remove('show');
+        }
+    }
+}
+
+function resetPaymentModalStages(){
+    changePaymentModalSize('reset');
+    document.querySelector('.payment-status').style.display = 'none';
+    document.querySelector('.pricing-comparison').style.display = 'block';
+    document.querySelector('.pricing-summary').style.display = 'none';
+
+    // close loading
+    closePaymentPopupLoader()
+
+    // reset payment success 
+    document.querySelector('span.transaction-reference').innerHTML='xxxxxxxxxxxxxxxx'
+    document.querySelector('span.paid-amount').innerHTML='000.00'
+
+    // clear all inputs
+    document.querySelectorAll('#newPlanUpgradePopup .cc-body input[type=text]').forEach((el) => {
+        el.value = ''
+        el.setAttribute('data-sc', '')
+    })
+
+}
+
+function changePlan(data, selplan) {
+
+    // check data for selected plan already exist or get the data from ajax call
+    // plan change allowed or not for upgrade
+    // update info text below cycle
+
+    for (let i in data) {
+        if (selplan == data['planname']) {
+
+        }
+    }
+
+}
+
+function updatePlanChange(e) {
+
+    const opt = document.createElement('option');
+    opt.setAttribute('value', '');
+    opt.setAttribute('selected', true);
+    opt.innerText = 'Change';
+    const sel = document.querySelector('.change-plan');
+    sel.insertBefore(opt, sel.firstChild);
+    sel.setAttribute('data-plan', sel.value);
+    updatePlanBanner(sel.value);
+}
+
+function showPlanSwitch(){
+
+    let currrentLocation = window.location.href;
+    if((currrentLocation.includes('/slides/') || currrentLocation.includes('/voice/')) && (!document.querySelector('.plan-dropdown-container').classList.contains('lg'))){
+        document.querySelector('.plan-dropdown-container').classList.add('lg');
+    }
+    setTimeout(function(){
+        document.querySelector('.plan-dropdown-container').classList.add('show');
+    },200)
+}
+
+function closePlanChange(){
+
+    document.querySelector('.plan-dropdown-container').classList.remove('show')
+}
+
+function updatePlanBanner(plan, planDisplayName) {
+    // const sel = document.querySelector('.selected-plan-banner');
+    const sel = document.querySelector('#selected-plan-wrapper');
+    sel.setAttribute('class', 'selected-plan-banner');
+    var pnArray = plan.split(' ');
+    for(var i = 0; i < pnArray.length; i++) {
+        // Trim the excess whitespace.
+        pnArray[i] = pnArray[i].replace(/^\s*/, "").replace(/\s*$/, "");
+        sel.classList.add(pnArray[i]);
+    }
+    sel.setAttribute('data-plan', plan);
+    sel.innerHTML = '';
+
+    const pi = document.createElement('img');
+    pi.setAttribute('id', "selected-plan-banner");
+    pi.alt = "selected-plan-banner";
+    // pi.classList.add('selected-plan-banner');
+    pi.src = staticUrl + '/icons/whitestar.svg';
+
+    sel.appendChild(pi);
+    sel.insertAdjacentHTML('beforeend', `<span class="selected-planname">${planDisplayName}</span>`);
+    // resetPaymentForm(); // commenting to retain error msg on plan and cycle switch
+}
+
+function listOtherPlanChange() {
+
+    const sel = document.querySelector('.change-plan');
+    sel.removeChild(sel.firstChild);
+    const selplan = sel.getAttribute('data-plan');
+    document.querySelector(`.change-plan option[value=${selplan}]`).setAttribute('selected', true)
+
+}
+
+function applyCoupon(e){
+
+    var cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+    var selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+    var trial = document.querySelector(".plan-picker.active").getAttribute('data-trial');
+    const activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);
+    updateCoupon(selPlan).then(function(discounts){
+        popupPayData['discount']=discounts
+        if(e.classList.contains('apply')){
+            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(activePaymentMethod))){
+                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'apply')
+            }else{
+                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'invalid')
+            }
+        }else if (e.classList.contains('remove')){
+            if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(activePaymentMethod))){
+                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'remove')
+            }else{
+                updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'invalid')
+            }
+        }
+        getcountry('true')
+    }, function (error) {
+        //return {}
+        //reject(error);
+
+    });
+}
+
+function onchangecoupon_code(e){
+    var cycle = document.querySelector(".plan-picker.active").getAttribute('data-cycle');
+    var selPlan = document.querySelector(".plan-picker.active").getAttribute('data-plan');
+    var trial = document.querySelector(".plan-picker.active").getAttribute('data-trial');
+    console.log(selPlan, cycle, trial, 'remove')
+    const activePaymentMethod = getActivePaymentMethod(ALLOWED_PAYMENT_METHODS);
+    updatePaymentSummary(popupPayData, selPlan, cycle, trial, 'remove')
+    getcountry('true')
+}
+
+function validateCoupon(data, selPlan, selCycle){
+
+    var applyCoupon = false;
+
+    if(data['plans'] && data['discount'] && data['discount'].constructor === Object && Object.keys(data['discount']).length > 0){
+
+        const discountObj = data['discount']
+        document.querySelector('.discount-section').classList.remove('hide')
+        //document.querySelector('.discount-section').classList.add('show')
+        document.querySelector(".discount-section .coupon-code").value =  discountObj['code']
+        
+
+        if (discountObj['valid'] == true && discountObj['expired'] == false && (discountObj['plan'] == 'all' || discountObj['plan'] == selPlan) && discountObj['cycle'] == selCycle){
+
+            var i = 0;
+            for (i in data['plans']) {
+                if (selPlan == data['plans'][i]['planname']) {
+                    break
+                }
+            }
+
+            const selPlanObj = data['plans'][i];
+            if(currency_code){
+                currency_code = currency_code;
+            }else{
+                currency_code = data["defaultCurrencyCode"]
+            }
+            const selPlanCycleObj = selPlanObj['cycles'][currency_code][selCycle];
+            const memberCount = data['currentPlan']['memberCount'];
+            const selPlanCyclePrice = selPlanCycleObj['priceDetails'][selCycle]['price'];
+            const totalPrice = memberCount * selPlanCyclePrice;
+
+            if(discountObj['type'] == 'amount'){
+                if(discountObj['rate'] > totalPrice){
+                    setCoupon('invalid')
+                }else{
+                    applyCoupon = true
+                    setCoupon('apply');
+                }
+            }else{  // percentage discount
+                applyCoupon = true
+                setCoupon('apply');
+            }
+            var Lcc = getCookie('Lcc');
+            if(Lcc==discountObj['code'])
+            {
+                document.cookie="Lcc;max-age=0";
+            }
+        }else if(discountObj['valid'] == true && discountObj['expired'] == true){
+            setCoupon('expire')
+        }
+        else {
+            setCoupon('invalid')
+        }
+    }else{
+        couponVisibility('hide')
+    }
+    // discount note
+    return applyCoupon
+}
+
+function couponVisibility(action){
+
+    if(action == 'show'){
+        document.querySelector('.discount-section').classList.remove('hide')
+        //document.querySelector('.discount-section').classList.add('show')
+        document.querySelector('.discounted-price').classList.remove('hide')
+        document.querySelector('.discounted-price').classList.add('show')
+    }else{
+        setCoupon('remove')
+        strikeRegularPrice()
+        document.querySelector('.discount-section').classList.remove('show')
+        document.querySelector('.discount-section').classList.add('hide')
+        document.querySelector('.discounted-price').classList.remove('show')
+        document.querySelector('.discounted-price').classList.add('hide')
+    }   
+}
+
+function strikeRegularPrice(action=false){
+
+    if(action == true){
+        document.querySelector('.order-summary #selected-plan-price').classList.add('strike')
+    }else{
+        document.querySelector('.order-summary #selected-plan-price').classList.remove('strike')
+    }
+
+}
+
+
+function setCoupon(type){
+
+    var discountBtn = document.querySelector('.discount-section button.discount');
+    var coupon_code=document.getElementById('coupon-code').value.trim();
+    if(currentTeamPlan != 'free'){
+        document.querySelector('.order-summary .prorated-price').style.display = 'flex';
+    }
+    document.querySelector(".discount-section").style.cssText='display:none !important';
+    try{
+        if((coupon_code!="")&&(type!=""))
+        {
+            document.querySelector(".discount-section").style.cssText='display:flex !important';
+            if(type == 'invalid'){
+                discountBtn.classList.remove('remove')
+                discountBtn.classList.remove('apply')
+                discountBtn.classList.add('disabled')
+                discountBtn.disabled=true;
+                discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+                document.querySelector(".discount-section .bill-icon").style.display = 'none'
+                document.querySelector(".discount-section .coupon-status").innerHTML = pgettext("NetworkError-NoticationMessage", "Coupon invalid")
+                document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+                document.querySelector('.discounted-price').classList.remove('show')
+                document.querySelector('.discounted-price').classList.add('hide')
+                strikeRegularPrice()
+            }else if(type == 'expire'){
+                discountBtn.classList.remove('remove')
+                discountBtn.classList.remove('apply')
+                discountBtn.classList.add('disabled')
+                discountBtn.disabled=true;
+                discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+                document.querySelector(".discount-section .bill-icon").style.display = 'none'
+                //document.querySelector(".discount-section .coupon-status").innerHTML = pgettext("NetworkError-NoticationMessage", "Coupon expired")
+                document.querySelector(".discount-section .coupon-status").innerHTML = pgettext("NetworkError-NoticationMessage", "Coupon invalid")
+                document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+                strikeRegularPrice()
+            }else if(type == 'apply'){
+            
+                discountBtn.classList.remove('apply')
+                discountBtn.classList.remove('disabled')
+                discountBtn.classList.add('remove')
+                discountBtn.disabled=false;
+                discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Remove")
+                document.querySelector(".discount-section .bill-icon").style.display = 'block'
+                document.querySelector(".discount-section .coupon-status").innerHTML = pgettext("NetworkError-NoticationMessage", "Coupon applied")
+                document.querySelector(".discount-section .coupon-code").classList.add('applied')
+                strikeRegularPrice(true)
+                document.querySelector('.order-summary .prorated-price').style.display = 'none';
+            }
+            // else if(type == 'remove'){
+            //     discountBtn.classList.remove('remove')
+            //     discountBtn.classList.remove('disabled')
+            //     discountBtn.classList.add('apply')
+            //     discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+            //     document.querySelector(".discount-section .bill-icon").style.display = 'none'
+            //     document.querySelector(".discount-section .coupon-status").innerHTML = ''
+            //     document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+            //     document.querySelector(".discount-section .coupon-code").value="";
+            //     document.querySelector('.discounted-price').classList.remove('show')
+            //     document.querySelector('.discounted-price').classList.add('hide')
+            //     strikeRegularPrice()
+            // }
+            else{
+                discountBtn.classList.remove('remove')
+                discountBtn.classList.remove('disabled')
+                discountBtn.classList.add('apply')
+                discountBtn.disabled=false;
+                discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+                document.querySelector(".discount-section .bill-icon").style.display = 'none'
+                document.querySelector(".discount-section .coupon-status").innerHTML = ''
+                document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+                document.querySelector('.discounted-price').classList.remove('show')
+                document.querySelector('.discounted-price').classList.add('hide')
+                strikeRegularPrice()
+            }
+            getcountry('true')
+        }
+        else if((coupon_code=="")&&(type=="remove"))
+        {
+            document.querySelector(".discount-section").style.cssText='display:flex !important';
+            discountBtn.classList.remove('remove')
+            discountBtn.classList.remove('disabled')
+            discountBtn.classList.add('apply')
+            discountBtn.disabled=false;
+            discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+            document.querySelector(".discount-section .bill-icon").style.display = 'none'
+            document.querySelector(".discount-section .coupon-status").innerHTML = ''
+            document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+            document.querySelector('.discounted-price').classList.remove('show')
+            document.querySelector('.discounted-price').classList.add('hide')
+            strikeRegularPrice()
+        }
+        else
+        {
+            discountBtn.classList.remove('remove')
+            discountBtn.classList.add('disabled')
+            discountBtn.disabled=true;
+            discountBtn.classList.add('apply')
+            discountBtn.innerHTML = pgettext("NetworkError-NoticationMessage", "Apply")
+            document.querySelector(".discount-section .bill-icon").style.display = 'none'
+            // document.querySelector(".discount-section .coupon-status").innerHTML = pgettext("NetworkError-NoticationMessage", "Coupon available")
+            document.querySelector(".discount-section .coupon-code").classList.remove('applied')
+            document.querySelector('.discounted-price').classList.remove('show')
+            document.querySelector('.discounted-price').classList.add('hide')
+        }
+    }catch(error){  
+    }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+function floatProperly(num, dec){
+    const divider = 10 ** dec
+    return Math.round(num*divider)/divider;
+}
+
+function isNumber(evt) {
+   
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+function cc_brand_id(cur_val) {
+    // the regular expressions check for possible matches as you type, hence the OR operators based on the number of chars
+    // regexp string length {0} provided for soonest detection of beginning of the card numbers this way it could be used for BIN CODE detection also
+
+    //JCB
+    jcb_regex = new RegExp('^(?:2131|1800|35)[0-9]{0,}$'); //2131, 1800, 35 (3528-3589)
+    // American Express
+    amex_regex = new RegExp('^3[47][0-9]{0,}$'); //34, 37
+    // Diners Club
+    diners_regex = new RegExp('^3(?:0[0-59]{1}|[689])[0-9]{0,}$'); //300-305, 309, 36, 38-39
+    // Visa
+    visa_regex = new RegExp('^4[0-9]{0,}$'); //4
+    // MasterCard
+    mastercard_regex = new RegExp('^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[01]|2720)[0-9]{0,}$'); //2221-2720, 51-55
+    maestro_regex = new RegExp('^(5[06789]|6)[0-9]{0,}$'); //always growing in the range: 60-69, started with / not something else, but starting 5 must be encoded as mastercard anyway
+    //Discover
+    discover_regex = new RegExp('^(6011|65|64[4-9]|62212[6-9]|6221[3-9]|622[2-8]|6229[01]|62292[0-5])[0-9]{0,}$');
+    ////6011, 622126-622925, 644-649, 65
+
+
+    // get rid of anything but numbers
+    cur_val = cur_val.replace(/\D/g, '');
+
+    // checks per each, as their could be multiple hits
+    //fix: ordering matter in detection, otherwise can give false results in rare cases
+    var sel_brand = "unknown";
+    if (cur_val.match(jcb_regex)) {
+        sel_brand = "jcb";
+    } else if (cur_val.match(amex_regex)) {
+        sel_brand = "amex";
+    } else if (cur_val.match(diners_regex)) {
+        sel_brand = "dinersClub";
+    } else if (cur_val.match(visa_regex)) {
+        sel_brand = "visa";
+    } else if (cur_val.match(mastercard_regex)) {
+        sel_brand = "masterCard";
+    } else if (cur_val.match(discover_regex)) {
+        sel_brand = "discover";
+    } else if (cur_val.match(maestro_regex)) {
+        if (cur_val[0] == '5') { //started 5 must be mastercard
+            sel_brand = "masterCard";
+        } else {
+            sel_brand = "maestro"; //maestro is all 60-69 which is not something else, thats why this condition in the end
+        }
+    }
+
+    return sel_brand;
+}
+
+function dateMask(event) {
+
+    // var inputChar = String.fromCharCode(event.keyCode);
+    var code = event.keyCode;
+    var allowedKeys = [8];
+    if (allowedKeys.indexOf(code) !== -1) {
+        return;
+    }
+
+    event.target.value = event.target.value.replace(
+        /^([1-9]\/|[2-9])$/g, '0$1/' // 3 > 03/
+    ).replace(
+        /^(0[1-9]|1[0-2])$/g, '$1/' // 11 > 11/
+    ).replace(
+        /^([0-1])([3-9])$/g, '0$1/$2' // 13 > 01/3
+    ).replace(
+        /^(0?[1-9]|1[0-2])([0-9]{2})$/g, '$1/$2' // 141 > 01/41
+    ).replace(
+        /^([0]+)\/|[0]+$/g, '0' // 0/ > 0 and 00 > 0
+    ).replace(
+        /[^\d\/]|^[\/]*$/g, '' // To allow only digits and `/`
+    ).replace(
+        /\/\//g, '/' // Prevent entering more than 1 `/`
+    );
+}
+
+function paymentCardValidation(e, event, type) {
+
+    // remove displayed error first
+    // on enter event
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        // click the pay button on enter
+
+    }
+
+    if (type == "expiry")
+        dateMask(event)
+
+    if (type == "cn") {
+        if (e.value.length > 3) {
+
+            var input = e.value;
+            input = input.replace(/[\W\s\._\-]+/g, '');
+            var split = 4;
+            var chunk = [];
+
+            for (var i = 0, len = input.length; i < len; i += split) {
+                chunk.push(input.substr(i, split));
+            }
+
+            e.value = chunk.join("-");
+
+            brand = cc_brand_id(e.value)
+            if (brand != "amex") {
+                e.setAttribute("maxLength", 19)
+            } else {
+                e.setAttribute("maxLength", 18)
+            }
+
+        }
+    }
+    if (type == "zc") {
+        if (e.value.match(/^[a-zA-Z0-9][a-zA-Z0-9\- ]{0,20}[a-zA-Z0-9]$/g)) {
+
+            // success zipcode
+
+
+        } else {
+
+            // error zipcode
+
+        }
+    }
+    if (type == "zcc") {
+
+        if (e.value.match(/^[a-zA-Z0-9][a-zA-Z0-9\- ]{0,20}[a-zA-Z0-9]$/g)) {
+
+            // success zipcode
+
+        } else {
+            // error zipcode
+
+        }
+    }
+
+}
+
+
+
+
+function createPaymentTooltip(text){
+    const Paytip = document.createElement('span');
+    Paytip.setAttribute("class", 'payment-tooltiptext');
+    Paytip.innerHTML = text;
+    return Paytip;
+}
+
+function ajaxCallPcc(e, teamId, type, plan, ext1, ext2, selPlan, selCycle, source, cplantypecycle, cpecd, discountType, trial) {
+    
+    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+    
+    if(currentTeamPlan == 'free'){
+        // GET MONTHLY DATA BY DEFAULT
+        selCycle = 'monthly';
+    }else{
+        selCycle = currentTeamPlanCycle;
+    }
+
+    
+    if(plan != "free" ){
+        proration = true
+    }else{
+        proration=false
+    }
+
+    url = siteUrl + '/p/pcc'
+    data = 'a=' + btoa(teamId) + '&c=' + btoa(proration) + '&d=' + btoa(selPlan) + '&cycleval=' + btoa(selCycle) + '&pname=' + btoa(selPlan)
+
+    fbajaxcall(url, data, null).then(function (result) {
+        if(result){
+            result = JSON.parse(result)
+            
+            if (!('error' in result) && result['error'] != true){
+                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                
+                r_maskedcc = atob(result["a"])
+                r_brand = atob(result["b"])
+                teamSize = atob(result['c'])
+                teamSize1 = atob(result['d'])
+                r_month_cost = atob(result['e'])
+                r_year_cost = atob(result['f'])
+                r_current_cycle = atob(result['g'])
+                r_current_cycle1 = atob(result['h'])
+                r_current_cycle2 = atob(result['i'])
+                r_halfyear_cost = atob(result['j'])
+                paymentmode = atob(result["paymentmode"]);
+                currency_code = atob(result['currency_code']);
+    
+                pccObj = {'r_maskedcc':r_maskedcc,'r_brand':r_brand,'teamSize':teamSize,'teamSize1':teamSize1,'r_month_cost':r_month_cost,'r_year_cost':r_year_cost,'r_current_cycle':r_current_cycle,'r_current_cycle1':r_current_cycle1,'r_current_cycle2':r_current_cycle2,'r_halfyear_cost':r_halfyear_cost,'paymentmode':paymentmode}
+                //console.log('pccObj');
+                console.dir(pccObj);
+
+                let popupPayDataLength = Object.keys(popupPayData).length
+                console.log('popupPayDataLength '+popupPayDataLength)
+                console.log('currentTeamPlanCycle '+currentTeamPlanCycle)
+                if(popupPayDataLength > 0){
+                    createPaymentStage(popupPayData, e.target.getAttribute('data-plan'));
+                    let payment_mode=document.querySelector('input[name=toggle-payment-mode-popup]:checked').value
+                    if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(payment_mode))){
+                        updatePaymentSummary(popupPayData, selPlan, currentTeamPlanCycle, trial, 'apply')
+                    }else{
+                        updatePaymentSummary(popupPayData, selPlan, currentTeamPlanCycle, trial, 'invalid')
+                    }
+                }else{
+                    //console.log('PopupPayData Empty')
+                }   
+                        
+                // SHOW PAYMENT SECTION & HIDE FEATURE SECTION
+                document.getElementsByClassName("pricing-comparison")[0].style.display = "none";
+                document.getElementsByClassName("pricing-summary")[0].style.display = "block";
+                // document.getElementById('newPlanUpgradePopup').style.maxHeight = "none";
+                // document.getElementById('newPlanUpgradePopup').style.height = "97vh";
+                //createPaymentStage(popupPayData, e.target.getAttribute('data-plan'));
+                //upgradeBtn[i].removeEventListener("click", cardUpgradeListener, false);
+    
+                // listen for coupon changes
+                var couponBtn = document.querySelector('.pricing-summary .discount-section .discount');
+                couponBtn.addEventListener("click", applyCouponListener, false);
+    
+                // listen for unselected plan cycle
+                var cycleBtn = document.querySelector('.plan-cycle-card-container');
+                cycleBtn.addEventListener("change", cycleChangeListener, false);
+    
+                //document.querySelector('#newPlanUpgradePopup #planFeatureStage').removeEventListener("click", cardUpgradeListener, false)
+    
+            }else{
+                // Notification bar here
+                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                document.getElementById("NotificationbarMessage").innerHTML = (result["errormsg"] != undefined) ? result["errormsg"]: result["msg"]
+                document.getElementsByClassName("Notification_popupbar")[0].style.display = "block";
+                result = JSON.stringify(result)
+                resolve(result)
+                setTimeout(() => {document.getElementsByClassName("Notification_popupbar")[0].style.display = "none";}, 3000);
+            }
+        }
+        
+        
+        
+    })
+}
+
+
+function ajaxCallPccToggle(e, teamId, type, plan, ext1, ext2, selPlan, selCycle, source, cplantypecycle, cpecd, discountType, trial,defaultflag = 1) {
+    //console.log(e, teamId, type, plan, ext1, ext2, selPlan, selCycle, source, cplantypecycle, cpecd, discountType, trial)
+    
+    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+    
+    // GET MONTHLY DATA BY DEFAULT
+    //selCycle = selCycle
+
+    
+    if(plan != "free" ){
+        proration = true
+    }else{
+        proration=false
+    }
+
+    url = siteUrl + '/p/pcc'
+    data = 'a=' + btoa(teamId) + '&c=' + btoa(proration) + '&d=' + btoa(selPlan) + '&cycleval=' + btoa(selCycle) + '&pname=' + btoa(selPlan)
+
+    fbajaxcall(url, data, null).then(function (result) {
+        if(result){
+            result = JSON.parse(result)
+            
+            if (!('error' in result) && result['error'] != true){
+                if(defaultflag){
+                    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                }
+                
+                
+                r_maskedcc = atob(result["a"])
+                r_brand = atob(result["b"])
+                teamSize = atob(result['c'])
+                teamSize1 = atob(result['d'])
+                r_month_cost = atob(result['e'])
+                r_year_cost = atob(result['f'])
+                r_current_cycle = atob(result['g'])
+                r_current_cycle1 = atob(result['h'])
+                r_current_cycle2 = atob(result['i'])
+                r_halfyear_cost = atob(result['j'])
+                paymentmode = atob(result["paymentmode"]);
+                currency_code = result['currency_code'] ? atob(result['currency_code']) : currency_code;
+                refund  = result['refund'] ?? null;
+    
+                pccObj = {'r_maskedcc':r_maskedcc,'r_brand':r_brand,'teamSize':teamSize,'teamSize1':teamSize1,'r_month_cost':r_month_cost,'r_year_cost':r_year_cost,'r_current_cycle':r_current_cycle,'r_current_cycle1':r_current_cycle1,'r_current_cycle2':r_current_cycle2,'r_halfyear_cost':r_halfyear_cost,'paymentmode':paymentmode}
+                //console.log('pccObj');
+                console.dir(pccObj);
+                
+                if(r_current_cycle == "free") {
+                    selCycle = "yearly"
+                }
+
+                if(refund) {
+                    proration = false;
+                }
+
+                let popupPayDataLength = Object.keys(popupPayData).length
+                console.log('popupPayDataLength '+popupPayDataLength)
+                if(popupPayDataLength > 0){
+                    createPaymentStage(popupPayData, selPlan, undefined,  undefined, true, currency_code);
+                    let payment_mode=document.querySelector('input[name=toggle-payment-mode-popup]:checked').value;
+                    if(popupPayData && popupPayData['discount'] && Object.keys(popupPayData['discount']).length > 0 && (popupPayData['discount']['paymentMethod'].includes(payment_mode))){
+                        updatePaymentSummary(popupPayData, selPlan, selCycle, trial, 'apply',currency_code)
+                    }else{
+                        updatePaymentSummary(popupPayData, selPlan, selCycle, trial, 'invalid', currency_code);
+                    }
+                    updatePricingCard(popupPayData, selPlan, currency_code);
+                }else{
+                    console.log('PopupPayData Empty')
+                }                
+
+
+                        
+                
+    
+            }else{
+                // Notification bar here
+                document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                document.getElementById("NotificationbarMessage").innerHTML = (result["errormsg"] != undefined) ? result["errormsg"]: result["msg"]
+                document.getElementsByClassName("Notification_popupbar")[0].style.display = "block";
+                result = JSON.stringify(result)
+                resolve(result)
+                setTimeout(() => {document.getElementsByClassName("Notification_popupbar")[0].style.display = "none";}, 3000);
+            }
+        }
+        
+        
+        
+    })
+}
+
+
+function updatePricingCard(popupData, selectedPlan, currency_code) {
+
+    var plan_details = getPlanObject(popupData, selectedPlan);
+
+    const currencySymbolElements = document.querySelectorAll('.currency-symbol');
+    updateCurrencySymbol(currencySymbolElements, currency_code);
+    
+    const totalPriceLabel = document.querySelectorAll('.total-price-label');
+
+    document.getElementById('save-value').innerText = `${plan_details["cycles"][currency_code]['monthly']["priceDetails"]["currency"]["symbol"]}${plan_details["cycles"][currency_code]['monthly']["priceDetails"]["monthly"]["price"]}`;
+
+   
+     
+
+    const availableCycles = ['monthly', 'yearly'];
+    const monthlyAmountElement = document.querySelectorAll('.monthly-amount');
+    
+
+    for (var i = 0; i < availableCycles.length; i++) { 
+        
+
+        if (availableCycles[i] == "monthly") {
+            monthlyAmountElement[i].textContent = plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["price"];  
+            totalPriceLabel[i].textContent = `${plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["currency"]["symbol"]} ${plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["yearly"]["price"]}  / billed yearly`;
+        }
+
+        else if (availableCycles[i] == "yearly") {
+            monthlyAmountElement[i].textContent = plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["monthly"]["price"]; 
+            totalPriceLabel[i].textContent = `${plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["currency"]["symbol"]} ${plan_details["cycles"][currency_code][availableCycles[i]]["priceDetails"]["price"]} / billed yearly`;
+        }
+        
+
+        // totalPriceLabel[i].textContent = `${paymentPlan["plan"]["cycles"][currency_code][selectedCycle]["priceDetails"]["price"]} ${paymentPlan["plan"]["cycles"][currency_code][availableCycles[i]]["priceDetails"]["currency"]["code"]} / billed yearly`;
+
+          
+    }
+
+}
+
+
+ 
+function getPlanObject(popupData, selectedPlan) {
+    var plans_object = popupData["plans"];
+    for (var i=0; i < plans_object.length; i++) {
+        if (plans_object[i]["planname"] == selectedPlan){
+            console.log(plans_object[i]);
+            return plans_object[i];
+        }
+    }
+}
+
+
+function updateCurrencySymbol(elements, currency_code) {
+    const currency_symbols = {
+        'INR': '₹',
+        'USD': '$'
+    }
+
+    for(i=0; i < elements.length; i++) {
+        elements[i].textContent = currency_symbols[currency_code];
+    }
+}
+
+function getActivePaymentMethod(allowedPaymentMethods){
+    let activePaymentMethod ;
+    if(document.querySelector('input[name="toggle-payment-mode-popup"]:checked')){
+        activePaymentMethod = document.querySelector('input[name="toggle-payment-mode-popup"]:checked').value;
+        console.log('Element checked');
+    }else{
+        console.log('Element not checked');
+        // MAKE 1ST ELEMENT ACTIVE
+        if(allowedPaymentMethods && allowedPaymentMethods.length >0){
+            activePaymentMethod = allowedPaymentMethods[0]
+        }
+    }
+    return activePaymentMethod;
+}
+
+//  INAPP DISCOUNT POPUP
+// var show_discount_popup = '{{voice_popup}}';
+// console.log('voice_popup : '+voice_popup)
+// if(voice_popup=="True"){
+//     openInAppDiscountPopup();
+// }
+
+// INAPP DISCOUNT POPUP OPEN
+ function openInAppDiscountPopup(discount_type){
+    console.log('discount popup opening');
+    if(discount_type == 'blackfriday'){
+        document.querySelector("#inAppDiscountPopupLtd").style.display='block';
+    }else{
+    document.querySelector("#inAppDiscountPopup").style.display='block';
+    }
+}
+
+
+// INAPP DISCOUNT POPUP CLOSE
+function closeInAppDiscountPopup(){
+    console.log('discount popup opening');
+    let popupElement =  document.querySelectorAll(".inAppDiscountPopup")
+    for (var i = 0, len = popupElement.length; i < len; i++) {
+        //work with checkboxes[i]
+        popupElement[i].style.display='none';
+    }
+}
+
+function openDiscountLink(discount_type){
+    console.log('discount link opening');
+    if(discount_type == 'blackfriday'){
+        window.open('https://www.animaker.com/ltd-pricing','_target');
+    }else{
+    window.open('https://app.animaker.com/pricing/?type=CP&p=voice pro_yearly&cc=VOICEPRO159','_target');
+    }
+}
+
+
+
+
+
+

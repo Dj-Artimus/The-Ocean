@@ -1,0 +1,478 @@
+// video tools authentication flow
+
+var registerappListener
+var loginListener
+var facebookregisterInapp
+var twofactorInapp
+
+function anonymousUserExport(uploaddata){
+      return new Promise(function(resolve, reject) {
+            
+            document.getElementsByClassName("anim-modal-auth-overlay")[0].style.display = "block";
+            
+            // If user clicks login display login else register block
+            if(uploaddata.type == "login"){
+                  document.getElementsByClassName("login_formInapp")[0].style.display = "block";
+            }
+            else{
+                  document.getElementsByClassName("signup_formInapp")[0].style.display = "block";
+            }
+
+            function usernameValidate(name){
+                  if(name == "")                                  
+                  {
+                        document.getElementsByName("r_firstname")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                        document.getElementsByClassName("sigin_errormsg")[0].innerHTML = pgettext("Username-Validation","Please enter your name.")
+                        return 0;
+                  }
+                  else if(name.length < 2){
+            
+                        document.getElementsByName("r_firstname")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                        document.getElementsByClassName("sigin_errormsg")[0].innerHTML = pgettext("Username-Validation","Name must contain 2 characters.")
+                        return 0;
+                  }
+            
+            }
+
+            function emailValidate(email,type){
+                  var regemail =  /^\w+([\.+-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,100})+$/;
+                  if(type == "register"){
+                        if(email == ""){
+                  
+                              document.getElementsByName("r_email")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[1].innerHTML = pgettext("Email-Validation","Please enter your email address.")
+                              return 0;
+
+                        }
+                        else if(regemail.test(email) == false)                                  
+                        {
+                  
+                              document.getElementsByName("r_email")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[1].innerHTML = pgettext("Email-Validation","Please enter a valid email address.")
+                              return 0;
+                  
+                        }
+                  }
+                  else{
+                        if(email == ""){
+                  
+                              document.getElementsByName("l_email")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("login_errormsg")[0].innerHTML = pgettext("Email-Validation","Please enter your email address.")
+                              return 0;
+
+                        }
+                        else if(regemail.test(email) == false)                                  
+                        {
+                  
+                              document.getElementsByName("l_email")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("login_errormsg")[0].innerHTML = pgettext("Email-Validation","Please enter a valid email address.")
+                              return 0;
+                  
+                        }
+                  }
+            
+            }
+
+            function pswdValidate(password,type){
+                  if(type == "register"){
+                        if(password.trim() == ""){
+                        
+                              document.getElementsByName("r_password")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[2].innerHTML = pgettext("Password-Validation","Please enter your password.")
+                              return 0;
+            
+                        }
+                        else if(password.length < 8){
+                  
+                              document.getElementsByName("r_password")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[2].innerHTML = pgettext("Password-Validation","Must contain 8 characters. Use a mix of letters, numbers or symbols.")
+                              return 0;
+                        }
+                        else if( password.match(/^ /g) ||  password.match(/ $/g)){
+
+                              document.getElementsByName("r_password")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[2].innerHTML = pgettext("Password-Validation","Your password can't start or end with blank spaces.")
+                              return 0;
+                        }
+                        else if( password.match(/[a-z]/g) &&  password.match(/[A-Z]/g) || password.match(/[a-z]/g) && password.match(/[0-9]/g) || password.match(/[a-z]/g) && password.match(/[!"#$%&'()*+,-./: ;<=>?@[\]^_`{|}~]/g) || password.match(/[A-Z]/g) && password.match(/[0-9]/g) || password.match(/[A-Z]/g) && password.match(/[!"#$%&'()*+,-./: ;<=>?@[\]^_`{|}~]/g) || password.match(/[0-9]/g) && password.match(/[!"#$%&'()*+,-./: ;<=>?@[\]^_`{|}~]/g) ){
+                              return true;
+                        }
+                        else{
+                  
+                              document.getElementsByName("r_password")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("sigin_errormsg")[2].innerHTML = pgettext("Password-Validation","Password is weak. Use a mix of letters, numbers or symbols.")
+                              return 0;
+                        }
+                  }
+                  else{
+                        if(password.trim() == ""){
+                        
+                              document.getElementsByName("l_password")[0].parentNode.style.borderBottom = "1px solid #ff0000"
+                              document.getElementsByClassName("login_errormsg")[1].innerHTML = pgettext("Password-Validation","Please enter your password.")
+                              return 0;
+            
+                        }
+                    
+                  }
+            
+            }
+
+            registerappListener = function registerappListener (e){ 
+
+                  var name = document.getElementsByName("r_firstname")[0].value.trim()
+                  var email = document.getElementsByName("r_email")[0].value.trim()
+                  var password = document.getElementsByName("r_password")[0].value
+
+                  var nameVal = usernameValidate(name);
+                  var mailVal = emailValidate(email , "register");
+                  var pwdVal = pswdValidate(password, "register");
+
+                  if(nameVal == 0 || mailVal == 0 || pwdVal==0 ){ 
+                        return false;
+                  }
+                  else{
+                        data = 'name='+name+'&email='+email+'&password='+password+'&uploadId='+uploaddata.uploadId
+
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+
+                        fbajaxcall(redirecturlserver+'/welcome',data,null,null).then(function(result) {
+                        
+                              result =JSON.parse(result)
+                              
+                              document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+                              
+                              if(result['error']){
+                                    document.getElementsByClassName("register_topmsge")[0].innerHTML = result['errorMsg'];
+                              }
+                              else if(result['Msg'] == undefined){
+                                   
+                                    resolve(result)
+                                    closeauthenticationpopups()
+                              }
+                              else{
+                                    twofactorauthenticationtrue(result['hit']).then(function(result) {
+                                          
+                                          resolve(result)
+                                    })
+                              }
+                              
+                        }, function(error) {
+                              reject(error)
+                        })
+      
+                  }
+                  
+            }
+
+            loginListener = function loginListener (e){ 
+                  var l_email = document.getElementsByName("l_email")[0].value.trim();
+                  var l_password = document.getElementsByName("l_password")[0].value;
+                  
+                  var mailVal = emailValidate(l_email, "login");
+                  var pswVal = pswdValidate(l_password, "login");
+      
+                  if(mailVal == 0 || pswVal == 0 ){ 
+                        return false;
+                  }
+                  else{
+                        data = 'email='+l_email+'&password='+l_password+'&uploadId='+uploaddata.uploadId
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+
+                        fbajaxcall(redirecturlserver+'/login/customlogin/',data,null,null).then(function(result) {
+                             
+                              result =JSON.parse(result)
+                              document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+                              if(result['error']){
+                                    document.getElementsByClassName("login_topmsge")[0].innerHTML = result['errorMsg'];
+                              }
+                              else if(result['Msg'] == undefined){
+                                   
+                                    resolve(result)
+                                    closeauthenticationpopups()
+                              }
+                              else{
+                                    twofactorauthenticationtrue(result['hit']).then(function(result) {
+                                          resolve(result)
+                                    })
+                              }
+                              
+                              
+                        }, function(error) {
+                              reject(error)
+                        })
+      
+                  }
+                  
+                  
+            }
+
+            facebookregisterInapp = function facebookregisterInapp (e){ 
+
+                  FB.login(function(response) {
+                        if (response.authResponse) {
+                              access_token = response.authResponse.accessToken; //get access token
+                              user_id = response.authResponse.userID; //get FB UID
+            
+                              url = redirecturlserver+'/login/facebookSocialLogin/';
+                              data='accessToken='+response.authResponse['accessToken']+'&userId='+response.authResponse['userID']+'&uploadId='+uploaddata.uploadId
+            
+                              document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+
+                              fbajaxcall(url,data).then(function(result) {
+                                    result =JSON.parse(result)
+
+                                    document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+                                    if(result['Msg'] == undefined){
+                                          resolve(result)
+                                          closeauthenticationpopups()
+                                    }
+                                    else{
+                                          twofactorauthenticationtrue(result['hit']).then(function(result) {
+                                                resolve(result)
+                                          })
+                                    }
+            
+                              }, function(error) {
+                                    
+                                    reject(error)
+                              })
+                        }
+                  }, 
+                  {
+                  //   scope: 'publish_stream,email'
+                  scope: 'email,public_profile'
+                  }); 
+                  
+            }
+
+            document.getElementById("register_btn_inappexport").addEventListener("click",registerappListener,false)
+            
+            document.getElementById("login_btn_inappexport").addEventListener("click",loginListener ,false)
+            
+            document.getElementById("openloginblock").addEventListener("click",function loginappListener (e){ 
+                  document.getElementsByClassName("register_email")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("register_username")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("register_password")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("sigin_errormsg")[0].innerHTML = ""
+                  document.getElementsByClassName("sigin_errormsg")[1].innerHTML = ""
+                  document.getElementsByClassName("sigin_errormsg")[2].innerHTML = ""
+                  document.getElementsByClassName("login_email")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("login_password")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("login_errormsg")[0].innerHTML = ""
+                  document.getElementsByClassName("login_errormsg")[1].innerHTML = ""
+                  document.getElementsByName("r_firstname")[0].value = ""
+                  document.getElementsByName("r_email")[0].value = ""
+                  document.getElementsByName("r_password")[0].value = ""
+                  document.getElementsByName("l_email")[0].value = ""
+                  document.getElementsByName("l_password")[0].value = ""
+                  document.getElementsByClassName("register_topmsge")[0].innerHTML = ""
+                  document.getElementsByClassName("login_topmsge")[0].innerHTML = ""
+
+                  document.getElementsByClassName("login_formInapp")[0].style.display = "block";
+                  document.getElementsByClassName("signup_formInapp")[0].style.display = "none";
+                  
+            },false)
+           
+           
+            document.getElementById("openregisterblock").addEventListener("click",function openregisterListener (e){ 
+                  document.getElementsByClassName("register_email")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("register_username")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("register_password")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("sigin_errormsg")[0].innerHTML = ""
+                  document.getElementsByClassName("sigin_errormsg")[1].innerHTML = ""
+                  document.getElementsByClassName("sigin_errormsg")[2].innerHTML = ""
+                  document.getElementsByClassName("login_email")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("login_password")[0].style.borderBottom = "1px solid #e1e1e1"
+                  document.getElementsByClassName("login_errormsg")[0].innerHTML = ""
+                  document.getElementsByClassName("login_errormsg")[1].innerHTML = ""
+                  document.getElementsByName("r_firstname")[0].value = ""
+                  document.getElementsByName("r_email")[0].value = ""
+                  document.getElementsByName("r_password")[0].value = ""
+                  document.getElementsByName("l_email")[0].value = ""
+                  document.getElementsByName("l_password")[0].value = ""
+                  document.getElementsByClassName("register_topmsge")[0].innerHTML = ""
+                  document.getElementsByClassName("login_topmsge")[0].innerHTML = ""
+                
+                  document.getElementsByClassName("login_formInapp")[0].style.display = "none";
+                  document.getElementsByClassName("signup_formInapp")[0].style.display = "block";
+            })
+
+            document.getElementById("facebookregisterInapp").addEventListener("click",facebookregisterInapp ,false)
+            document.getElementById("facebookregisterInapp1").addEventListener("click",facebookregisterInapp ,false)
+
+            document.addEventListener("selectionFired", function (e) {
+
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+                           
+                        token = e.detail.id_token
+                        url = redirecturlserver+'/login/googlebackendverification/';
+                        data='token='+token+'&uploadId='+uploaddata.uploadId
+      
+                        fbajaxcall(url,data).then(function(result) {
+                              result =JSON.parse(result)
+                              document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+                              if(result['Msg'] == undefined){
+                                    
+                                    resolve(result)
+                                    closeauthenticationpopups()
+                              }
+                              else{
+                                   
+                                    twofactorauthenticationtrue(result['hit']).then(function(result) {
+                                          resolve(result)
+                                    })
+                              }
+      
+                        }, function(error) {
+                              
+                              reject(error)
+                        })
+
+                        document.removeEventListener("selectionFired", false )
+
+            },false);
+ 
+      })
+}
+
+
+function twofactorauthenticationtrue(hit){
+      return new Promise(function(resolve, reject) {
+            document.getElementsByClassName("login_formInapp")[0].style.display = "none";
+            document.getElementsByClassName("signup_formInapp")[0].style.display = "none";
+            document.getElementsByClassName("twofactorauth_formInapp")[0].style.display = "block";
+
+            twofactorInapp = function twofactorInapp (e){ 
+                  url = redirecturlserver+'/login/appsidetwoFactorverification/';
+                  var otp = document.getElementsByName("twofa_otp")[0].value.trim();
+                  data='otp='+otp
+
+                  document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "block";
+
+                  fbajaxcall(url,data).then(function(result) {
+                        result =JSON.parse(result)
+
+                        document.getElementsByClassName("lds-animaker-overlay")[0].style.display = "none";
+
+                        if(result['error']){
+                              document.getElementsByClassName("twofactorapp_errormsg")[0].innerHTML = result['errorMsg'];
+                        }
+                        else{
+                              result['hit'] = hit
+                              resolve(result);
+                              closeauthenticationpopups();
+                        }
+                        
+
+                  })
+
+            }
+
+            document.getElementById("twofactorapp_submit").addEventListener("click",twofactorInapp ,false)
+
+      })
+}
+
+
+function closeauthenticationpopups(){
+      document.getElementsByClassName("register_email")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("register_username")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("register_password")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("sigin_errormsg")[0].innerHTML = ""
+      document.getElementsByClassName("sigin_errormsg")[1].innerHTML = ""
+      document.getElementsByClassName("sigin_errormsg")[2].innerHTML = ""
+      document.getElementsByClassName("login_email")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("login_password")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("login_errormsg")[0].innerHTML = ""
+      document.getElementsByClassName("login_errormsg")[1].innerHTML = ""
+      document.getElementsByName("r_firstname")[0].value = ""
+      document.getElementsByName("r_email")[0].value = ""
+      document.getElementsByName("r_password")[0].value = ""
+      document.getElementsByName("l_email")[0].value = ""
+      document.getElementsByName("l_password")[0].value = ""
+      document.getElementsByClassName("register_topmsge")[0].innerHTML = ""
+      document.getElementsByClassName("login_topmsge")[0].innerHTML = ""
+
+
+      document.getElementsByClassName("anim-modal-auth-overlay")[0].style.display = "none";
+      document.getElementsByClassName("login_formInapp")[0].style.display = "none";
+      document.getElementsByClassName("signup_formInapp")[0].style.display = "none";
+      document.getElementsByClassName("twofactorauth_formInapp")[0].style.display = "none";
+
+      document.getElementById("register_btn_inappexport").removeEventListener("click", registerappListener, false )
+      document.getElementById("login_btn_inappexport").removeEventListener("click", loginListener, false )
+      document.getElementById("facebookregisterInapp").removeEventListener("click", facebookregisterInapp, false )
+      document.getElementById("twofactorapp_submit").removeEventListener("click", twofactorInapp, false )
+
+      let closeevent = new Event("POPUPCLOSE", {bubbles: true});
+      document.dispatchEvent(closeevent)
+}
+
+function onSignIn(googleUser) {
+     
+            var profile = googleUser.getBasicProfile();
+
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+
+            var selectionFired = new CustomEvent("selectionFired", {
+                  "detail": {"id_token":id_token}
+            });
+              
+            document.dispatchEvent(selectionFired);
+}
+
+
+function focusspusername(e){
+     
+            document.getElementsByClassName("register_username")[0].style.borderBottom = "1px solid #e1e1e1"
+            document.getElementsByClassName("sigin_errormsg")[0].innerHTML = ""
+       
+} 
+function focusspemail(e){ 
+     
+            document.getElementsByClassName("register_email")[0].style.borderBottom = "1px solid #e1e1e1"
+            document.getElementsByClassName("sigin_errormsg")[1].innerHTML = ""
+       
+}
+function focussppassword(e){ 
+     
+            document.getElementsByClassName("register_password")[0].style.borderBottom = "1px solid #e1e1e1"
+            document.getElementsByClassName("sigin_errormsg")[2].innerHTML = ""
+       
+}
+function focuslpemail(e){ 
+     
+      document.getElementsByClassName("login_email")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("login_errormsg")[0].innerHTML = ""
+ 
+
+}
+function focuslppassword(e){ 
+
+      document.getElementsByClassName("login_password")[0].style.borderBottom = "1px solid #e1e1e1"
+      document.getElementsByClassName("login_errormsg")[1].innerHTML = ""
+ 
+}
+
+
+function signupclickinpopup(){
+      if (event.keyCode === 13) {
+            document.getElementById("register_btn_inappexport").click();
+      }
+}
+
+function loginclickinpopup(){
+      if (event.keyCode === 13) {
+            document.getElementById("login_btn_inappexport").click();
+      }
+}
+
+function twofactorauthclickinpopup(){
+      if (event.keyCode === 13) {
+            document.getElementById("twofactorapp_submit").click();
+      }
+}

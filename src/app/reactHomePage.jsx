@@ -40,6 +40,7 @@ export default function ReactHomePage() {
     feedDroplets,
     setFeedDroplets,
     GetFeedDroplets,
+    GetUnFeedDroplets,
     isFeedDropletsFetched,
     setDropletDataType,
     dropletsData,
@@ -47,21 +48,51 @@ export default function ReactHomePage() {
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [hasMoreUnFeedDroplets, setHasMoreUnFeedDroplets] = useState(false);
   // const [feedDroplets, setFeedDroplets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const feedRef = useRef();
+  const limit = 5;
 
-  const fetchFeedData = () =>
-    fetchDataForInfiniteScroll(
-      isLoading,
-      setIsLoading,
-      hasMore,
-      setHasMore,
-      page,
-      setPage,
-      5,
-      GetFeedDroplets
-    );
+  const fetchFeedData = useCallback(async () => {
+    if (isLoading || !hasMore) return;
+    setIsLoading(true);
+    try {
+      if (!hasMoreUnFeedDroplets) {
+        const newData = await GetFeedDroplets(page, limit);
+        if (newData?.length > 0) {
+          if (newData.length < limit) {
+            setPage(1); // Reset page after last fetch
+            setHasMoreUnFeedDroplets(true);
+          } // Stop fetching
+          else setPage((prev) => prev + 1); // Increment only if fetch is valid
+        }
+      } else {
+        const newData = await GetUnFeedDroplets(page, limit);
+        if (newData?.length > 0) {
+          if (newData.length < limit) {
+            setHasMore(false);
+            setHasMoreUnFeedDroplets(false);
+          } // Stop fetching
+          else setPage((prev) => prev + 1); // Increment only if fetch is valid
+        } else {
+          setHasMore(false);
+          setHasMoreUnFeedDroplets(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching droplets:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    isLoading,
+    hasMore,
+    page,
+    hasMoreUnFeedDroplets,
+    GetFeedDroplets,
+    GetUnFeedDroplets,
+  ]);
 
   const handleScroll = () =>
     setInfiniteScroll(feedRef, hasMore, page, isLoading, fetchFeedData);

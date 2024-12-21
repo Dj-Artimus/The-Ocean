@@ -1,0 +1,1553 @@
+/*** upgrade model css ****/
+.anim-new-modal *{
+    outline: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.anim-new-modal-overlay ,.anim-new-modal-block-overlay , .anim-modal-auth-overlay{display: none;height: 100%;width: 100%;position: fixed;background-color: rgba(0,0,0,0.8);top: 0;bottom: 0;left: 0;z-index: 99997;}
+.anim-new-modal {
+    display: none;
+    overflow: hidden;
+    position: fixed;
+    /* top: 0;
+    left: 0; */
+    z-index: 99998;
+    right: 0;
+    border-radius: 5px;
+    perspective: 800px;
+    background-color: #fff;
+}
+
+.anim-new-modal .upgradeplanPaymentBlock {
+    padding: 35px 0px 0px 0px;
+}
+
+.upgradePlan_model .new-modal-body {
+    padding: 6% 10%;
+    border-bottom: 0px solid #e6e6e6;
+    /* width: 100%; */
+    height:100%;
+}
+
+.upgradePlan_model .new-modal-header {
+    padding: 24px 0 0 0;
+    text-align: center;
+    background-image: linear-gradient(to right, #a07ceb,#7f6fec);
+    height: 80px;
+    position: relative;
+}
+.ent-anim-col {
+    width: 40%;
+}
+
+.upgradePlan_model .updrade-now .upgrade-now-btn:hover {
+    background: #FFCA00;
+    opacity: 1;
+}
+.upgradePlan_model .updrade-now {
+    padding: 2% 0 3% 0;
+}
+
+/* .upgradePlan_model .coupen_discount_text{
+    display: none;
+    margin-bottom: 10px;
+    background: #83BF11 0% 0% no-repeat padding-box;
+    border-radius: 12px;
+    opacity: 0.8;
+    width: 100px;
+    height: 20px;
+    font-size: 12px;
+    color: #fff;
+    line-height: 1.7;
+    text-align: center;
+} */
+
+.upgradePlan_model .discount_coupen_show{
+    display: none;
+    margin-bottom: 10px;
+    line-height: 2.5;
+}
+.upgradePlan_model .coupen_discount_text{
+    display: inline-block;
+    font-weight: bold;
+    color: #54536c;
+    font-size: 16px;
+}
+
+.upgradePlan_model .coupen_code_val_input{
+    float: right;
+    width: 250px;
+    background: #F1F1F1;
+    border: 1px solid #E1E1E1;
+    border-radius: 4px;
+    opacity: 1;
+    font-size: 14px;
+    color: #E1E1DF;
+    padding: 0px 10px;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.credit-card-number::-webkit-input-placeholder {
+    font-weight: 500;
+    color: #C3CDD3;
+    font-size:18px;
+}
+.credit-card-month::-webkit-input-placeholder {
+    font-weight: 500;
+    color: #C3CDD3;
+    font-size:18px;
+}
+.credit-card-cvv::-webkit-input-placeholder {
+    font-weight: 500;
+    color: #C3CDD3;
+    font-size:18px;
+}
+.monthly-details{
+    background:transparent;
+    border: 1px solid #ebebeb;
+    /* padding: 10px 0; */
+    display: flex;
+    padding: 0 20px;
+    justify-content: flex-start;
+    align-items: center;
+    color: #54536c;
+    border-radius: 3px;
+    cursor:pointer;
+}
+
+.monthly_plan{
+    display: inline-block;
+    /* width: 93%; */
+    padding-left: 10px;
+}
+.monthly_plan p{
+    font-size: 17px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+.monthly_cost{
+    font-weight:500;
+}
+.cost_per_month{
+    font-weight: 500;
+    font-size: 15px;
+    padding-left: 3px;
+}
+.plan_select{
+    display: inline-block;
+    width: 5%;
+}
+.selected-plan .plan_select span{
+    height: 12px;
+    width: 12px;
+    background-color: #ffc524;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #8065F6;
+}
+.yearly-details{
+    background: transparent;
+    border: 1px solid #ebebeb;
+    /* padding: 10px 0; */
+    display: flex;
+    padding: 0 20px;
+    justify-content: flex-start;
+    align-items: center;
+    color: #54536c;
+    border-radius: 3px;
+    margin:15px 0;
+    cursor:pointer;
+}
+.yearly_plan{
+    display: inline-block;
+    width: 70%;
+    padding-left: 10px;
+}
+.yearly_plan p{
+    font-size: 17px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+.yearly_cost{
+    font-weight:500;
+}
+.cost_per_year{
+    font-weight: 500;
+    font-size: 15px;
+    padding-left: 3px;
+}
+.selected-plan{
+    background: #F1F1F1;
+}
+.plan_select span{
+    height: 12px;
+    width: 12px;
+    background-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #e1e1e1;
+}
+.yearly_offer {
+    width: 23%;
+    display: inline-block;
+    border: 1px solid transparent;
+    background-color: #F29B4A;
+    border-radius: 12px;
+    text-align: center;
+}
+.yearly_offer_details{
+    padding: 4px 5px;
+}
+.yearly_offer_details p{
+    margin: 0;
+    color: #FCE3CE;
+    font-size: 11px;
+}
+.cost_per_member{
+    display:inline-block;
+}
+.total_amount{
+    display:inline-block;
+    float:right;
+    vertical-align: middle;
+}
+.total_cost_purchase{
+    padding:15px 0;
+}
+.cost_per_member{
+    display: inline-block;
+    vertical-align: middle;
+}
+.cost_per_member p{
+    margin: 0;
+    font-weight: bold;
+    color: #54536c;
+    font-size: 15px;
+}
+.total_member_cost{
+    font-weight: 500;
+}
+.total_amount p{
+    margin: 0;
+    font-weight: bold;
+    color: #54536c;
+    font-size: 14px;
+}
+.note-description{color:#b8c2c8;font-size: 12px;margin:10px 0}
+
+.purchase_details, .zipcode_area{
+    position: relative;
+    width: 100%;
+    min-height: 45px;
+    display: inline-block;
+    color: #54536c;
+    border: 1px solid rgba(14,19,24,.2);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.purchase_details:hover,.date_details:hover,.cvv_details:hover{
+    border: 1px solid #FFCA00;
+}
+.purchase_details:focus-within,.date_details:focus-within,.cvv_details:focus-within{
+    border: 1px solid rgba(14,19,24,.45);
+}
+/* .date_details:hover{
+    border: 1px solid #FFCA00;
+}
+.date_details:focus-within{
+    border: 1px solid rgba(14,19,24,.45);
+} */
+.card-details {
+    width: 90%;
+}
+.ent-card-details {
+    width: 90%;
+}
+.date_details_input,.cvv_details_input {
+    width: 90%;
+    padding-left:25px;
+}
+.entdate_details_input,.entcvv_details_input {
+    width: 90%;
+    padding-left:25px;
+}
+.credit-card-number {
+    width: 100%;
+    font-size: 18px;
+    color: #54536c;
+    border: 0px;
+    display: inline-block;
+    height: 39px;
+    outline:none;
+}
+.zipcode-number{
+    width: 100%;
+    padding-left: 10px;
+    font-size: 18px;
+    color: #54536c;
+    border: 0px;
+    display: inline-block;
+    height: 39px;
+    outline:none;
+}
+.credit-card-number::-webkit-input-placeholder, .credit-card-month::-webkit-input-placeholder,.credit-card-cvv::-webkit-input-placeholder,.zipcode-number::-webkit-input-placeholder{
+    font-weight: 500;
+    color: #E1E1E1;
+    font-size:15px;
+    }
+    .credit_card_icon {
+    display: inline-block;
+    background-image: url("https://static.animaker.com/icons/creditcardicon.svg");
+    width: 24px;
+    height: 24px;
+}
+    .calender_icon{
+    display: inline-block;
+    background-image: url("https://static.animaker.com/icons/calendericon.svg");
+    width: 24px;
+    height: 24px;
+    }
+    .cvv_icon{
+    display: inline-block;
+    background-image: url("https://static.animaker.com/icons/cardcvvicon.svg");
+    width: 24px;
+    height: 24px;
+    }
+    .zipcode_icon {
+        display: inline-block;
+        background-image: url("https://static.animaker.com/icons/zipcode_icon.svg");
+        width: 24px;
+        height: 24px;
+    }
+    .date_details,.cvv_details{
+    position: relative;
+    /* width: 48%; */
+    min-height: 45px;
+    display: inline-block;
+    color: #54536c;
+    border: 1px solid rgba(14,19,24,.2);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.credit-card-month,.credit-card-cvv {
+    width: 100%;
+    font-size: 18px;
+    color: #54536c;
+    border: 0px;
+    display: inline-block;
+    height: 39px;
+    outline:none;
+    /* padding: 10px; */
+}
+.date_section{
+    display: inline-block;
+    width: 49%;
+    /* margin-left: 1px; */
+    margin-right: 3px;
+}
+.entdate_section .entcvv_section .entdate_section{
+    display: inline-block;
+    width: 30%;
+    margin-right: 3px;
+}
+.cvv_section{
+    display: inline-block;
+    width: 48.5%;
+    margin-left: 4px;
+}
+.expiry_cvv_section{
+    width:100%;
+    padding:10px 0;
+}
+.entexpiry_cvv_section{
+    width:40%;
+    padding:10px 0;
+}
+.note_payment_card_details{color:#54536c;font-size: 13px;margin:10px 0;text-align:center;}
+.upgradePlan_model .change_credit_card{
+    padding-left:5px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.upgradePlan_model .change_credit_card:hover,.upgradePlan_model .cancel_card:hover{
+    color: #8471EB;
+}
+.purchase_icon{
+    width:10%;padding-top: 5px;padding-left: 14px;height:35px;
+}
+sub {
+    bottom: -.25em;
+}
+sup {
+    top: -.5em;
+}
+sub, sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+
+
+/***** Upgrade features listing  popup css ****/
+
+.upgradePayment_free_popup , .upgradePayment_starter_popup , .upgradePayment_pro_popup , .upgradePlan_model , .downgrade_popup_model{
+    font-family: 'PT Sans';
+    width: 625px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-image: url("https://static.animaker.com/imagesizes/login-pattern.svg");
+    background-position: bottom;
+    overflow: hidden;
+    /* background-size: ; */
+    background-size: contain;
+    background-repeat: no-repeat;
+    line-height: 1.42857143;
+}
+.upgradePayment_free_popup .new-modal-header, .upgradePayment_starter_popup .new-modal-header, .upgradePayment_pro_popup .new-modal-header, .downgrade_popup_model .new-modal-header{
+    padding: 24px 0 0 0;text-align: center;background-image: linear-gradient(to right, #a07ceb,#7f6fec);height: 180px;position: relative;
+}
+.upgradePayment_free_popup .close, .upgradePayment_starter_popup .close, .upgradePayment_pro_popup .close , .upgradePlan_model .close, .downgrade_popup_model .close{
+    background-image: url("https://static.animaker.com/icons/clear_normal.svg");
+    width: 17px;height: 17px;opacity:1;right: 5px;position: absolute;top: 5px; cursor: pointer;
+}
+.upgradePayment_free_popup .close, .upgradePayment_starter_popup .close, .upgradePayment_pro_popup .close , .upgradePlan_model .close, .downgrade_popup_model .close{
+    background-image: url("https://static.animaker.com/icons/clear.svg");
+}
+  
+.upgradePayment_free_popup .modal-body-text, .upgradePayment_starter_popup .modal-body-text, .upgradePayment_pro_popup .modal-body-text , .upgradePlan_model .modal-body-text, .downgrade_popup_model .modal-body-text{
+    font-size: 24px;color: #fff;margin:0;
+}
+
+.upgradePayment_free_popup .new-modal-body{
+    padding: 6% 10%;
+    border-bottom: 0px solid #e6e6e6;
+    /* width: 100%; */
+    height: 100%;
+    transform: translateY(-120px);
+    margin-bottom: -120px;
+}
+.upgradePayment_free_popup .pricing_growth_section{
+    display: inline-block;
+    text-align: center;
+    padding: 25px 20px;
+    width: 50%;
+    border-right: 1px solid #eeeeee;
+}
+.upgradePayment_free_popup .pricing_business_section{
+    display: inline-block;
+    /* width: calc(50% - 2px); */
+    width: 50%;
+    padding: 25px 20px;
+}
+.upgradePayment_free_popup .see_plans , .upgradePayment_starter_popup .see_plans, .upgradePayment_pro_popup .see_plans{
+    width: 100%;
+    text-align: center;
+    margin: 20px 0 10px 0;
+}
+
+.anim-new-modal .see_plans button{
+    font-family: 'PT Sans';
+    color: #9982de;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: bolder;
+}
+.anim-new-modal1 {
+    display: none;
+    overflow: hidden;
+    position: fixed;
+    z-index: 99997;
+    border-radius: 5px;
+    perspective: 800px;
+    background-color: #fff;
+  }
+.upgradePayment_free_popup .watermark_text , .upgradePayment_starter_popup .watermark_text, .upgradePayment_pro_popup .watermark_text {
+    margin: 0;
+    font-size: 12px;
+    color: #414053;
+}
+
+.upgradePayment_free_popup .upgrade_plan , .upgradePayment_starter_popup .upgrade_plan, .upgradePayment_pro_popup .contact_us {
+    font-family: 'PT Sans';
+    font-size: 15px;
+    /* background-image: linear-gradient(to right, #503df9, #9e52f7); */
+    padding: 7px 30px;
+    color: #414053;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    opacity: 0.8;
+    border: 1px solid #e1e1e1;
+}
+.upgradePayment_free_popup .upgrade_plan:hover , .upgradePayment_starter_popup .upgrade_plan:hover, .upgradePayment_pro_popup .contact_us:hover {
+    background-image: linear-gradient(to right, #6de19b, #6ceedb);
+    color: #fff;
+    border: 2px solid #6DE4A9;
+}
+
+.anim-new-modal .pricing_details_section{
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 2px 1px 7px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+}
+
+.anim-new-modal .growth_price, .anim-new-modal .business_price{
+    font-weight: bold;
+    font-size: 50px;
+    margin: 0;
+    color: #414053;
+}
+.anim-new-modal .growth_price sup, .anim-new-modal .business_price sup{
+    font-size: 25px;
+    font-weight: 500;
+}
+.anim-new-modal .growth_price sub, .anim-new-modal .business_price sub{
+    font-size: 15px;
+    font-weight: 500;
+}
+.anim-new-modal .growth_icon, .anim-new-modal .business_icon{
+    width: 12px;
+    height: 12px;
+    margin-bottom: 4px;
+    vertical-align: middle;
+}
+.anim-new-modal .growth_text, .anim-new-modal .business_text{
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 12px;
+    padding-left: 5px; 
+    color: #414053;
+}
+.anim-new-modal .growth_features_text, .anim-new-modal .business_features_text{
+    display: inline-flex;
+    font-size: 15px;
+    color: #54546C;
+    align-items: center;
+}
+.anim-new-modal .growth_features, .anim-new-modal .business_features{
+    text-align:left;
+    display:flex;
+    margin-bottom: 10px; 
+}
+
+.anim-new-modal .more_exports{
+    font-size:16px;
+    color: #54546C;
+    text-align: center;
+    margin: 15px 0;
+}
+.anim-new-modal .more_exports .contact_us{
+    color: #947DDA;
+    float:none;
+    cursor:pointer;
+    font-weight: bolder;
+}
+
+/*** Enterprise features Extra s popup css ***/
+
+.upgradePayment_starter_popup .new-modal-body, .upgradePayment_pro_popup .new-modal-body {
+    padding: 70px 14%;
+    border-bottom: 0px solid #e6e6e6;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-155px);
+    margin-bottom: -155px;
+}
+.upgradePayment_starter_popup .new-modal-body{
+   margin-bottom: -185px;
+}
+
+.upgradePayment_starter_popup .pricing_business_section, .upgradePayment_pro_popup .pricing_business_section{
+    /* padding: 35px 50px; */
+    padding: 35px 80px;
+    width: 100%;
+}
+
+.upgradePayment_starter_popup .business_features, .upgradePayment_pro_popup .business_features {
+    margin-bottom: 10px;
+}
+
+.upgradePayment_pro_popup .business_features_unlock{
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 15px;
+    color: #414053;
+}
+
+.upgradePayment_free_popup .pricListingWithPlanNames, .upgradePayment_free_popup .plansQualityDescription, .upgradePayment_free_popup .plansUpgradeWholeSection{
+    display: flex;
+}
+
+/**** Enterprise  popup css ****/
+
+.enterprise_modal {
+    font-family: 'PT Sans';
+    width: 570px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 10px;
+    line-height: 1.42857143;
+    height: 95%;
+    overflow: auto;
+    max-height: 781px;
+
+  }
+.enterprise_modal .new-modal-header {
+    padding: 20px 0 0 0;
+    text-align: center;
+    height: 50px;
+    position: relative;
+}
+.enterprise_modal .close{
+        background-image: url("https://static.animaker.com/icons/clear_normal.svg");
+        width: 17px;height: 17px;opacity:1;right: 5px;position: absolute;top: 5px;cursor: pointer;
+}
+.enterprise_modal .close:hover{
+        background-image: url("https://static.animaker.com/icons/clear.svg");
+}
+.enterprise_modal .new-modal-body {
+    padding: 0% 8% 3% 8%;
+    border-bottom: 0px solid #e6e6e6;
+    width: 100%;
+    height: 100%;
+}
+.enterprise_modal .modal-body-text {font-size: 24px;color: #54546C;font-weight: bold; padding-left: 10px; }
+.enterprise_modal .growth_icon,.enterprise_modal .business_icon{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+}
+.enterprsie_feature_text{color: #54546C;
+    color: #54546C;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 3px;
+}
+.enterprise_form_labels {
+    color: #54546C;
+    display: block;
+    font-size: 15px;
+    margin: 0 0 2px 0;
+    font-weight: 500;
+}
+.mandatory {
+    color: red;
+}
+.supportinput {
+    padding: 6px 20px;
+    width: 100%;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid #e2dee4;
+    color: #000;
+    height:39px;
+    /* margin: 5px 0; */
+}
+.enterprise_modal .updrade-now {
+    padding: 2% 0 2% 0;
+    text-align: center;
+}
+.updrade-now .upgrade-now-btn{
+    background: linear-gradient(45deg, #F25EAB 0%, #F9BA69 100%) !important;
+}
+.paynow-upgrade-now-btn{
+    background: linear-gradient(101deg, #503DF9 0%, #9E52F7 80%) !important;
+}
+.paynow-upgrade-now-btn{
+    width: 180px;
+    height: 40px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    font-family: 'PT Sans';
+    text-align: center;
+    padding: 2% 0px;
+    margin: 0px 160px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.switchteam-btn,.ent-paynow-btn{
+    background: linear-gradient(101deg, #503DF9 0%, #9E52F7 80%);
+}
+
+.switchteam-cncl-btn{
+    background: #EBEBEB ;
+    width: 164px;
+    height: 40px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #54536E;
+    font-weight: 700;
+    font-family: 'PT Sans';
+    text-align: center;
+    padding: 2% 0px;
+    margin: 0px 22px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.switchteam-btn,.ent-paynow-btn {
+    width: 164px;
+    height: 40px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    font-family: 'PT Sans';
+    text-align: center;
+    padding: 2% 0px;
+    margin: 0px 22px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+.enterprise_modal .updrade-now .upgrade-now-btn, .updrade-now .upgrade-now-btn  {
+    width: 100%;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    font-family: 'PT Sans';
+    text-align: center;
+    background-image: linear-gradient(to right, #6de19b, #6ceedb);
+    padding: 2% 0px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+.supportinput:hover{
+    border:1px solid #FFCA00;
+}
+.supportinput:focus-within{
+    border: 1px solid rgba(14,19,24,.45);
+}
+.enterprise_modal .updrade-now .upgrade-now-btn:hover{
+    background: #FFCA00;
+    opacity: 1;
+}
+
+.supportinput{
+    margin:0;
+}
+.country_dropdown,.city_dropdown{
+    display:none;
+    width:235px;
+    max-height: 250px;
+    overflow-y: scroll;
+    position: absolute;
+    z-index: 99999;
+    background: #fff;
+    box-shadow: 0 10px 10px 2px rgb(0 0 0 / 5%);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top: 1px solid rgb(235, 235, 235);
+    padding: 10px;
+}
+.citylist,.countrylist{
+    cursor: pointer;
+}
+.activelocationcountrykey,.activelocationcitykey{
+    background-color: #F8F8F8;
+}
+    
+
+/* loading screen */
+.lds-animaker-overlay{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-color: rgba(0,0,0,0.25);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99997;
+}
+.lds-animaker {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+.lds-animaker div {
+    display: inline-block;
+    position: absolute;
+    left: 6px;
+    width: 13px;
+    background:olive;
+    animation: lds-animaker 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+    .lds-animaker div:nth-child(1) {
+    left: 6px;
+    animation-delay: -0.24s;
+    }
+    .lds-animaker div:nth-child(2) {
+    left: 26px;
+    animation-delay: -0.12s;
+    }
+    .lds-animaker div:nth-child(3) {
+    left: 45px;
+    animation-delay: 0;
+    }
+    @keyframes lds-animaker {
+    0% {
+        top: 6px;
+        height: 51px;
+    }
+    50%, 100% {
+        top: 19px;
+        height: 26px;
+    }
+    }
+
+.maskedMonthly{
+    pointer-events: none;
+}
+
+#enterprise_modal .enterpriseform_error{
+    font-size:14px;
+    color:#ff0000;
+    margin-bottom: 10px;
+}
+
+
+/* Login and register css */
+.signup_formInapp, .login_formInapp, .twofactorauth_formInapp{
+    width: 625px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    padding: 50px;
+    background-color:#fff;
+}
+.signup_header h1 , .login_header h1{
+    text-align: center;
+    font-size: 24px;
+    color: #2d2d2d;
+}
+
+.signup_formInapp .signup_body, .login_formInapp .login_body{
+    padding: 20px 0px;
+}
+
+.signup_body .register_username, .signup_body .register_email , .signup_body .register_password , .login_body .login_email , .login_body .login_password{
+    position: relative;
+    min-height: 60px;
+    display: inline-block;
+    border-bottom: 1px solid #e1e1e1;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0 20px 0;
+}
+
+.signup_body .register_username .name_field, .signup_body .register_email .email_field, .signup_body .register_password .password_field , .login_body .login_email .email_field, .login_body .login_password .password_field {
+    width: 100%;
+    height: 60px;
+    font-size: 18px;
+    border: none;
+    color: #54536c;
+    padding-left: 60px;
+    /* border-radius: 5px; */
+}
+.signup_body .register_username .username_icon, .signup_body .register_email .email_icon, .signup_body .register_password .password_icon , .login_body .login_email .email_icon, .login_body .login_password .password_icon {
+    position: absolute;
+    top: 18px;
+    left: 15px;
+    width: 24px;
+    height: 24px;
+}
+.signup_body .register_username .username_icon{
+    background-image: url(https://static.animaker.com/icons/name.svg);
+}
+.signup_body .register_email .email_icon, .login_body .login_email .email_icon{
+    background-image: url(https://static.animaker.com/icons/email-icon.svg);
+}
+
+.signup_body .register_password .password_icon, .login_body .login_password .password_icon{
+    background-image: url(https://static.animaker.com/imagesizes/password_icon.svg);
+}
+
+.signup_body .register_button , .login_body .login_button{
+    width: 100%;
+    font-size: 18px;
+    background-image: linear-gradient(to right, #503df9, #9e52f7);
+    color: white;
+    height: 50px;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    opacity: 0.8;
+    margin-top: 25px;
+    cursor:pointer;
+}
+
+.signup_body .social_area , .login_body .social_area {
+    text-align: center;
+    margin: 30px auto 0 auto;
+}
+.signup_body .social_area div, .login_body .social_area div{
+	display: inline-block;
+    margin-right: 10px;
+    cursor:pointer;
+}
+.signup_body .social_area img, .login_body .social_area img{
+    width: 40px;
+    height: 40px;
+}
+
+.signup_formInapp .footer_section p, .login_formInapp .footer_section p {
+    font-size: 18px;
+    color: #54536C;
+    text-align: center;
+}
+.signup_formInapp .sigin_errormsg {
+    font-size: 14px;
+    color: #ff0000;
+}
+.login_formInapp .login_errormsg , .twofactorapp_errormsg{
+    font-size: 14px;
+    color: #ff0000;
+}
+
+.g-signin2{
+    vertical-align: top;
+}
+.g-signin2 .abcRioButton{
+    box-shadow: none;
+}
+
+
+/* Downgrade  */
+
+.downgrade_popup_model .new-modal-body{
+    padding: 6% 10%;
+    border-bottom: 0px solid #e6e6e6;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-120px);
+    margin-bottom: -100px;
+}
+
+.downgrade_popup_model .downgrade_details_section , .downgrade_popup_model .cancelsubscription_details{
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 2px 1px 7px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+    color: #54536C;
+}
+.downgrade_details_section h2 , .cancelsubscription_details h2{
+    font-size: 18px;
+    font-weight: 600;
+}
+.downgrade_details_section .donwgrade_features ,.cancelsubscription_details .cancelsubscription_features{
+    /* display:flex;
+    align-items: center; */
+    padding: 10px 0;
+}
+.downgrade_details_section .donwgrade_features .listedmark_icon  ,.cancelsubscription_details .cancelsubscription_features .listedmark_icon{
+    width: 18px;
+    height: 18px;
+}
+.downgrade_details_section .donwgrade_features .donwgrade_features_text ,.cancelsubscription_details .cancelsubscription_features .cancelsubscription_features_text,.cancelsubscription_details .cancelsubscription_features .cancelsubscription_features_text1{
+    padding-left: 10px;
+    font-size: 16px;
+    color: #54536C;
+}
+.downgrade_details_section .decription_downgrade, .cancelsubscription_details .decription_cancelsubscription{
+    font-size: 14px;
+    color: #54536C;
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.cancel_subscription_to_lowerplan,.stay_in_currentplan_not_cancel , .downgrade_subscription_to_free , .downgrade_stay_in_currentplan , .switch_subscription_to_lowerplan, .stay_in_currentplan_not_cancel_in_step2{
+    margin: 10px 0;
+    width: 100%;
+    font-size: 15px;
+    color: #2D2D2D;
+    height: 40px;
+    text-align: center;
+    text-decoration: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #E8E8E8;
+    border-radius: 4px;
+}
+
+.switch_subscription_to_lowerplan{
+    color: #fff;
+}
+
+.cancel_subscription_to_lowerplan{
+    background: #FA4848;
+    color: white;
+}
+
+.cancel_subscription_to_free{
+    border: none;
+    background: none;
+    text-decoration: underline;
+    width: 100%;
+    font-size: 15px;
+    color: #2d2d2d;
+}
+
+.stay_in_currentplan_not_cancel:hover{
+    background: transparent linear-gradient(271deg, #6DE19B 0%, #6DE3A3 17%, #6CEEDB 88%, #6CEEDB 100%) 0% 0% no-repeat padding-box;
+    color: white;
+    border: none; 
+}
+
+
+#enterpriselicencedropdown .down_arrow,#enterpriseemployeedropdown .down_arrow,#enterprisedepartmentdropdown .down_arrow{
+    background-image: url(https://static.animaker.com/icons/down-arrow.svg);
+    position: absolute;
+    top: 13px;
+    right: 15px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.enterpriselicence_dropdown_block,.enterpriseemployee_dropdown_block,.enterprisedepartment_dropdown_block{
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -o-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    padding: 5px 0px;
+    z-index: 1;
+}
+.enterpriselicence_dropdown_block{
+    top: -40px;
+}
+
+.enterpriselicence_dropdown_block .enterpriselicence_dropdown_list,.enterpriseemployee_dropdown_block .enterpriseemployee_dropdown_list,.enterprisedepartment_dropdown_block .enterprisedepartment_dropdown_list{
+    padding: 5px 20px;
+    cursor: pointer;
+    position: relative;
+    border-left: 5px solid transparent;
+}
+.enterpriselicence_dropdown_block .enterpriselicence_dropdown_list.selected_licenses,.enterpriseemployee_dropdown_block .enterpriseemployee_dropdown_list.selected_employees,.enterprisedepartment_dropdown_block .enterprisedepartment_dropdown_list.selected_department{
+    border-left: 5px solid #ffc524;
+    background: #EBECF0;
+}
+
+
+#total_membersCost_splitUp .price_highlightshow{
+    font-size: 17px;
+}
+
+
+@media only screen and (max-height: 680px) {
+    .supportinput{
+        margin: unset;
+    }
+}
+
+/* Zoom Popup */
+.zoomvideo_recordingdetails{
+    display: block;
+    font-family: 'PT Sans';
+    width: 700px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-position: bottom;
+    overflow: hidden;
+    background-size: contain;
+    background-repeat: no-repeat;
+    line-height: 1.42857143;
+}
+.zoomvideo_recordingdetails .new-modal-header{
+    padding: 15px 0;
+    text-align: center;
+    background-image: linear-gradient(to right, #a07ceb,#7f6fec);
+    position: relative;
+}
+.zoomvideo_recordingdetails .modal-body-text{
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+.zoomvideo_recordingdetails .close{
+    background-image: url(https://static.animaker.com/icons/clear_normal.svg);
+    width: 17px;
+    height: 17px;
+    opacity: 1;
+    right: 5px;
+    position: absolute;
+    top: 5px;
+    cursor: pointer;
+}
+
+.zoomvideo_recordingdetails .new-modal-body{
+    padding: 25px;
+}
+
+.zoom_header{
+    font-size: 14px;
+    color: #54536E;
+    display: flex;
+    align-items: center;
+}
+
+.zoomvideo_recordingdetails .search_dash_hover{
+    display: inline-block;
+    margin-left: auto;
+    cursor: pointer;
+    position: relative;
+}
+.zoomvideo_recordingdetails .search_dash_hover .zoomsearch_icon{
+    background-image: url(https://static.animaker.com/icons/zoom_search.svg);
+    position: absolute;
+    right: 0;
+    top: -8px;
+    width: 20px;
+    height: 20px;
+    transition: right 0.5s;
+    -webkit-transition: right 0.5s;
+}
+
+.zoomvideo_recordingdetails .search_dash_hover .search_zoomrecordings_more{
+    width: 100%;
+    padding-left: 50px;
+    color: #54536C;
+    /* border-radius: 5px; */
+    border: none;
+    /* border-bottom: 2px solid #f1f1f1; */
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    -webkit-transition:opacity 0.5s; /* Safari 3.1 to 6.0 */
+    }
+
+.zoomvideo_recordingdetails .recordinglist{
+    margin-top: 20px;
+    padding: 0 15px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    align-items: center;
+    background-color: #F3F4F8;
+    grid-column-gap: 15px;
+    max-height:320px;
+    overflow-y: scroll;
+}
+.zoomvideo_recordingdetails .manage1,.zoomvideo_recordingdetails .manage2,.zoomvideo_recordingdetails .manage3,.zoomvideo_recordingdetails .manage4,.zoomvideo_recordingdetails .manage5,.zoomvideo_recordingdetails .manage6{
+    font-size: 12px;
+    color: #D0D0D0;
+    text-align: center;
+    padding: 10px 0px;
+}
+.zoomvideo_recordingdetails .manage7,.zoomvideo_recordingdetails .manage8,.zoomvideo_recordingdetails .manage9,.zoomvideo_recordingdetails .manage10,.zoomvideo_recordingdetails .manage11,.zoomvideo_recordingdetails .manage12{
+    margin: 10px 0px;
+}
+
+.zoomvideo_recordingdetails .manage9,.zoomvideo_recordingdetails .manage10,.zoomvideo_recordingdetails .manage11,.zoomvideo_recordingdetails .manage12{
+    font-size: 12px;
+    color: #54536E;
+    text-align: center;
+}
+.zoomvideo_recordingdetails .manage8{
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.zoomvideo_recordingdetails .zoomrecordings-footer{
+    padding: 20px 0 40px 0;
+}
+.zoomvideo_recordingdetails .importzoomvideo{
+    float: right;
+    font-size: 12px;
+    color: #fff;
+    background: #F1821E;
+    padding: 6px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Upload status popup */
+.zoomvideo_recordingdetails .zoomvideouploadstatus{
+    margin-top: 20px;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    background-color: #F3F4F8;
+    grid-column-gap: 15px;
+    max-height:320px;
+    overflow-y: scroll;
+    grid-row-gap: 20px;
+}
+
+
+#zoom-videouploadstatus .statusprogress2{
+    width: 100px;
+    height: 10px;
+    border-radius: 8px;
+    background-color: #ececec;
+    position: relative;
+}
+
+#zoom-videouploadstatus .statusprogress2 .zoomvideouploadstatusprogressbar{
+    height: 100%;
+    -webkit-border-top-right-radius: 8px;
+    -webkit-border-bottom-right-radius: 8px;
+    -moz-border-radius-topright: 8px;
+    -moz-border-radius-bottomright: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: rgb(43,194,83);
+    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(43,194,83)), color-stop(1, rgb(84,240,84)) );
+    background-image: -moz-linear-gradient( center bottom, rgb(43,194,83) 37%, rgb(84,240,84) 69% );
+    -webkit-box-shadow: inset 0 2px 9px rgba(255,255,255,0.3), inset 0 -2px 6px rgba(0,0,0,0.4);
+    -moz-box-shadow: inset 0 2px 9px rgba(255,255,255,0.3), inset 0 -2px 6px rgba(0,0,0,0.4);
+    box-shadow: inset 0 2px 9px rgba(255,255,255,0.3), inset 0 -2px 6px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+/* Zoom month and year dropdown */
+
+#zoommonthlydropdown .select_zoom_month, #zoomyearlydropdown .select_zoom_yearly{ 
+    width: 80px;
+    height: 34px;
+    padding: 0px 10px;
+    border: 1px solid rgba(14,19,24,.2);
+    border-radius: 5px;
+  }
+  
+  #zoommonthlydropdown .up_arrow_zoom_monthly, #zoomyearlydropdown .up_arrow_zoom_monthly {
+    background-image: url(https://static.animaker.com/icons/down-arrow.svg);
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    transform: rotate(180deg);
+    cursor: pointer;
+  }
+  #zoommonthlydropdown .down_arrow_zoom_monthly, #zoomyearlydropdown .down_arrow_zoom_monthly{
+    background-image: url(https://static.animaker.com/icons/down-arrow.svg);
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+  .zoommonthly_dropdown_block,.zoomyearly_dropdown_block{
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    -o-box-shadow: 0 0 10px rgba(0,0,0,0.10);
+    padding: 5px 0px;
+    z-index: 1;
+  }
+  
+  .zoommonthly_dropdown_block .zoommonthly_dropdown_list, .zoomyearly_dropdown_block .zoomyearly_dropdown_list{
+    padding:2px 15px;
+    cursor: pointer;
+    position: relative;
+  }
+  .zoommonthly_dropdown_block .zoommonthly_dropdown_list:hover, .zoomyearly_dropdown_block .zoomyearly_dropdown_list:hover{
+    background: #EBECF0;
+  }
+  
+  .zoommonthly_dropdown_block .zoommonthly_dropdown_list .select_checkmark_zoom, .zoomyearly_dropdown_block .zoomyearly_dropdown_list .select_checkmark_zoom{
+    display: none;
+    background-image: url(https://static.animaker.com/icons/Tick.svg);
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+  }
+  .zoommonthly_dropdown_block .selected_zoommonthly .select_checkmark_zoom, .zoomyearly_dropdown_block .selected_zoomyearly .select_checkmark_zoom{
+    display: block;
+  }
+
+  /* End of zoom dropdown */
+
+.left-arrow-prevzoommonth{
+    display: inline-block;
+    color: #3289C7;
+    margin-left: 20px;
+    width: 15px;
+    height: 15px;
+    background-image: url(https://static.animaker.com/icons/back.png);
+    background-position: left;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.right-arrow-nextzoommonth{
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    background-image: url(https://static.animaker.com/icons/front.png);
+    background-position: center;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    transition: 0.15s ease all;
+    cursor: pointer;
+}
+
+
+/* Video popup code */
+
+/* The Modal (background) */
+ #commonplayvideopopup{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    /* padding-top: 100px;  */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  }
+
+/* Modal Content */
+ #commonplayvideopopup .playvideopopup_content{ 
+    /* margin: auto; */
+    position: relative;
+    width: 766px;
+    /* height: 687.5px; */
+    height: 406px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+  }
+  
+  
+#commonplayvideopopup .playvideopopup_content .close_preview_playerPopup{
+    position: absolute;
+    right:10px;
+    top:0;
+    cursor: pointer;
+  }
+  
+  #commonplayvideopopup .playvideopopup_content .playvideopopup_body{
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+  }
+  
+  #commonplayvideopopup .playvideopopup_content .playvideopopup_body iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+
+  /* slide tutorial popup */
+
+  #slideplayvideopopup{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  #slideplayvideopopup .playvideopopup_content{ 
+    margin:0;
+    position:relative;
+    width: 766px;
+    height: 450px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
+  }
+  
+  
+  #slideplayvideopopup .playvideopopup_content .close_preview_playerPopup{
+    position: absolute;
+    right:10px;
+    top:0;
+    cursor: pointer;
+  }
+  
+  
+  #slideplayvideopopup .playvideopopup_content .playvideopopup_body{
+    padding: 0;
+    overflow: hidden;
+    height: 90%;
+    position: relative;
+  }
+  
+  
+  #slideplayvideopopup .playvideopopup_content .playvideopopup_body iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #slideplayvideopopup .playvideopopup_content .playvideopopup_footer {
+    height: 10%;
+    padding:10px 20px;
+  }
+  
+  #slideplayvideopopup .playvideopopup_content .playvideoproject_name{
+    font-family: Pt sans;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d2d2d;
+  }
+  
+  
+  #slideplayvideopopup .playvideopopup_content button{
+    display: inline-block;
+    float: right;
+    padding:8px 50px;
+    background: linear-gradient(to right, #7465FD, #AC74FB);
+    color: #ffffff;
+    font-family: Pt sans;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+  }
+
+  @media only screen and (max-width: 768px){
+
+    .upgradePayment_free_popup, .upgradePayment_starter_popup, .upgradePayment_pro_popup, .upgradePlan_model, .downgrade_popup_model{
+        width: 350px;
+    }
+    .upgradePayment_starter_popup .new-modal-body, .upgradePayment_pro_popup .new-modal-body{
+        padding: 50px 3% 30px;
+    }
+    .anim-new-modal .pricing_details_section{
+        padding:0 !important;
+    }
+    .upgradePayment_starter_popup .pricing_business_section, .upgradePayment_pro_popup .pricing_business_section{
+        padding: 35px 20px;
+    }
+
+  }
+
+  
+
+  @media only screen and (max-width: 580px) {
+    .upgradePlan_model{
+        width: 355px;
+    }
+    .upgradePlan_model .new-modal-header{
+        padding: 18px 0 0 0;
+        height: 70px;
+    }
+    .yearly-details{
+        padding: 0 10px;
+    }
+    .upgradePlan_model .new-modal-body{
+        padding: 3% 5%;
+    }
+    .date_section{
+      width:48%;
+    }
+    .upgradePlan_model .coupen_code_val_input{
+        float:right;
+        width:150px;
+    }
+    .upgradePlan_model .yearly_plan{
+        width:100%;
+    }
+    .upgradePlan_model .yearly_plan .selected-plan{padding-right:0;}
+    .purchase_icon{width:15%;}
+    .total_cost_purchase{padding:10px 0}
+    .total_member_cost span{
+        float:left;
+    }
+    .note-description{
+        text-align: center;
+    }
+    .cost_per_member{
+        display: inline-block;
+        vertical-align: middle;
+        width: 72%;
+    }
+    .enterprise_modal .updrade-now .upgrade-now-btn, .updrade-now .upgrade-now-btn{background: linear-gradient(45deg, #F25EAB 0%, #F9BA69 100%);}
+  }

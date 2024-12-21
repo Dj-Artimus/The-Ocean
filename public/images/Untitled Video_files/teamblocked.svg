@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="111.5" height="111.5" viewBox="0 0 111.5 111.5">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_12577" data-name="Rectangle 12577" width="62.41" height="62.41" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_59062" data-name="Group 59062" transform="translate(-585 -151)">
+    <circle id="Ellipse_5918" data-name="Ellipse 5918" cx="55" cy="55" r="55" transform="translate(585 151)" fill="#fff7dd"/>
+    <g id="Group_59057" data-name="Group 59057" transform="translate(663.278 229.279)">
+      <path id="Path_84929" data-name="Path 84929" d="M97.368,57.987A15.861,15.861,0,1,1,81.507,42.126,15.861,15.861,0,0,1,97.368,57.987Z" transform="translate(-65.646 -42.126)" fill="#ffdbde" stroke="#ff4857" stroke-width="3"/>
+      <line id="Line_2782" data-name="Line 2782" x1="20" y2="20" transform="translate(5.861 5.861)" fill="none" stroke="#ff4857" stroke-linecap="round" stroke-width="3.4"/>
+    </g>
+    <g id="Group_59061" data-name="Group 59061" transform="translate(611 177)">
+      <g id="Group_59060" data-name="Group 59060" transform="translate(-2 -2)" clip-path="url(#clip-path)">
+        <path id="Path_84936" data-name="Path 84936" d="M36.189,18.078a9.444,9.444,0,1,1-9.443,9.443A9.443,9.443,0,0,1,36.189,18.078Z" transform="translate(-5.703 -3.296)" fill="none" stroke="#ffc300" stroke-width="4"/>
+        <path id="Path_84939" data-name="Path 84939" d="M36.189,18.078a9.444,9.444,0,1,1-9.443,9.443A9.443,9.443,0,0,1,36.189,18.078Z" transform="translate(-5.703 -3.296)" fill="#faebff" stroke="#ffc300" stroke-width="4"/>
+        <path id="Path_84937" data-name="Path 84937" d="M16.963,65.33c2.972-7.595,9.575-12.877,17.236-12.877A16.547,16.547,0,0,1,41.793,54.3" transform="translate(-2.986 -12.841)" fill="none" stroke="#ffc300" stroke-width="4"/>
+        <path id="Path_84938" data-name="Path 84938" d="M30.289,54.3a16.538,16.538,0,0,1,7.595-1.849c7.66,0,14.264,5.283,17.236,12.878" transform="translate(-6.686 -12.841)" fill="none" stroke="#ffc300" stroke-width="4"/>
+        <circle id="Ellipse_5919" data-name="Ellipse 5919" cx="27.624" cy="27.624" r="27.624" transform="translate(3.582 3.581)" fill="none" stroke="#ffc300" stroke-width="4"/>
+      </g>
+    </g>
+  </g>
+</svg>

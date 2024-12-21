@@ -1,0 +1,16 @@
+<svg id="icons8-mastercard" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="27.033" height="18.431" viewBox="0 0 27.033 18.431">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.418" y1="45.202" x2="0.608" y2="46.198" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00b3ee"/>
+      <stop offset="1" stop-color="#0082d8"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fede00"/>
+      <stop offset="1" stop-color="#ffd000"/>
+    </linearGradient>
+  </defs>
+  <path id="Path_83791" data-name="Path 83791" d="M27.266,9H3.766A1.766,1.766,0,0,0,2,10.766v14.9a1.766,1.766,0,0,0,1.766,1.766h23.5a1.766,1.766,0,0,0,1.766-1.766v-14.9A1.766,1.766,0,0,0,27.266,9Z" transform="translate(-2 -9)" fill="url(#linear-gradient)"/>
+  <circle id="Ellipse_5859" data-name="Ellipse 5859" cx="6.176" cy="6.176" r="6.176" transform="translate(3.072 3.072)" fill="#cf1928"/>
+  <circle id="Ellipse_5860" data-name="Ellipse 5860" cx="6.176" cy="6.176" r="6.176" transform="translate(11.059 3.072)" fill="url(#linear-gradient-2)"/>
+  <path id="Path_83792" data-name="Path 83792" d="M20,21.1a6.16,6.16,0,0,0,2.183,4.707,6.167,6.167,0,0,0,0-9.415A6.16,6.16,0,0,0,20,21.1Z" transform="translate(-8.941 -11.85)" fill="#d97218"/>
+</svg>

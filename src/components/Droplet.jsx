@@ -18,7 +18,7 @@ import { UIStore } from "@/store/UIStore";
 import Button from "./Button";
 import DropletLoader from "./DropletLoader";
 import { useRouter } from "next/navigation";
-import { getTime } from "@/utils/TimeAndCountFormater";
+import { formatCount, getTime } from "@/utils/TimeAndCountFormater";
 import Image from "next/image";
 import ContentAndMediaElement from "./ContentAndMediaElement";
 
@@ -40,7 +40,6 @@ const Droplet = ({
   redrops,
 }) => {
   const {
-
     rippleDrawerOpen,
     setIsRippleDrawerOpen,
 
@@ -162,11 +161,7 @@ const Droplet = ({
 
   useEffect(() => {
     checkIsDropletRippled(droplet_id);
-  }, [
-    ripplesRefreshId, isRippleInitiated,
-    checkIsDropletRippled,
-    droplet_id,
-  ]);
+  }, [ripplesRefreshId, isRippleInitiated, checkIsDropletRippled, droplet_id]);
 
   useEffect(() => {
     if (!rippleDrawerOpen && isRippleInitiated) {
@@ -353,7 +348,7 @@ const Droplet = ({
                 />
               )}
             </Button>
-            <h1>{stars}</h1>
+            <h1>{formatCount(stars)}</h1>
           </div>
 
           {oceanVision && (
@@ -368,7 +363,7 @@ const Droplet = ({
                   title="Repost"
                 />
               </Button>
-              <h1> {redrops} </h1>
+              <h1> {formatCount(redrops)} </h1>
             </div>
           )}
           <div className="flex items-center gap-1">
@@ -400,7 +395,7 @@ const Droplet = ({
                 />
               )}
             </Button>
-            <h1> {ripples} </h1>
+            <h1> {formatCount(ripples)} </h1>
           </div>
           <Button
             onClick={() => {

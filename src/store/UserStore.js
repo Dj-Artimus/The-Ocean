@@ -403,7 +403,6 @@ export const UserStore =
                             set({
                                 anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
                             });
-                            console.log('Anchorings fetched successfully', data)
 
                             return data;
                         }

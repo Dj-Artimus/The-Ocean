@@ -14,6 +14,8 @@ import {
 import { useRouter } from "next/navigation";
 import { UserStore } from "@/store/UserStore";
 import { UIStore } from "@/store/UIStore";
+import '../globals.css';
+import { Cyclone } from "@mui/icons-material";
 
 const countries = [
   { code: "US", name: "United States" },
@@ -157,13 +159,13 @@ const CreateProfile = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center bg-gray-100 dark:bg-d_foreground p-4">
+    <div className="w-full h-screen flex justify-center items-center bg-gray-100 dark:bg-d_foreground p-4">
       {isLoadingPage ? (
         <div className="w-full h-full flex justify-center items-center bg-transparent">
           <CircularProgress />
         </div>
       ) : (
-        <div className="w-full max-w-md bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
+        <div className="w-full max-w-md max-h-[80%] overflow-x-hidden overflow-y-auto customScrollbar bg-white dark:bg-d_primary rounded-lg shadow-md dark:shadow-sm p-6 shadow-blue-300 dark:shadow-blue-800">
           <div className="mb-6">
             <Typography
               variant="h4"
@@ -403,7 +405,11 @@ const CreateProfile = () => {
                 fullWidth
                 className="bg-blue-600 !text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 !rounded-xl !py-2 text-md"
               >
-                Save Profile
+                {isSubmiting ? (
+                  <Cyclone className="animate-spin" />
+                ) : (
+                  "Save Profile"
+                )}
               </Button>
             </form>
           </div>

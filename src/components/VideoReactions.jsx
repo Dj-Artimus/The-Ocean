@@ -13,6 +13,7 @@ import {
 } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "./Button";
+import { formatCount } from "@/utils/TimeAndCountFormater";
 
 const VideoReactions = ({ video }) => {
   const {
@@ -174,7 +175,7 @@ const VideoReactions = ({ video }) => {
             <StarOutlineRounded className="size-[33px] translate-x-2" />
           )}
         </Button>
-        <h1> {video?.stars} </h1>
+        <h1> {formatCount(video?.stars)}</h1>
       </div>
       {oceanVision && (
         <div className="flex items-center gap-1">
@@ -182,7 +183,7 @@ const VideoReactions = ({ video }) => {
             className="size-7 cursor-pointer hover:scale-110 active:scale-95"
             title="Repost"
           />
-          <h1> {video?.redrops} </h1>
+          <h1> {formatCount(video?.redrops)} </h1>
         </div>
       )}
 
@@ -204,7 +205,7 @@ const VideoReactions = ({ video }) => {
             <AssistantOutlined className="size-7" title="Comment" />
           )}
         </Button>
-        <h1>{video?.ripples}</h1>
+        <h1>{formatCount(video?.ripples)}</h1>
       </div>
       <Button
         onClick={() => {

@@ -53,7 +53,7 @@ const Anchorings = () => {
 
   useEffect(() => {
     getAnchorings();
-  }, [getAnchorings]);
+  }, []);
 
   useEffect(() => {
     setScrollListener(oceanitesRef, handleScroll);

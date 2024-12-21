@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_10782" data-name="Rectangle 10782" width="24" height="24" transform="translate(-318 578)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_86" data-name="Mask Group 86" transform="translate(318 -578)" clip-path="url(#clip-path)">
+    <g id="Group_56669" data-name="Group 56669" transform="translate(2500.287 -836.482)">
+      <g id="Group_56663" data-name="Group 56663" transform="translate(-2814.27 1427.268)">
+        <path id="Path_60582" data-name="Path 60582" d="M-2806.15,1427.747c-4.4,0-8.12,3.435-8.12,5.593,0,2.5,4.057,3.622,8.078,3.622s8.078-1.12,8.078-3.622C-2798.113,1431.129-2801.714,1427.747-2806.15,1427.747Zm-.042,7.455c-4.207,0-6.319-1.194-6.319-1.863,0-.927,2.639-3.83,6.361-3.83,3.493,0,6.278,2.753,6.278,3.83,0,.667-2.111,1.861-6.319,1.861Z" transform="translate(2814.27 -1427.747)" fill="#8796c1"/>
+      </g>
+      <g id="Group_56667" data-name="Group 56667" transform="translate(-2811.027 1416.482)">
+        <g id="Group_56664" data-name="Group 56664">
+          <circle id="Ellipse_4300" data-name="Ellipse 4300" cx="4.926" cy="4.926" r="4.926" transform="translate(0 0)" fill="none"/>
+        </g>
+        <g id="Group_56665" data-name="Group 56665">
+          <path id="Path_60583" data-name="Path 60583" d="M-2805.957,1426.334a4.931,4.931,0,0,1-4.926-4.926,4.931,4.931,0,0,1,4.926-4.926,4.932,4.932,0,0,1,4.926,4.926A4.93,4.93,0,0,1-2805.957,1426.334Zm0-8.224a3.3,3.3,0,0,0-3.3,3.3,3.3,3.3,0,0,0,3.3,3.3,3.3,3.3,0,0,0,3.3-3.3A3.3,3.3,0,0,0-2805.957,1418.11Z" transform="translate(2810.883 -1416.482)" fill="#8796c1"/>
+        </g>
+        <g id="Group_56666" data-name="Group 56666">
+          <path id="Path_60584" data-name="Path 60584" d="M-2805.957,1418.11a3.3,3.3,0,0,0-3.3,3.3,3.3,3.3,0,0,0,3.3,3.3,3.3,3.3,0,0,0,3.3-3.3A3.3,3.3,0,0,0-2805.957,1418.11Z" transform="translate(2810.883 -1416.482)" fill="rgba(135,150,193,0.3)"/>
+        </g>
+      </g>
+      <g id="Group_56668" data-name="Group 56668" transform="translate(-2814.27 1427.268)">
+        <path id="Path_60585" data-name="Path 60585" d="M-2806.192,1435.2c-4.207,0-6.319-1.194-6.319-1.863,0-.927,2.639-3.83,6.361-3.83,3.493,0,6.278,2.753,6.278,3.83,0,.667-2.111,1.861-6.319,1.861Z" transform="translate(2814.27 -1427.747)" fill="rgba(135,150,193,0.3)"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -20,6 +20,8 @@ import PageLoader from "@/components/PageLoader";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import OceanVisionModal from "@/components/OceanVisionModal";
 import { CommunicationStore } from "@/store/CommunicationStore";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { NavigationStore } from "@/store/NavigationStore";
 
 const ReactLayout = ({ children }) => {
   const {
@@ -37,6 +39,11 @@ const ReactLayout = ({ children }) => {
     updateOnlineStatus,
   } = UserStore();
 
+  const pathname = usePathname();            // Get the current pathname
+  const searchParams = useSearchParams();    // Get query parameters from the URL
+  const router = useRouter();                // Get the Next.js router (useRouter from next/navigation)
+
+  const { history, currentIndex, AddPageToHistory, GoBack, GoForward } =  NavigationStore();
   const {    subscribeToMessages,} = CommunicationStore()
 
   useEffect(() => {
@@ -108,6 +115,59 @@ const ReactLayout = ({ children }) => {
       if (messagesChannel) messagesChannel.unsubscribe();
     };
   }, [subscribeToMessages]);
+
+
+    // Add page to history when navigating
+    useEffect(() => {
+      const page = {
+        pathname,
+        query: Object.fromEntries(searchParams.entries()),  // Converts searchParams to an object
+      };
+      AddPageToHistory(page);
+    }, [pathname, searchParams, AddPageToHistory]);
+  
+    // Handle browser popstate event (back/forward buttons)
+    useEffect(() => {
+      const onPopState = () => {
+        if (history.length > 0) {
+          if (currentIndex > 0) {
+            GoBack();
+            router.push(history[currentIndex - 1].pathname);  // Use router.push for navigation
+          } else {
+            router.push('/');  // Fallback to home page if history is empty
+          }
+        }
+      };
+  
+      window.addEventListener('popstate', onPopState);
+  
+      return () => {
+        window.removeEventListener('popstate', onPopState);
+      };
+    }, [history, currentIndex, GoBack, router]);
+  
+    // Handle custom mobile back button behavior for PWAs (standalone mode)
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const handleMobileBackButton = (event) => {
+          // Prevent app exit or closing on back press
+          event.preventDefault();
+          if (history.length > 1 && currentIndex > 0) {
+            GoBack();
+            router.push(history[currentIndex - 1].pathname);  // Use router.push for navigation
+          } else {
+            router.push('/');  // Navigate to home if history is empty
+          }
+        };
+  
+        // On Android in standalone mode (PWA), listen for back button
+        window.addEventListener('popstate', handleMobileBackButton);
+  
+        return () => {
+          window.removeEventListener('popstate', handleMobileBackButton);
+        };
+      }
+    }, [history, currentIndex, GoBack, router]);
 
   return (
     <ErrorBoundary>

@@ -18,6 +18,7 @@ import { UserStore } from "@/store/UserStore";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { UIStore } from "@/store/UIStore";
+import { formatCount } from "@/utils/TimeAndCountFormater";
 
 const OceaniteCard = ({
   oceaniteData,
@@ -38,7 +39,7 @@ const OceaniteCard = ({
     anchoringsIds,
     setOceaniteProfileData,
   } = UserStore();
-  const { oceanVision } = UIStore()
+  const { oceanVision } = UIStore();
   const [isAnchoring, setIsAnchoring] = useState(false);
 
   const handleAnchor = async (anchoring_id) => {
@@ -89,10 +90,14 @@ const OceaniteCard = ({
                     <span className="font-sans text-[15px]">@</span>
                     {username}
                   </h1>
-                  <span className="mx-1 text-slate-500 xs:hidden xs3:block">
-                    •
-                  </span>
-                  {getPlatformIcon(platform)}
+                  {platform && (
+                    <>
+                      <span className="mx-1 text-slate-500 xs:hidden xs3:block">
+                        •
+                      </span>
+                      {getPlatformIcon(platform)}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -140,26 +145,26 @@ const OceaniteCard = ({
             <div className="flex justify-between w-full items-center">
               <div className="xs1:flex justify-center gap-1 p-1 rounded-xl text-blue-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary w-full hover:text-blue-400">
                 <Anchor />
-                <h1 className="-mb-1">{anchors}</h1>
+                <h1 className="-mb-1">{formatCount(anchors)}</h1>
               </div>
               <div className="xs1:flex justify-center gap-2 p-1 rounded-xl text-blue-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary w-full hover:text-blue-400">
                 <SailingRounded />
-                <h1 className="-mb-1">{anchorings}</h1>
+                <h1 className="-mb-1">{formatCount(anchorings)}</h1>
               </div>
             </div>
             <span className="text-slate-600"> • </span>
             <div className="flex justify-center gap-2 items-center w-full">
               <Cyclone sx={{ width: "26px", height: "26px" }} />
 
-              {
-                oceanVision && <>
+              {oceanVision && (
+                <>
                   <LinkedIn sx={{ width: "26px", height: "26px" }} />
                   <Instagram sx={{ width: "26px", height: "26px" }} />
                   <Facebook sx={{ width: "26px", height: "26px" }} />
                   <X />
                   <YouTube sx={{ width: "26px", height: "26px" }} />
                 </>
-              }
+              )}
             </div>
           </div>
         </div>

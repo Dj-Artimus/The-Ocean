@@ -8,11 +8,12 @@ export const setInfiniteScroll =
       const { scrollTop, scrollHeight, clientHeight } = element;
       if (
         hasMore &&
-        clientHeight + 100 < scrollHeight &&
-        scrollTop + clientHeight >= scrollHeight - 100
+        scrollTop + clientHeight >= scrollHeight - 100 &&
+        !isLoading
       ) {
-        if (page > 1 && !isLoading) await dataFetcher();
+        await dataFetcher();
       }
+
     }
   }, 300)
 

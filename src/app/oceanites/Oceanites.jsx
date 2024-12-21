@@ -53,7 +53,7 @@ const OceaniteAtolls = () => {
 
   useEffect(() => {
     getOceanites();
-  }, [getOceanites]);
+  }, []);
 
   useEffect(() => {
     setScrollListener(oceanitesRef, handleScroll);

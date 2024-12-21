@@ -381,6 +381,61 @@ export const DropletStore = create(
             })
         },
 
+        GetUnFeedDroplets: async (page = 1, limit = 5) => {
+            try {
+                const getFeedCount = async () => {
+                    const { count } = await supabase.schema("Ocean").from("Droplet").select('*', { count: 'exact' });
+                    return count;
+                }
+
+                const getFeed = async (lastDroplet) => {
+                    const offset = (page - 1) * limit;
+                    const { data, error } = await supabase.schema("Ocean").from("Droplet").select('*,user_id(*)').order('created_at', { ascending: false }).range(offset, lastDroplet ? lastDroplet : (offset + limit - 1));
+                    if (error || !data) {
+                        console.log('No Profile found');
+                        return null;
+                    }
+
+                    const existingDroplets = get().feedDroplets;
+                    const newDroplets = data.filter(
+                        (droplet) => !existingDroplets.some((existing) => existing.id === droplet.id)
+                    );
+
+                    // Fisher-Yates Shuffle Algorithm
+                    const shuffleDroplets = (array) => {
+                        for (let i = array?.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1)); // Random index
+                            [array[i], array[j]] = [array[j], array[i]]; // Swap
+                        }
+                        return array;
+                    };
+
+                    const shuffledDroplets = shuffleDroplets(newDroplets);
+
+                    set({
+                        feedDroplets: [...existingDroplets, ...shuffledDroplets], // Append new droplets
+                        // feedDroplets: data,
+                        // feedDroplets: [ ...get().feedDroplets, ...data],
+                        dropletsData: data,
+                        isFeedDropletsFetched: true,
+                    });
+
+                    return data;
+                }
+
+                const data = await getFeed();
+
+                if (data.length === 0) {
+                    const count = await getFeedCount();
+                    const data = await getFeed(count - 1);
+                    return data;
+                }
+                return data;
+            } catch (error) {
+                return console.log(error);
+            }
+        },
+
         GetFeedDroplets: async (page = 1, limit = 5) => {
             try {
                 const getFeedCount = async () => {

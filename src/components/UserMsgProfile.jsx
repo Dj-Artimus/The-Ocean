@@ -64,11 +64,11 @@ const UserMsgProfile = ({ profile_id, avatar_url, name, wave }) => {
             )}
           </div>
         </CustomizedBadges>
-        <div className="mx-1 leading-snug mt-[2px] hidden xs:block max-w-96">
-          <div className="flex justify-center flex-col truncate w-full">
+        <div className="mx-1 leading-snug mt-[2px] hidden xs:block">
+          <div className="flex justify-center flex-col w-full">
             {/* <div className="flex justify-center flex-col truncate xs:w-[40vw] xs2:w-[45vw] xs3:w-[50vw] xs4:w-[58vw] xs5:w-[62vw] xs6:w-[70vw] sm:w-[45vw]  md:w-[35vw] lg:w-[19vw] xl:w-[13vw]"> */}
-            <h1 className="font-semibold leading-non truncate">{name}</h1>
-            <p className="text-[14px] truncate">{wave}</p>
+            <h1 className="font-semibold leading-non ">{name}</h1>
+            <p className="text-[14px] line-clamp-1 ">{wave}</p>
             {/* <h1 className="text-text_clr2 dark:text-d_text_clr2">4h ago</h1> */}
           </div>
         </div>

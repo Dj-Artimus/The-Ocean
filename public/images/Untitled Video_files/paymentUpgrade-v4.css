@@ -1,0 +1,3378 @@
+/* ANIMAKER GRID STARTS */
+/* PAYMENT POPUP CSS */
+:root {
+    --anim-gutter-x: 1.5rem;
+    --anim-gutter-x: 1rem;
+    
+}
+
+body {
+    margin: 0;
+}
+.upi-icon{
+    width: 55px;
+    height: 19px;
+}
+.pricingPopup .upi-icon{
+    width: auto;
+    height: 25px;
+    display: block;
+    margin-left: auto;
+    padding: 0;
+}
+
+
+.subscription-header-container span {
+    display: block;
+    text-align: left !important;
+    font: normal normal normal 15px/12px 'PT Sans', sans-serif !important;
+    letter-spacing: 0px !important;
+    color: #54536E !important;
+    opacity: 1;
+    margin-bottom: 15px;
+    margin-left: 3px !important;
+}
+
+.fixed-height{
+    height: 100vh;
+}
+
+.overflow-fixed{
+    height: 100vh;
+    overflow: scroll;
+}
+
+.anim-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.anim-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: calc(var(--anim-gutter-x) * -.5);
+    margin-right: calc(var(--anim-gutter-x) * -.5);
+}
+
+.anim-col {
+    flex-basis: 100%;
+    padding-right: calc(var(--anim-gutter-x) * .5);
+    padding-left: calc(var(--anim-gutter-x) * .5);
+}
+
+.anim-row.gx-0 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.rightcontainer.payment-upgrade-section .anim-row.gx-0 {
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+}
+
+.just-cont-end {
+    justify-content: flex-end;
+    display: flex;
+}
+
+.just-cont-center {
+    justify-content: center;
+    display: flex;
+}
+
+.choose-plan {
+    padding: 35px 40px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    height: 635px;
+}
+
+.pricing-summary,
+.pricing-comparison {
+    /* margin-top:60px; */
+}
+
+div.stock-grapic-section {
+    /* border-radius: 8px 0px 0px 8px; */
+    padding: 25px;
+}
+
+div.stock-grapic-bg {
+    background: transparent linear-gradient(153deg, #C790FA 0%, #60B0FF 100%) 0% 0% no-repeat padding-box;
+}
+
+.stock-grapic-bg.aipoweredanimationpro{
+    background: transparent linear-gradient(135deg, #503DF9 0%, #9E52F7 100%) 0% 0% no-repeat padding-box;
+    border-radius: 8px 0px 0px 8px;
+    opacity: 1;
+}
+
+div.stock-grapic-bg.wbupgradedashboard,
+div.stock-grapic-bg.wbupgrademoment,
+div.stock-grapic-bg.wbcharacterbuilder,
+div.stock-grapic-bg.wbupgradelibrary,
+div.stock-grapic-bg.wbupgradeproject{
+    /* padding: 0; */
+    background: transparent linear-gradient(180deg, #F8FEFF 0%, #EFFAFC 58%, #C3E8F0 100%) 0% 0% no-repeat padding-box;
+}
+.payment-upgrade-section h1.graphic-header.wbupgradedashboard,
+.payment-upgrade-section h1.graphic-header.wbupgrademoment,
+.payment-upgrade-section h1.graphic-header.wbcharacterbuilder,
+.payment-upgrade-section h1.graphic-header.wbupgradelibrary,
+.payment-upgrade-section h1.graphic-header.wbupgradeproject{
+    color:#141212;
+    margin: 30px 10px 20px 10px;
+}
+
+.stock-grapic-bg:has(.voiceapp),.stock-grapic-bg:has(.voiceapp),.stock-grapic-bg:has(.stickerify),.stock-grapic-bg:has(.bgremove){
+    display: flex;
+    align-items: center;
+  }
+
+div.stock-grapic-bg:has(.premiumAssets){
+    background: url('../img/popup-music-tracks-bg.svg'),transparent linear-gradient(153deg, #C790FA 0%, #60B0FF 100%) 0% 0% no-repeat padding-box;
+    background-position: bottom;
+    background-repeat: no-repeat;
+}
+
+.payment-upgrade-section h1.graphic-header {
+    text-align: left;
+    font: normal normal bold 26px/40px 'PT Sans';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    margin: 0 auto 24px auto;
+    text-align: center;
+    letter-spacing: 0.1px;
+}
+
+.payment-upgrade-section h1.graphic-header.common, 
+.payment-upgrade-section h1.graphic-header.smartmove
+{      
+    font: normal normal bold 26px/40px 'PT Sans';
+    margin: 0;
+    padding: 20px 50px;
+    text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.folder,
+.payment-upgrade-section h1.graphic-header.properties
+{
+    margin: 0;
+    padding: 20px 0px;
+    text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.premiumAssets{
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .payment-upgrade-section h1.graphic-header.upgradeaiduration{
+    text-align: center;
+    max-width: 270px;
+    /* margin: 0 60px; */
+}
+.payment-upgrade-section h1.graphic-header.aipoweredanimation{
+    text-align: center;
+    max-width: 262px;
+}
+
+.payment-upgrade-section h1.graphic-header.aipoweredanimation.ar{
+    max-width: none;
+}
+
+.payment-upgrade-section h1.graphic-header.aipoweredanimationpro{
+    max-width: 330px;
+    text-align: left;
+    margin-left: 50px;
+}
+
+
+
+.payment-upgrade-section .folder {
+    width: auto;
+    height: auto !important;
+    overflow: auto !important;
+    padding:0;
+    margin: 0;
+    background: none;
+    color: #54536c;
+    border: none !important;
+    border-radius: 4px;
+    display: block;
+    white-space: normal;
+}
+
+.payment-upgrade-section h1.graphic-header.ccb,
+.payment-upgrade-section h1.graphic-header.kids
+{
+    margin: 0;
+padding: 20px 40px 40px 40px;
+text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.textPrebuilt
+{
+    margin: 0;
+padding: 20px 25px 20px 25px;
+text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.voiceupgrade, 
+.payment-upgrade-section h1.graphic-header.voiceapp,
+.payment-upgrade-section h1.graphic-header.videoformatsupgrade
+{
+    margin: 0;
+padding: 10px 0px 17px 0px;
+text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.quality
+{
+    margin: 0;
+padding: 0px 25px 10px 25px;
+text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.background
+{
+    margin: 0;
+    padding: 10px 20px 20px 20px;
+    text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.screenEffects
+{
+    margin: 0;
+padding: 20px 20px 30px 20px;
+text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.stock
+{
+    margin: 0;
+    padding: 20px 0px 30px 0px;
+    text-align: center;
+}
+
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade
+{
+    margin: 0;
+    padding: 0px 20px 20px 20px;
+    text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.cbpupgrade
+{
+    margin: 0;
+padding: 10px 20px 20px 20px;
+text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.comments
+{
+margin: 0;
+padding: 20px 0px 20px 20px;
+text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.version
+{
+    margin: 0;
+padding: 0px 40px 20px 40px;
+text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.stickerify{
+    text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.bgremove{
+    text-align: center;
+    font-size: 23px;
+}
+.payment-upgrade-section h1.graphic-header.resize
+{
+    margin: 0;
+padding: 10px 20px 30px 20px;
+text-align: center;
+}
+.payment-upgrade-section h1.graphic-header.export{
+    padding: 0px 60px 20px 60px;
+}
+
+.payment-upgrade-section h2 {
+    text-align: left;
+    font: normal normal bold 19px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin: 0 auto 24px auto;
+}
+
+.payment-upgrade-section span.compare-plans {
+    text-align: left;
+    text-decoration: underline;
+    font: normal normal normal 15px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    cursor: pointer;
+}
+
+.payment-upgrade-section h3 {
+    text-align: left;
+    font: normal normal bold 20px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+}
+
+.payment-upgrade-section img.plan-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.payment-upgrade-section div.plan-icon-container {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+}
+
+.payment-popup-upgrade-overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99999;
+    display: none;
+}
+
+div.plan-icon-container.pro img,
+div.plan-icon-container.biz img{
+    content: url('../icons/pro_icon_star.svg');
+}
+
+div.plan-icon-container.starter img,
+div.plan-icon-container.startup img, div.plan-icon-container.voice.pro img , div.plan-icon-container.slides.pro img {
+    content: url('../icons/starter_icon_star.svg');
+}
+
+div.plan-icon-container.basic img,
+div.plan-icon-container.personal img {
+    content: url('../icons/basic_icon_star.svg');
+}
+
+div.plan-icon-container.enterprise img{
+    content: url('../icons/enterprise_star.svg');
+}
+
+div.plan-icon-container.growth img{
+    content: url('../icons/growth_star.svg');
+}
+
+.payment-upgrade-section div.card-planheader-container {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.payment-upgrade-section div.card-planheader-container h3 {
+    margin: 0;
+    margin-left: 5px;
+    text-transform: capitalize;
+}
+
+.payment-upgrade-section img.plan-icon+h3 {
+    display: inline-block;
+    text-align: left;
+    font: normal normal bold 20px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin-left: 5px;
+}
+
+.payment-upgrade-section h2.price {
+    text-align: left;
+    font: normal normal bold 38px/22px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin: 25px 0 40px 0;
+}
+
+.payment-upgrade-section h2 sup {
+    font: normal normal bold 24px 'PT Sans', 'sans-serif';
+    /* color:#141212; */
+    color: #54536E;
+    position: relative;
+    top: -9px;
+}
+.payment-upgrade-section .plan-picker.active h2 sup{
+    font: normal normal bold 18px/7px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section h2 sub {
+    font: normal normal normal 14px/9px 'PT Sans', 'sans-serif';
+    position: relative;
+    left: -5px;
+    top: -2px;
+}
+.payment-upgrade-section .plan-picker.active h2 sub{
+    font: normal normal normal 20px/9px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.payment-upgrade-section ul li {
+    text-align: left;
+    font: normal normal normal 14px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    padding-left: 30px;
+    position: relative;
+}
+
+.payment-upgrade-section ul li+li {
+    margin: 15px auto;
+}
+
+.payment-upgrade-section ul li:before {
+    content: url("../icons/Tick.svg");
+    display: block;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left: 0px;
+}
+
+.payment-upgrade-section .free ul li:before {
+    content: url("https://static.animaker.com/icons/free_icon_star.svg");
+}
+
+
+.payment-upgrade-section button {
+    background: transparent linear-gradient(99deg, #503DF9 0%, #9E52F7 100%) 0% 0% no-repeat padding-box;
+    border-radius: 8px;
+    opacity: 0.8;
+    height: 40px;
+    width: 260px;
+    font: normal normal bold 18px/29px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    border: none;
+    margin: 40px auto 20px auto;
+    display: block;
+    cursor: pointer;
+}
+
+.payment-upgrade-section div.light-pink-bg {
+    background: #ECE6FF 0% 0% no-repeat padding-box;
+    /* border-radius: 0px 0px 8px 8px;  */
+    padding: 13px;
+}
+
+.payment-upgrade-section div.light-pink-bg label {
+    text-align: center;
+    font: normal normal normal 16px/30px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    display: block;
+}
+
+.payment-upgrade-section label a {
+    text-align: center;
+    text-decoration: underline;
+    font: normal normal bold 16px/30px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FF7F00;
+    cursor: pointer;
+}
+
+.pricing-summary {
+    display: none;
+}
+
+/* SECOND SECTION  */
+.plan-comparison {
+    padding: 40px 20px;
+}
+
+.plan-comparison-bg {
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison-bg{
+    min-height: calc(var(--vh, 1vh) * 100);
+    display: flex;
+    align-items: center;
+}
+
+.pricing-summary h2 {
+    font: normal normal bold 22px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #141212;
+}
+
+.payment-upgrade-section select.change-plan {
+    text-align: right;
+    font: normal normal normal 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FF7F00;
+    outline: none;
+    border: none;
+}
+
+.payment-upgrade-section hr {
+    border-top: 1px solid #EBEBEB;
+    margin: 20px auto;
+}
+
+.payment-upgrade-section .discount-section {
+    padding: 12px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #EBEBEB;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 15px;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
+
+.payment-upgrade-section .order-summary .discount-section.hide, .payment-upgrade-section .order-summary .discounted-price.hide { 
+    visibility: hidden;
+}
+
+.payment-upgrade-section .order-summary .discount-section.show, .payment-upgrade-section .order-summary .discounted-price.show {
+    visibility: visible;
+}
+
+.payment-upgrade-section .order-summary .discount-section.show, .payment-upgrade-section .order-summary .discounted-price {
+    display: flex !important;
+}
+
+.payment-upgrade-section .order-summary .pricing-plan .discount-section .anim-col:first-child{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+}
+
+.payment-upgrade-section .order-summary .pricing-plan .discount-section span.discount-code {
+    font: normal normal bold 15px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFC300;
+    display: block;
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    max-width: 120px;
+}
+
+.payment-upgrade-section .order-summary .pricing-plan .discount-section p.coupon-status {
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    max-width: 120px;
+}
+
+.payment-upgrade-section  .order-summary .pricing-plan label.strike#selected-plan-price {
+    text-decoration: line-through;
+}
+
+.payment-upgrade-section  .order-summary .pricing-plan .anim-row:nth-child(1){
+    margin-bottom: 10px;
+}
+.payment-upgrade-section  .order-summary .pricing-plan .anim-row:nth-child(5){
+    margin-top: 10px;
+}
+
+.rightcontainer.payment-upgrade-section .discount-section span.discount-code {
+    font: normal normal bold 15px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFC300;
+    display: contents;
+}
+
+.rightcontainer.payment-upgrade-section .discount-section span.discount-code {
+    display: block;
+    margin: 0;
+}
+
+.payment-upgrade-section button.discount.apply {
+    background: #83BF11 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    height: 27px;
+    width: 65px;
+    font: normal normal normal 14px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    margin: auto auto auto 5px;
+    display: inline-block;
+}
+
+.payment-upgrade-section button.discount.remove {
+    background: #FFC300 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    height: 27px;
+    width: 65px;
+    font: normal normal normal 14px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    margin: auto auto auto 5px;
+    display: inline-block;
+}
+
+.payment-upgrade-section button.discount.disabled {
+    background: #b1b1b1 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    height: 27px;
+    width: 65px;
+    font: normal normal normal 14px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    margin: auto auto auto 12px;
+    display: inline-block;
+    cursor: not-allowed;
+}
+
+.payment-upgrade-section .order-summary label.total {
+    font: normal normal bold 24px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #141212;
+}
+
+.payment-upgrade-section h4 {
+    width: 100%;
+    text-align: center;
+    /* border-bottom: 1px solid #727287; */
+    /* opacity: 0.14; */
+    line-height: 0.1em;
+    margin: 0;
+}
+
+.payment-upgrade-section h4 span {
+    padding: 0;
+    text-align: center;
+    font: normal normal normal 14px/29px 'PT Sans',sans-serif;
+    letter-spacing: 0px;
+    color: #54536E;
+    position: relative;
+    top: 0px;
+}
+.subscription-note-container span.renew-subscription-note{
+    text-align: center !important;
+    font: normal normal normal 14px/29px 'PT Sans',sans-serif;
+    letter-spacing: 0px;
+    color: #54536E;
+}
+
+.payment-upgrade-section .pricing-comparison .card.enterprise {
+    background: #F7F4FF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 10px 25px #ece6ff1a;
+}
+
+.payment-upgrade-section .pricing-comparison .card.enterprise .anim-row {
+    height: 455px;
+    /* align-content: center; */
+}
+
+.payment-upgrade-section .pricing-comparison .card.enterprise div.card-planheader-container{
+    /* justify-content: center; */
+}
+
+.payment-upgrade-section .card.enterprise h2.price{
+    font: normal normal bold 20px/22px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section .card.enterprise h2.price.ru{
+    font: normal normal bold 16px/22px 'PT Sans', 'sans-serif';
+    margin-bottom: 10px;
+}
+
+
+.payment-upgrade-section .pricing-comparison .choose-plan.enterprise .card.enterprise button{
+    background: #E87400 0% 0% no-repeat padding-box;
+    margin-bottom: 20px !important;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.payment-upgrade-section .pricing-comparison .choose-plan.enterprise{
+    padding: 38px 40px;
+}
+
+.payment-upgrade-section .pricing-comparison .card .card-content p{
+    opacity: 1;
+    text-align: center;
+    font: normal normal normal 14px/23px PT Sans;
+    letter-spacing: 0px;
+    color: #54536E;
+}
+
+.payment-upgrade-section .card {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 10px 25px #6E6E6E1A;
+    border: 1px solid #F4F4F4;
+    border-radius: 8px;
+    height: 515px;
+}
+
+.payment-upgrade-section .card-content {
+    padding: 30px;
+    position: relative;
+}
+.pricingPopup.payment-upgrade-section .card-content{
+    height: 515px;
+}
+
+.payment-upgrade-section img.close-icon-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.payment-upgrade-section .plan-comparison .plan-picker {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 6px;
+    text-align: center;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    margin: 10px;
+    border: 1px solid #774FF0;
+}
+
+.payment-upgrade-section .plan-comparison .plan-picker.active {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 10px 25px #0000000A;
+    border: 2px solid #FFC300;
+    margin:0;
+    height: 200px;
+    background: white;
+}
+
+.payment-upgrade-section .active .pricing-summary h3 {
+    font-weight: bold;
+}
+
+.payment-upgrade-section .plan-comparison span.tag {
+    background: #000000 0% 0% no-repeat padding-box;
+    border-radius: 10px;
+    color: white;
+    /* width: 94px; */
+    height: 20px;
+    padding: 2px 18px;
+    font-size: 12px;
+    position: absolute;
+    top: -11px;
+}
+
+.payment-upgrade-section .plan-comparison .plan-picker h2.price {
+    text-align: center;
+    font: normal normal normal 28px/9px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #141212;
+    margin: 25px auto 20px auto;
+}
+
+.payment-upgrade-section .plan-comparison .active.plan-picker h2.price {
+    font: normal normal bold 36px/9px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section .plan-comparison .plan-picker h3 {
+    text-align: center;
+    font: normal normal normal 20px/9px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.payment-upgrade-section .plan-comparison .active.plan-picker h3{
+    font: normal normal normal 24px/9px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section .plan-comparison .active.plan-picker h3 {
+    font: normal normal bold 28px/9px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section .plan-comparison .plan-picker label {
+    text-align: center;
+    font: normal normal normal 12px/7px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin-top: 12px;
+}
+.payment-upgrade-section .plan-comparison .plan-picker.active label{
+    font: normal normal normal 16px/7px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section .plan-comparison .plan-picker.active label{
+    font: normal normal normal 16px/7px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section .pricing-summary h3 {
+    text-align: center;
+    font: normal normal normal 22px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #141212;
+}
+
+.payment-upgrade-section .plan-picker h2 sup {
+    top: -12px;
+    color: #141212;
+}
+
+.payment-upgrade-section .order-summary {
+    padding: 40px 30px;
+}
+
+.payment-upgrade-section .order-summary h3 {
+    text-align: center;
+    font: normal normal bold 22px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #141212;
+    margin: 0 auto 30px auto;
+}
+
+.payment-upgrade-section .order-summary img.plan-icon {
+    width: 28px;
+    height: 28px;
+    top: 0;
+}
+
+.payment-upgrade-section .order-summary label {
+    text-align: left;
+    font: normal normal normal 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    display: flex;
+    align-items: center;
+}
+
+.payment-upgrade-section .order-summary div.pricing-plan div.anim-col:nth-child(2) {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.payment-upgrade-section .order-summary button.paynow-button {
+    background: transparent linear-gradient(98deg, #503DF9 0%, #9E52F7 100%) 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    font: normal normal bold 18px/29px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    height: 44px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.payment-upgrade-section .order-summary div.pricing-plan span {
+    font: normal normal normal 12px/29px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #B8C2C8;
+    display: block;
+    text-align: center;
+}
+
+.payment-upgrade-section .order-summary div.selected-plan-banner {
+    height: 19px;
+    border-radius: 12px;
+    position: relative;
+    bottom: 3px;
+    margin: 0;
+    text-align: left;
+    max-width: 100%;
+    margin-bottom: 0px !important;
+    margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+div.selected-plan-banner.pro,
+.selected-plan-banner.biz {
+    background: #59D4FF 0% 0% no-repeat padding-box;
+}
+
+div.selected-plan-banner.starter,
+div.selected-plan-banner.startup, div.selected-plan-banner.slides.pro, div.selected-plan-banner.voice.pro {
+    background: #FFC300 0% 0% no-repeat padding-box;
+}
+
+div.selected-plan-banner.basic,
+div.selected-plan-banner.personal {
+    background: #6AE164 0% 0% no-repeat padding-box;
+}
+
+div.selected-plan-banner.enterprise {
+    background: #8920FF 0% 0% no-repeat padding-box;
+}
+
+div.selected-plan-banner.growth {
+    background: #FF9638 0% 0% no-repeat padding-box;
+}
+
+.payment-upgrade-section .order-summary div.selected-plan-banner img {
+    margin-left: 5px;
+    height: 9px;
+    width: 9px;
+    margin-right: 5px;
+}
+
+.payment-upgrade-section .order-summary div.pricing-plan span.selected-planname {
+    color: white;
+    display: initial;
+    padding-right: 10px;
+    background: none;
+}
+
+.payment-upgrade-section .order-summary div.pricing-plan div.anim-row:first-child div.anim-col:first-child {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.payment-upgrade-section .order-summary div.pricing-plan div.anim-row:nth-child(2) div.anim-col:first-child {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.payment-upgrade-section .payment-upgrade-section hr.footer {
+    margin: 10px 0;
+}
+
+.payment-upgrade-section div.pricing-plan img.client-logo {
+    display: block;
+    margin: 20px auto auto auto;
+}
+
+.payment-upgrade-section .credit-card-section {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #E9E9E9;
+    border-radius: 8px;
+}
+
+.payment-upgrade-section .credit-card-section label {
+    text-align: left;
+    font: normal normal normal 13px/22px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #A0A0A0;
+}
+
+.payment-upgrade-section .credit-card-section input[type=text] {
+    background: #F2F3F7 0% 0% no-repeat padding-box;
+    border: 1px solid #ECECEC;
+    border-radius: 4px;
+    height: 44px;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    font: normal normal normal 15px/9px 'PT Sans';
+    letter-spacing: 0px;
+    color: #54536E;
+    opacity: 1;
+}
+
+.payment-upgrade-section .cc-header,
+.payment-upgrade-section .cc-body {
+    padding: 20px;
+}
+.pricingPopup.payment-upgrade-section .credit-card-section.razorpay .cc-header{
+    padding: 14.5px 20px;
+}
+.pricingPopup.payment-upgrade-section .credit-card-section.card .cc-header{
+    padding: 16.5px 20px;
+}
+.pricingPopup.payment-upgrade-section .credit-card-section.paypal .cc-header{
+    padding: 14.5px 20px;
+}
+
+.payment-upgrade-section .credit-card-section.paypal .cc-header{
+    padding: 14px 20px;
+}
+
+.rightcontainer.payment-upgrade-section .cc-header,
+.rightcontainer.payment-upgrade-section .cc-body {
+    /* padding: 15px 20px; */
+    padding: 16px;
+}
+
+.pricingPopup.payment-upgrade-section .cc-body {
+    border-top: 1px solid #EBEBEB;
+}
+
+.rightcontainer.payment-upgrade-section .cc-body {
+    padding-top: 0;
+}
+
+.payment-upgrade-section .credit-card-section hr {
+    margin: 0;
+}
+
+.payment-upgrade-section .pricing-summary .credit-card-section h2 {
+    text-align: left;
+    font: normal normal bold 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin: 0;
+}
+
+.payment-upgrade-section .credit-card-section.paypal {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.pricing-summary .credit-card-section.paypal h2 {
+    padding: 20px;
+}
+
+.payment-upgrade-section img.paypal-icon {
+    width: 100%;
+    max-width: 72px;
+    display: block;
+    margin-left: auto;
+    padding: 0;
+}
+
+.payment-upgrade-section .cc-body .anim-row+.anim-row {
+    margin-top: 20px;
+}
+
+.pricingPopup.payment-upgrade-section {
+    background-image: none;
+    height: 690px;
+    border-radius: 16px;
+    min-height: 690px;
+    height: auto;
+}
+
+/* .payment-upgrade-section img#selected-plan-icon {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+} */
+img.pricing-banner {
+    width: 94%;
+}
+
+.pricingPopup.payment-upgrade-section label.green-tick-radio-grp {
+    display: flex;
+    margin: 0;
+    font: normal normal bold 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    align-items: center;
+    position: relative;
+}
+
+.pricingPopup.payment-upgrade-section .cc-header.active img.green-tick-radio-icon {
+    display: block;
+}
+
+.pricingPopup.payment-upgrade-section .credit-card-section.razorpay .cc-header.active img.green-tick-radio-icon{
+    top:2px;
+}
+
+
+/* PAYMENT INLINE PAGE CSS */
+
+.achieve-more-section-bg {
+    background-image: url("../icons/glitters-top.svg"), url("../icons/glitters-bottom.svg"), url("../icons/payment-bg-1.svg"), url("../icons/payment-bg-2.svg"), linear-gradient(147deg, #752996 0%, #1D005C 50%, #571884 100%);
+    background-position: top, bottom, left -30% center, bottom -11% right, center;
+    background-size: 80%, 80%, 30%, 60%, 100%;
+    background-repeat: no-repeat;
+    min-height: calc(var(--vh, 1vh) * 100);
+    /* max-height: 100vh; */
+    display: flex;
+    align-items: center;
+}
+
+.rightcontainer.payment-upgrade-section {
+    height: calc(100% - 65px);
+    float: none;
+    width: 100%;
+}
+
+.payment-upgrade-section .achieve-more-section h1 {
+    font: normal normal bold 44px/60px 'PT Sans', 'sans-serif';
+    text-align: left;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    margin: 30px auto;
+}
+
+.payment-upgrade-section .achieve-more-section ul {
+    list-style: none;
+    padding: 0 0 0 30px;
+    margin: 50px 0 50px 0;
+}
+
+.payment-upgrade-section .achieve-more-section ul li {
+    text-align: left;
+    font: normal normal normal 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    padding: 5px 0 5px 30px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.payment-upgrade-section .achieve-more-section ul li+li {
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+.payment-upgrade-section .achieve-more-section ul li:before {
+    content: url("../icons/green-tick-icon.svg");
+    display: block;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left: 0px;
+    top: 6px;
+    clip-path: circle(40%);
+}
+
+img.animaker-logo-new {
+    width: 100%;
+    max-width: 185px;
+}
+
+.client-footer {
+    padding: 25px 50px;
+}
+
+.faded-bg {
+    position: relative;
+}
+
+.faded-bg>* {
+    position: relative;
+    z-index: 1;
+}
+
+.faded-bg::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.client-footer.faded-bg::after {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 6px;
+    opacity: 0.2;
+}
+
+.client-footer span {
+    text-align: center;
+    font: normal normal normal 13px/29px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #AC9CC3;
+}
+
+img.client-trust-logo {
+    /* max-width: 256px; */
+    width: 100%;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker {
+    width: auto;
+    /* 275px */
+    height: 130px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active{
+    height: 150px;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .active.plan-picker h3 {
+    font: normal normal bold 20px/9px 'PT Sans', 'sans-serif';
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker h3{
+    margin-top: 0px;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker h3 {
+    font: normal normal normal 18px/9px 'PT Sans', 'sans-serif';
+}
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active h3{
+    font:normal normal bold 21px/9px 'PT Sans', 'sans-serif';
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker h2.price {
+    font: normal normal normal 22px/9px 'PT Sans', 'sans-serif';
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active h2.price {
+    font: normal normal bold 26px/9px 'PT Sans', 'sans-serif';
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+/* .rightcontainer.payment-upgrade-section .plan-comparison span.tag{
+    -webkit-transform:translate(0%, -50%);
+} */
+.rightcontainer.payment-upgrade-section .card {
+    height: auto;
+    border: 1px solid #EBEBEB;
+    margin: 20px auto;
+    box-shadow: none;
+}
+
+
+
+.rightcontainer.payment-upgrade-section button.paynow-button {
+    width: 100%;
+    height: 44px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.cc-container {
+    max-width: 615px;
+    width: 615px;
+    margin: auto;
+}
+
+.rightcontainer.payment-upgrade-section .card-content {
+    padding: 15px;
+}
+
+.rightcontainer.payment-upgrade-section .discount-section {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 53px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.rightcontainer.plan-comparison {
+    padding: inherit 0;
+}
+
+.rightcontainer.payment-upgrade-section label {
+    font: normal normal normal 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    margin: 0;
+}
+
+/* .rightcontainer.payment-upgrade-section .discount-section label {
+    float: left;
+    position: relative;
+    top: 5px;
+} */
+
+.rightcontainer.payment-upgrade-section label.total {
+    font: normal normal normal 20px/12px 'PT Sans', 'sans-serif';
+    color: #83BF11;
+}
+
+img.green-tick-radio-icon {
+    position: absolute;
+    left: -2px;
+    top: 0px;
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+    display: none;
+}
+
+.rightcontainer.payment-upgrade-section span {
+    display: block;
+    text-align: center;
+    font: normal normal normal 13px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #B0C0C8;
+    margin-bottom: 15px;
+}
+
+.rightcontainer.payment-upgrade-section span.renew-subscription-note.subscription-txt{
+    margin:20px 0 12px 0;
+    font: normal normal normal 13px/16px 'PT Sans',sans-serif;
+    letter-spacing: 0px;
+    color: #54536E;
+}
+
+
+.rightcontainer.payment-upgrade-section .payment-loader-container span {
+    display: initial;
+    color: inherit;
+}
+
+.payment-upgrade-section .toggle-payment {
+    border: 1px solid #EFEFEF;
+    border-radius: 8px;
+    padding: 4px 20px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.payment-upgrade-section .active.toggle-payment {
+    border: 1px solid #FFC300;
+}
+
+.payment-upgrade-section .active.toggle-payment img.green-tick-radio-icon {
+    display: block;
+}
+
+.rightcontainer.payment-upgrade-section img.paypal-icon {
+    /* margin: 0;
+    padding: 0;
+    max-width: 72px;
+    width: 72px; */
+}
+
+.payment-upgrade-section img.credit-card-icon {
+    width: auto;
+    height: 20px;
+    padding: 1px;
+}
+
+.payment-upgrade-section input[type=radio] {
+    margin: 0;
+    height: 18px;
+    width: 18px;
+    cursor: pointer;
+    pointer-events:none;
+
+}
+
+.p-relative {
+    position: relative;
+}
+
+.payment-upgrade-section .credit-card-section .toggle-payment label.green-tick-radio-grp {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightcontainer.payment-upgrade-section .credit-card-section input[type=text] {
+    margin-top: 10px;
+}
+
+.rightcontainer.payment-upgrade-section span.credit-text,
+.rightcontainer.payment-upgrade-section span.razorpay-text {
+    color: black;
+    margin: 0;
+}
+
+label.green-tick-radio-grp {
+    cursor: pointer;
+}
+
+.rightcontainer.payment-upgrade-section .plan-picker h2 sup {
+    top: -5px;
+}
+
+.rightcontainer.payment-upgrade-section .plan-picker h2 sub {
+    bottom: 1px;
+    left: 0;
+    font: normal normal normal 14px/9px 'PT Sans', 'sans-serif';
+}
+
+.payment-upgrade-section div.pricing-plan {
+    margin: 0;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison {
+    padding: 90px 20px 0 20px;
+}
+
+.payment-upgrade-section label.radio-clickable {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+}
+
+label.radio-clickable.disabled {
+    cursor: default;
+}
+.payment-tooltip {
+    position: relative;
+    display: inline-block;
+}
+  
+.payment-tooltip .payment-tooltiptext {
+    visibility: hidden;
+    text-align: center;
+    padding: 12px;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    width: 190px;
+    /*height: 60px; */
+    /* width: auto; */
+    height: auto;
+    background: #000000be;
+    border-radius: 6px;
+    font: normal normal normal 13px/18px 'PT Sans','sans-serif' !important;
+    letter-spacing: 0px !important;
+    color: #FFC300 !important;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.payment-tooltip .prorate-tooltiptext  {
+    visibility: hidden;
+    text-align: center;
+    padding: 12px;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    width: 190px;
+    /*height: 60px; */
+    /* width: auto; */
+    height: auto;
+    background: #000000be;
+    border-radius: 6px;
+    font: normal normal normal 13px/18px 'PT Sans','sans-serif' !important;
+    letter-spacing: 0px !important;
+    color: #FFC300 !important;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.prorate-info-icon.payment-tooltip .payment-tooltiptext{
+    transform: translate(-50%, -125%);
+}
+
+.prorate-info-icon.payment-tooltip .prorate-tooltiptext{
+    transform: translate(-50%, -125%);
+}
+
+.rightcontainer.payment-upgrade-section .prorate-info-icon.payment-tooltip .payment-tooltiptext{
+    left:50%;
+}
+
+.rightcontainer.payment-upgrade-section .prorate-info-icon.payment-tooltip .prorate-tooltiptext{
+    left:50%;
+}
+
+
+  
+.radio-clickable.disabled.payment-tooltip:hover .payment-tooltiptext,
+.prorate-info-icon.payment-tooltip:hover .payment-tooltiptext{
+    visibility: visible;
+}
+.prorate-info-icon.payment-tooltip:hover .prorate-tooltiptext{
+    visibility: visible;
+}
+
+.prorate-info-icon{
+    background-image: url("../icons/icon-info-prorate.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 12px;
+    height: 12px;
+    margin: 0px 0 0 0 !important;
+    display: inline-block !important;
+    position: relative;
+    top: 2px;
+}
+
+input.toggle-subscription-type {
+    visibility: hidden;
+}
+
+
+.rightcontainer.payment-upgrade-section button.discount {
+    float: right;
+}
+
+/* .rightcontainer.payment-upgrade-section img.bill-icon {
+    position: relative;
+    top: 5px;
+} */
+.align-item-center {
+    align-items: center;
+}
+
+.collapse-content {
+    display: block;
+}
+
+.payment-upgrade-section button.paypal-button {
+    background: #FEC43A 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    font: normal normal bold 18px/29px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    height: 44px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+img.paypal-btn-icon {
+    width: 100%;
+    max-width: 80px;
+    position: relative;
+    top: -2px;
+}
+
+.payment-upgrade-section .credit-card-section input[type=text]:focus {
+    border: 1px solid #FFC300;
+}
+
+div.popup_change_credit_card {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+
+}
+
+div.popup_change_credit_card span.change {
+    color: #FF7F00;
+}
+
+div.popup_change_credit_card span.undo {
+    color: #B0C0C8;
+}
+
+div.popup_change_credit_card span.change,
+div.popup_change_credit_card span.undo {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+div.popup_change_credit_card span.brand {
+    cursor: pointer;
+}
+
+div.popup_change_credit_card img:not(:first-child) {
+    margin-left: 8px;
+}
+
+.payment-upgrade-section .order-summary label.selected-plan-banner.starter {
+    background: #FFC300 0% 0% no-repeat padding-box;
+}
+
+.payment-upgrade-section .order-summary label.selected-plan-banner.pro {
+    background: #59D3FF 0% 0% no-repeat padding-box;
+}
+
+.payment-upgrade-section .credit-card-err-section {
+    display: flex;
+    text-align: center;
+    color: #FF6767;
+    background-color: none;
+}
+
+.payment-upgrade-section .credit-card-err-section .cc-display-error {
+    background: none !important;
+}
+
+.payment-upgrade-section input[type=radio]:disabled {
+    cursor: not-allowed;
+}
+
+.payment-upgrade-section input[type=radio]:disabled {
+    cursor: not-allowed;
+}
+
+.collapse-content {
+    -webkit-transition: height .25s ease;
+    -o-transition: height .25s ease;
+    transition: height .25s ease;
+    overflow: hidden;
+}
+
+.collapse-content:not(.active) {
+    display: none;
+}
+
+.achieve-more-section {
+    padding: 55px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .card-content .anim-col:first-child {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .card-content .anim-col:first-child div:first-child {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.rightcontainer.payment-upgrade-section .plan-comparison .card-content .anim-col:first-child div:first-child p{
+    margin: 0;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .card-content .discount-section .anim-col:first-child {
+    gap:5px;
+}
+
+label.green-tick-radio-grp.disabled {
+    cursor: not-allowed;
+}
+
+.credit-card-payment-container .cc-header div.popup_change_credit_card div.card-brand img{
+    vertical-align: middle;
+}
+
+.credit-card-payment-container .cc-header.disabled div.popup_change_credit_card span {
+    color: #B0C0C8;
+    cursor: not-allowed;
+    text-decoration: underline;
+    text-decoration-color: #B0C0C8;
+}
+
+.credit-card-payment-container .cc-header.disabled div.popup_change_credit_card div.card-brand {
+    cursor: not-allowed;
+}
+
+.payment-status {
+    display: none;
+}
+
+.payment-status .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 35px 30px;
+    justify-content: space-evenly;
+    width: 100%;
+    position: inherit !important;
+}
+
+.payment-status .wrapper img {
+    height: 72px;
+    width: 72px;
+}
+
+.payment-status .wrapper hr {
+    border: 0;
+    width: 100%;
+    background-color: #EBEBEB;
+    height: 1px;
+    margin: 21px auto;
+}
+
+.payment-status .wrapper p#totalamount {
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+.payment-status .wrapper p#transaction-id{
+    margin: 0 0 10px;
+}
+
+.payment-status .wrapper h1 {
+    margin: 16px auto 24px auto;
+    font: normal normal bold 32px/17px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536C;
+}
+
+.payment-status .wrapper a {
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    color: #fff;
+    padding: 10px 30px;
+    text-align: center;
+    border-radius: 5px;
+    margin: 0 auto;
+    width: 240px;
+    height: 44px;
+    background: #F0831D 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+}
+
+
+.plan-dropdown-container {
+    position: absolute;
+    width: 116px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 0px 6px #0000000F;
+    border-radius: 4px;
+    font: normal normal normal 15px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    right: 30px;
+    display: none;
+    z-index: 1;
+}
+.plan-dropdown-container.lg{
+    width: 136px;
+}
+
+.plan-dropdown-container div.plan-dropdown-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
+    padding: 0px 14px;
+
+    font: normal normal normal 15px/19px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+}
+
+.plan-dropdown-container div.plan-dropdown-block:first-child {
+    margin-top: 10px;
+}
+
+.plan-dropdown-container div.plan-dropdown-block:last-child {
+    margin-bottom: 10px;
+}
+
+.plan-dropdown-container div.plan-dropdown-block:hover {
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+}
+
+.plan-dropdown-container.show {
+    display: block;
+}
+
+.plan-dropdown-block.selected{
+    background: #F8F8F8 0% 0% no-repeat padding-box;
+    font-weight: bold !important;
+}
+
+.plan-dropdown-container p {
+    margin: 0;
+    padding-left: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.plan-dropdown-container.show .plan-dropdown-block.selected span.tick {
+    margin: 0;
+    height: 20px;
+    width: 20px;
+    background-image: url("../icons/Tick.svg");
+    position: absolute;
+    right: 14px;
+}
+
+.plan-dropdown-container.show .plan-dropdown-block span.cover {
+    position: absolute;
+    width: 100%;
+    height: inherit;
+    left: 0px;
+    cursor: pointer;
+    z-index: 1;
+    background: none;
+}
+
+.plan-dropdown-container.show .plan-dropdown-block:first-child span.cover {
+    top: 10px;
+}
+
+
+
+.plan-dropdown-container .plan-icon-container {
+    width: 13px !important;
+    height: 13px !important;
+}
+
+.plan-dropdown-container .plan-icon-container .plan-icon {
+    height: 10px !important;
+}
+
+.scrollingLoaderDisplay {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    /* margin: 0 0 0 -75px; */
+    border: 6px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 6px solid #a076ee;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.payment-upgrade-section div.payment-loader-container {
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    position: absolute;
+    border: none;
+    z-index: 2;
+    background-color: rgba(255, 255, 255);
+    display: none;
+}
+
+.rightcontainer.payment-upgrade-section div.payment-loader-container{
+    height: 100vh;
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.spinLoader {
+    position: absolute;
+    text-align: center;
+    z-index: 2;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    display: none;
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.spinLoader div.loaderDisplay {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border: 6px solid #7c7c7c;
+    border-radius: 50%;
+    border-top: 6px solid #a076ee;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.spinLoader.show {
+    display: block;
+}
+
+
+.payment-upgrade-section div.payment-loader-container.show {
+    display: block;
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.three-ds-section {
+    position: absolute;
+    text-align: center;
+    z-index: 2;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    display:none;
+}
+.payment-upgrade-section div.payment-loader-container.show div.three-ds-section.show{
+    display:block;  
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.three-ds-section.show h3{
+    text-align: center;
+}
+
+
+.payment-upgrade-section div.payment-loader-container.show div.three-ds-section.show span.loading{
+    position: absolute;
+    margin-left: 5px;
+}
+
+.payment-upgrade-section div.payment-loader-container.show div.three-ds-section.show span.loading:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    -webkit-animation: ellipsis steps(4, end) 900ms infinite;
+    animation: ellipsis steps(4, end) 900ms infinite;
+    content: "\2026";
+    /* ascii code for the ellipsis character */
+    width: 0px;
+}
+
+.loading-note-section{
+    position: absolute;
+    text-align: center;
+    z-index: 2;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 0;
+}
+
+
+.payment-upgrade-section div.pricing-plan div.switch-plan {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    text-align: right;
+    font: normal normal normal 15px/12px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #FF7F00;
+    outline: none;
+    border: none;
+}
+
+.payment-upgrade-section div.pricing-plan div.switch-plan p {
+    color: #FF7F00;
+    margin: 0;
+    font-weight: 600;
+}
+
+.payment-upgrade-section div.pricing-plan div.switch-plan.change span.down-arrow {
+    top: -5px;
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-right: 0.2em solid #ff7f00;
+    border-top: 0.2em solid #FF7F00;
+    transform: rotate(135deg);
+    display: block;
+}
+
+.payment-popup-bg {
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.8);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99997;
+}
+
+
+/* PAYMENT SUCCESS SCREEN  */
+.payment-confirmation-section{
+    background-image: url('../img/payment-success-bg.svg');
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+    background-color: #320A69;
+}
+.success-container{
+    height: 410px;
+    width: 560px;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.success-container img.success-tick{
+    transform: unset;
+    position: initial;
+}
+.anim-card{
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 0px 2px #00000029;
+    border-radius: 8px;
+    opacity: 1;
+    text-align: center;
+    font: normal normal normal 15px/24px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536C;
+    opacity: 1;
+}
+.payment-confirmation-section h1.head-text{
+    font: normal normal bold 32px/17px 'PT Sans', 'sans-serif';
+}
+.payment-confirmation-section span.light-text{
+    font: normal normal normal 15px/24px 'PT Sans', 'sans-serif';
+}
+.payment-confirmation-section hr{
+    border: 1px solid #EFEFEF;
+    margin: 24px 0;
+}
+.payment-confirmation-section button{
+    background: #F0831D 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    color: white;
+    height: 44px;
+    max-width: 240px;
+    font: normal normal bold 15px/15px 'PT Sans', 'sans-serif';
+    margin: 24px auto auto;
+    display: block;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+.payment-confirmation-section .anim-card{
+    padding: 35px;
+    width: 100%;
+}
+
+/* PAYPAL SUCCESS POP-UP */
+.paypal-payment-success{
+    width: 820px;
+    height: 650px;
+    margin: auto;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+}
+.paypal-header{
+    background: linear-gradient(104deg, #C790FA 0%, #60B0FF 100%);
+    background-size: 100% 35%;
+    background-repeat: no-repeat;
+    border-radius: 4px 4px 0px 0px;
+    opacity: 1;
+    font: normal normal normal 28px/24px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #2D2D2D;
+    padding: 50px 30px;
+}
+.notice-box{
+    border: 1px solid #DDDDDD;
+    border-radius: 6px;
+    max-width: 567px;
+    padding: 15px;
+}
+.paypal-header img.animaker-logo {
+    position: absolute;
+    right: 70px;
+    top: 70px;
+    height: 43px;
+    width: auto;
+}
+img.paypal-modal-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+ul.paypal-steps{
+    list-style: none;
+    padding: 0;
+}
+img.success-tick,
+img.success-confirmation{
+    width: 52px;
+    height: 52px;
+    transform:translate(-80px, 0px);
+    position: absolute;
+}
+img.success-tick{
+    width: 82px;
+    height: 82px;
+}
+.paypal-header img.success-tick{
+    transform: translate(-95px, -10px);
+}
+ul.paypal-steps li {
+    padding-left: 100px;
+    position: relative;
+}
+ul.paypal-steps li:first-child{
+    padding-bottom: 20px;
+}
+ul.paypal-steps li:first-child:before{
+    content: '';
+    border-left: 2px dashed #E8E8E8;
+    height: 125%;
+    position: absolute;
+    left: 45px;
+    top:22px;
+}
+ul.paypal-steps li:nth-child(2){
+    padding-top: 60px;
+}
+ul.paypal-steps li span{
+    font: normal normal normal 17px/34px 'PT Sans', 'sans-serif';
+    color: #B2B2B2;
+}
+ul.paypal-steps li h1{
+    font: normal normal bold 28px/24px 'PT Sans', 'sans-serif';
+    color: #2D2D2D;
+    margin: 10px 0;
+}
+ul.paypal-steps li label{
+    font: normal normal normal 14px/24px 'PT Sans', 'sans-serif';
+    color: #FFFFFF;
+    display: block;
+}
+button.paypal-confirm-btn{
+    width: 100%;
+    max-width: 250px;
+    height: 44px;
+    background-color: #F0831D;
+    border-radius: 4px;
+    color:white;
+    border: none;
+    font:normal normal normal 18px/24px 'PT Sans', 'sans-serif';
+    margin: 30px auto;
+    display: block;
+    cursor: pointer;
+}
+p.notice-content {
+    font: normal normal normal 14px/24px 'PT Sans', 'sans-serif';
+    color: #54536C;
+}
+ul.paypal-steps li label.notice-title{
+    color: #FFC300;
+    font-weight: bold;
+}
+
+
+/* PAYMENT CONFIRM CSS */
+#paypalPaymentConfirmPopup.paypal-payment-success{
+    width: 620px;
+    height: 560px;
+    /* transform: translate(65%, 35%); */
+    font: normal normal normal 18px/24px 'PT Sans', 'sans-serif';
+}
+.paypal-confirm-section{
+    padding: 45px;
+    text-align: center;
+    background: url('../icons/paypal-success-bg.svg');
+    background-position: top;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.paypal-confirm-section img.success-tick{
+    position: initial;
+    height: auto;
+    width: auto;
+    margin-top: 10%;
+    transform: unset;
+}
+.paypal-confirm-section h1{
+    font: normal normal bold 28px/24px 'PT Sans', 'sans-serif';
+    color: #2D2D2D;
+    margin: 10px 0;
+}
+.paypal-confirm-section label{
+    font-weight: normal;
+}
+
+
+/* success-confirmation.svg */
+/* success-tick.svg */
+
+
+/* ANIMATIONS GOES HERE */
+@keyframes ellipsis {
+    to {
+            width: 1.25em;
+    }
+}
+
+@-webkit-keyframes ellipsis {
+    to {
+            width: 1.25em;
+    }
+}
+
+
+/* MEDIA QUERIES GOES HERE */
+@media screen and (min-width: 800px) {
+    .anim-col {
+            flex: 1;
+    }
+
+    .md-20 {
+            flex: 2%;
+    }
+
+    .md-30 {
+            flex: 3;
+    }
+
+    .md-40 {
+            flex: 4;
+    }
+
+    .md-50 {
+            flex: 5;
+    }
+
+    .md-60 {
+            flex: 6;
+    }
+
+    .md-70 {
+            flex: 7;
+    }
+
+    .md-80 {
+            flex: 8;
+    }
+
+    .md-90 {
+            flex: 9;
+    }
+
+    .md-100 {
+            flex: 10;
+    }
+
+    .md-33 {
+            flex: 3.3;
+    }
+
+    .md-67 {
+            flex: 6.7;
+    }
+
+    .md-35 {
+            flex: 3.5;
+    }
+
+    .md-65 {
+            flex: 6.5;
+    }
+    .md-67.md-80{
+        flex:8;
+    }
+    .md-33.md-20{
+        flex:2;
+    }
+
+}
+
+@media screen and (max-width: 1280px) {
+    div.stock-grapic-bg{
+            display: none;
+    }
+    .pricingPopup.payment-upgrade-section .card-content{
+            justify-content: center;
+            display: flex;
+    }
+    div.anim-col.md-30.stock-grapic-bg + div.anim-col.md-70{
+            background: transparent linear-gradient(153deg, #C790FA 0%, #60B0FF 100%) 0% 0% no-repeat padding-box;
+    }
+    div.anim-col.md-33.stock-grapic-bg + div.anim-col.md-67{
+            background: transparent linear-gradient(153deg, #C790FA 0%, #60B0FF 100%) 0% 0% no-repeat padding-box;
+    }
+    div.choose-plan{
+            background: none;
+    }
+    .payment-upgrade-section h2,
+    .payment-upgrade-section span.compare-plans{
+            color: white;
+    }
+}
+
+.rightcontainer.payment-upgrade-section div.selected-plan-banner{
+    height: 19px;
+    border-radius: 12px;
+    /* position: relative; */
+    bottom: 3px;
+    margin: 0;
+    text-align: left;
+    max-width: 100%;
+    margin-bottom: 0px !important;
+    margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.rightcontainer.payment-upgrade-section div.selected-plan-banner img{
+    margin-left: 5px;
+    height: 10px;
+    width: 10px;
+    margin-right: 5px;
+}
+
+.rightcontainer.payment-upgrade-section .card .card-content .anim-row:first-child{
+    margin-bottom: 10px;
+}
+
+.rightcontainer.payment-upgrade-section div.selected-plan-banner  span.selected-planname {
+    color: white;
+    display: initial;
+    padding-right: 10px;
+    background: none;
+    margin: 0;
+}
+
+.rightcontainer.payment-upgrade-section .credit-card-section label {
+    font: normal normal normal 13px/22px 'PT Sans', 'sans-serif';
+    color: #A0A0A0;
+}
+
+.payment-upgrade-section .pricing-changeplan .changeplan_dialog_box{
+    display: flex;
+flex-direction: column;
+}
+
+.payment-upgrade-section .pricing-changeplan .changeplan-header{
+    padding: 20px 0;
+    text-align: center;
+    background-image: linear-gradient(to right, #a07ceb,#7f6fec);
+    height: 80px;
+    font-size: 24px;
+    color: #fff;
+}
+
+.payment-upgrade-section .pricing-changeplan .changeplan-body{
+    padding: 6% 10%;
+    border-bottom: 0px solid #e6e6e6;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+
+.rightcontainer.payment-upgrade-section .cc-body .anim-row+.anim-row{
+    margin-top: 10px;
+}
+
+.rightcontainer.payment-upgrade-section span.cc-display-error{
+    color: #FF6767;
+    margin-bottom: 0px;
+}
+
+.payment-upgrade-section .achieve-more-section ul.features-with-trial li:before {
+    content: url("../icons/trialcheck.svg");
+    display: block;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left: 0px;
+    top: 7px;
+    clip-path: circle(60%);
+}
+
+.payment-upgrade-section .achieve-more-section h1.trial-head{
+    color: #FFCC27;
+    margin: 0px 30px;
+}
+
+.payment-upgrade-section .achieve-more-section p.trial-head{
+    margin: 30px 30px 0px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.payment-upgrade-section button.paynow-button img.trust-icon{
+    vertical-align: middle;
+    z-index: -1;
+    position: relative;
+    top:-2px;
+}
+
+
+.pricingpage.payment-confirmation-section a{
+    
+    max-width: 240px;
+    font: normal normal bold 15px/15px 'PT Sans', 'sans-serif';
+    border: none;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    color: #fff;
+    padding: 10px 30px;
+    text-align: center;
+    margin: 0 auto;
+    width: 240px;
+    height: 44px;
+    background: #F0831D 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    line-height: 1.5;
+}
+.payment-upgrade-section .choose-plan button {
+    position: absolute;
+    bottom: 10px;
+}
+
+
+div.stock-grapic-section .graphic-content .features-items {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    gap: 10px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 36px #0000000a;
+    border-radius: 6px;
+    opacity: 1;
+    margin: 20px 0px;
+}
+div.stock-grapic-section .graphic-content .features-more {
+    text-align: center;
+}
+div.stock-grapic-section .graphic-content .feature-more p {
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    font: normal normal normal 16px/22px 'PT Sans', 'sans-serif';
+}
+.graphic-content.voiceapp{
+    display: flex;
+    justify-content: center;
+}
+
+div.stock-grapic-section .graphic-content.common {
+        margin: 0;
+    }
+
+
+div.stock-grapic-section .graphic-content .features-items   img.feature-icon {
+    height: 34px;
+    width: 34px;
+    margin: 0 0 0 90px;
+}
+
+div.stock-grapic-section .graphic-content.comments img.pricing-banner {
+    position: absolute;
+    width: 340px;
+    left: 0px;
+    bottom:0;
+}
+
+div.stock-grapic-section .graphic-content.uploadfileto20gb img.pricing-banner {
+    position: absolute;
+    width: 385px;
+    bottom: 0px;
+    left: 27px;
+}
+
+
+div.stock-grapic-section .graphic-content.version img.pricing-banner {
+position: absolute;
+width: 354px;
+left: 58px;
+bottom: 0;
+}
+div.stock-grapic-section .graphic-content.export img.pricing-banner{
+    width: 360px;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+
+}
+
+div.stock-grapic-section .graphic-content.resize img.pricing-banner {
+    position: absolute;
+    width: 310px;
+}
+div.stock-grapic-section .graphic-content.pdfdownload img.pricing-banner {
+    position: absolute;
+    width: 350px;
+    bottom: 0;
+    left: -10px;
+}
+
+div.stock-grapic-section .graphic-content.pptimport img.pricing-banner {
+    position: absolute;
+    width: 340px;
+    left: 30px;
+}
+
+
+div.stock-grapic-section .graphic-content.quality img.pricing-banner {
+    height: 92%;
+    width: 92%;
+    margin-left: 13px;
+}
+
+div.stock-grapic-section .graphic-content.downloadsrtfile img.pricing-banner {
+    position: absolute;
+    width: 335px;
+    left: 0px;
+    bottom:0px
+}
+
+div.stock-grapic-section .graphic-content.aipoweredanimation img.pricing-banner {
+    width: 380px;
+    left: 32px;
+    position: absolute;
+    bottom: 0;
+}
+
+div.stock-grapic-section .graphic-content.aipoweredanimationpro img.pricing-banner{
+    /* width: 736px;
+    left: 0;
+    position: absolute;
+    bottom: 0; */
+    width: 100%;
+    display: block;
+}
+
+div.stock-grapic-section .graphic-content.aipoweredanimationstarter img.pricing-banner{
+    width: 410px;
+    left: 0px;
+    position: absolute;
+    bottom: 0px;
+}
+
+
+div.stock-grapic-section .graphic-content.upgradeaiduration img.pricing-banner {
+    width: 350px;
+    left: 19px;
+    position: absolute;
+    bottom: 0;
+}
+
+div.stock-grapic-section .graphic-content .features-items  p.feature-text {
+    margin: 0;
+    text-align: left;
+    font: normal normal bold 15px/16px 'PT Sans', 'sans-serif';
+    letter-spacing: 0px;
+    color: #54536E;
+    opacity: 1;
+}
+
+/* .stock-grapic-bg.whiteboardanimation div.stock-grapic-section,
+.stock-grapic-bg.wbcharacterbuilder div.stock-grapic-section{
+    padding: 0;
+}
+
+.stock-grapic-bg.whiteboardanimation img.pricing-banner,
+.stock-grapic-bg.wbcharacterbuilder img.pricing-banner{
+    width: 100%;
+    max-height: none;
+} */
+
+.wbcharacterbuilder img.pricing-banner{
+    width: 80%;
+    display: block;
+    margin: auto;
+}
+
+@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+.payment-upgrade-section div.payment-loader-container {
+    background-color: white;
+}
+}
+
+/* if backdrop support: very transparent and blurred */
+@supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
+    .payment-upgrade-section div.payment-loader-container {
+      background-color: rgba(255, 255, 255, .5);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+    }
+}
+
+.display-error{
+    color: #FF6767!important;
+    background: none;
+}
+
+.payment-upgrade-section .credit-card-section.card {
+    height: auto;
+    border-radius: 16px;
+}
+.payment-order-summary .card{
+    border-radius: 16px;
+}
+.input_error{
+    border-color:#FF6767!important;
+}
+
+
+/* french  style starts */
+.payment-upgrade-section h1.graphic-header.common.fr,
+.payment-upgrade-section h1.graphic-header.ccb.fr,
+.payment-upgrade-section h1.graphic-header.properties.fr,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.fr,
+.payment-upgrade-section h1.graphic-header.background.fr,
+.payment-upgrade-section h1.graphic-header.screenEffects.fr,
+.payment-upgrade-section h1.graphic-header.folder.fr,
+.payment-upgrade-section h1.graphic-header.smartmove.fr,
+.payment-upgrade-section h1.graphic-header.resize.fr,
+.payment-upgrade-section h1.graphic-header.version.fr,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.fr,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.fr,
+.payment-upgrade-section h1.graphic-header.comments.fr{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.fr {
+    font: normal normal normal 14px/16px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.fr {
+    margin: 15px 0 20px 0;
+}
+.plan-dropdown-container.show .plan-dropdown-block.selected span.tick.fr{
+    right: 5px;
+}
+.pricing-banner.fr
+{
+    height: 470px;
+}
+.payment-upgrade-section .order-summary.fr{
+    padding:8px 30px;
+}
+/* french  style ends */
+/* spanish  style starts */
+.payment-upgrade-section h1.graphic-header.common.es,
+.payment-upgrade-section h1.graphic-header.ccb.es,
+.payment-upgrade-section h1.graphic-header.properties.es,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.es,
+.payment-upgrade-section h1.graphic-header.background.es,
+.payment-upgrade-section h1.graphic-header.screenEffects.es,
+.payment-upgrade-section h1.graphic-header.folder.es,
+.payment-upgrade-section h1.graphic-header.smartmove.es,
+.payment-upgrade-section h1.graphic-header.resize.es,
+.payment-upgrade-section h1.graphic-header.version.es,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.es,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.es,
+.payment-upgrade-section h1.graphic-header.comments.es{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.es {
+    font: normal normal normal 14px/16px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.es {
+    margin: 15px 0 20px 0;
+}
+.plan-dropdown-container.show .plan-dropdown-block.selected span.tick.es{
+    right: 5px;
+}
+.pricing-banner.es
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.es{
+    padding: 10px 30px;
+}
+/* spanish  style ends */
+/* italian  style starts */
+.payment-upgrade-section h1.graphic-header.common.it,
+.payment-upgrade-section h1.graphic-header.ccb.it,
+.payment-upgrade-section h1.graphic-header.properties.it,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.it,
+.payment-upgrade-section h1.graphic-header.background.it,
+.payment-upgrade-section h1.graphic-header.screenEffects.it,
+.payment-upgrade-section h1.graphic-header.folder.it,
+.payment-upgrade-section h1.graphic-header.smartmove.it,
+.payment-upgrade-section h1.graphic-header.resize.it,
+.payment-upgrade-section h1.graphic-header.version.it,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.it,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.it,
+.payment-upgrade-section h1.graphic-header.comments.it{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.it {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.it {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.it
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.it{
+    padding: 10px 30px;
+}
+/* italian style ends */
+/* Deutsh  style starts */
+.payment-upgrade-section h1.graphic-header.common.de,
+.payment-upgrade-section h1.graphic-header.ccb.de,
+.payment-upgrade-section h1.graphic-header.properties.de,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.de,
+.payment-upgrade-section h1.graphic-header.background.de,
+.payment-upgrade-section h1.graphic-header.screenEffects.de,
+.payment-upgrade-section h1.graphic-header.folder.de,
+.payment-upgrade-section h1.graphic-header.smartmove.de,
+.payment-upgrade-section h1.graphic-header.resize.de,
+.payment-upgrade-section h1.graphic-header.version.de,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.de,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.de,
+.payment-upgrade-section h1.graphic-header.comments.de{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.de {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.de {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.de
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.de{
+    padding: 10px 30px;
+}
+/* Deutsh style ends */
+/* Portugues  style starts */
+.payment-upgrade-section h1.graphic-header.common.pt,
+.payment-upgrade-section h1.graphic-header.ccb.pt,
+.payment-upgrade-section h1.graphic-header.properties.pt,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.pt,
+.payment-upgrade-section h1.graphic-header.background.pt,
+.payment-upgrade-section h1.graphic-header.screenEffects.pt,
+.payment-upgrade-section h1.graphic-header.folder.pt,
+.payment-upgrade-section h1.graphic-header.smartmove.pt,
+.payment-upgrade-section h1.graphic-header.resize.pt,
+.payment-upgrade-section h1.graphic-header.version.pt,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.pt,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.pt,
+.payment-upgrade-section h1.graphic-header.comments.pt{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.pt {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.pt {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.pt
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.pt{
+    padding: 20px 10px;
+}
+.plan-dropdown-container.pt{
+    width:150px;
+}
+/* Portugues style ends */
+/* Pyccknn  style starts */
+.payment-upgrade-section h1.graphic-header.common.ru,
+.payment-upgrade-section h1.graphic-header.ccb.ru,
+.payment-upgrade-section h1.graphic-header.properties.ru,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.ru,
+.payment-upgrade-section h1.graphic-header.background.ru,
+.payment-upgrade-section h1.graphic-header.screenEffects.ru,
+.payment-upgrade-section h1.graphic-header.folder.ru,
+.payment-upgrade-section h1.graphic-header.smartmove.ru,
+.payment-upgrade-section h1.graphic-header.resize.ru,
+.payment-upgrade-section h1.graphic-header.version.ru,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.ru,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.ru,
+.payment-upgrade-section h1.graphic-header.comments.ru{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.ru {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.ru {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.ru
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.ru{
+    padding: 8px 20px;
+}
+/* Pyccknn style ends */
+/* Polski  style starts */
+.payment-upgrade-section h1.graphic-header.common.pl,
+.payment-upgrade-section h1.graphic-header.ccb.pl,
+.payment-upgrade-section h1.graphic-header.properties.pl,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.pl,
+.payment-upgrade-section h1.graphic-header.background.pl,
+.payment-upgrade-section h1.graphic-header.screenEffects.pl,
+.payment-upgrade-section h1.graphic-header.folder.pl,
+.payment-upgrade-section h1.graphic-header.smartmove.pl,
+.payment-upgrade-section h1.graphic-header.resize.pl,
+.payment-upgrade-section h1.graphic-header.version.pl,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.pl,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.pl,
+.payment-upgrade-section h1.graphic-header.comments.pl{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.pl {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.pl {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.pl
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.pl{
+    padding: 10px 20px;
+}
+/* Polski style ends */
+/* nederlands  style starts */
+.payment-upgrade-section h1.graphic-header.common.nl,
+.payment-upgrade-section h1.graphic-header.ccb.nl,
+.payment-upgrade-section h1.graphic-header.properties.nl,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.nl,
+.payment-upgrade-section h1.graphic-header.background.nl,
+.payment-upgrade-section h1.graphic-header.screenEffects.nl,
+.payment-upgrade-section h1.graphic-header.folder.nl,
+.payment-upgrade-section h1.graphic-header.smartmove.nl,
+.payment-upgrade-section h1.graphic-header.resize.nl,
+.payment-upgrade-section h1.graphic-header.version.nl,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.nl,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.nl,
+.payment-upgrade-section h1.graphic-header.comments.nl{
+    padding: 20px 20px; 
+    font: normal normal bold 24px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.nl {
+    font: normal normal normal 14px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.nl {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.nl
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.nl{
+    padding: 10px 20px;
+}
+/* nederlands style ends */
+/* 日本語 ja style starts */
+.payment-upgrade-section h1.graphic-header.common.ja,
+.payment-upgrade-section h1.graphic-header.ccb.ja,
+.payment-upgrade-section h1.graphic-header.properties.ja,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.ja,
+.payment-upgrade-section h1.graphic-header.background.ja,
+.payment-upgrade-section h1.graphic-header.screenEffects.ja,
+.payment-upgrade-section h1.graphic-header.folder.ja,
+.payment-upgrade-section h1.graphic-header.smartmove.ja,
+.payment-upgrade-section h1.graphic-header.resize.ja,
+.payment-upgrade-section h1.graphic-header.version.ja,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.ja,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.ja,
+.payment-upgrade-section h1.graphic-header.comments.ja{
+    padding: 20px 20px; 
+    font: normal normal bold 20px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.ja {
+    font: normal normal normal 13px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.ja {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.ja
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.ja{
+    padding: 10px 20px;
+}
+.foo.ja{
+    font: normal normal normal 13px/30px 'PT Sans', 'sans-serif' !important;
+}
+/* 日本語 ja style ends */
+/* 日本語 zh-hans style starts */
+.payment-upgrade-section h1.graphic-header.common.zh-hans,
+.payment-upgrade-section h1.graphic-header.ccb.zh-hans,
+.payment-upgrade-section h1.graphic-header.properties.zh-hans,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.zh-hans,
+.payment-upgrade-section h1.graphic-header.background.zh-hans,
+.payment-upgrade-section h1.graphic-header.screenEffects.zh-hans,
+.payment-upgrade-section h1.graphic-header.folder.zh-hans,
+.payment-upgrade-section h1.graphic-header.smartmove.zh-hans,
+.payment-upgrade-section h1.graphic-header.resize.zh-hans,
+.payment-upgrade-section h1.graphic-header.version.zh-hans,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.zh-hans,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.zh-hans,
+.payment-upgrade-section h1.graphic-header.comments.zh-hans{
+    padding: 20px 20px; 
+    font: normal normal bold 20px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.zh-hans {
+    font: normal normal normal 13px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.zh-hans {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.zh-hans
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.zh-hans{
+    padding: 30px 20px;
+}
+.foo.zh-hans{
+    font: normal normal normal 14px/30px 'PT Sans', 'sans-serif';
+}
+/* 简体中文 zh-hans style ends */
+/* 日本語 zh-hans style starts */
+.payment-upgrade-section h1.graphic-header.common.zh-hant,
+.payment-upgrade-section h1.graphic-header.ccb.zh-hant,
+.payment-upgrade-section h1.graphic-header.properties.zh-hant,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.zh-hant,
+.payment-upgrade-section h1.graphic-header.background.zh-hant,
+.payment-upgrade-section h1.graphic-header.screenEffects.zh-hant,
+.payment-upgrade-section h1.graphic-header.folder.zh-hant,
+.payment-upgrade-section h1.graphic-header.smartmove.zh-hant,
+.payment-upgrade-section h1.graphic-header.resize.zh-hant,
+.payment-upgrade-section h1.graphic-header.version.zh-hant,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.zh-hant,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.zh-hant,
+.payment-upgrade-section h1.graphic-header.comments.zh-hant{
+    padding: 20px 20px; 
+    font: normal normal bold 20px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.zh-hant {
+    font: normal normal normal 13px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.zh-hant {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.zh-hant
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.zh-hant{
+    padding: 50px 20px;
+}
+.foo.zh-hant{
+    font: normal normal normal 14px/30px 'PT Sans', 'sans-serif';
+}
+/* 简体中文 zh-hant style ends */
+/* 日本語 zh-hans style starts */
+.payment-upgrade-section h1.graphic-header.common.ko,
+.payment-upgrade-section h1.graphic-header.ccb.ko,
+.payment-upgrade-section h1.graphic-header.properties.ko,
+.payment-upgrade-section h1.graphic-header.textPrebuilt.ko,
+.payment-upgrade-section h1.graphic-header.background.ko,
+.payment-upgrade-section h1.graphic-header.screenEffects.ko,
+.payment-upgrade-section h1.graphic-header.folder.ko,
+.payment-upgrade-section h1.graphic-header.smartmove.ko,
+.payment-upgrade-section h1.graphic-header.resize.ko,
+.payment-upgrade-section h1.graphic-header.version.ko,
+.payment-upgrade-section h1.graphic-header.Watermarkupgrade.ko,
+.payment-upgrade-section h1.graphic-header.cbpupgrade.ko,
+.payment-upgrade-section h1.graphic-header.comments.ko{
+    padding: 20px 20px; 
+    font: normal normal bold 20px/36px 'PT Sans';
+}
+.payment-upgrade-section ul li.ko {
+    font: normal normal normal 13px/18px 'PT Sans', 'sans-serif';
+}
+.payment-upgrade-section h2.price.ko {
+    margin: 15px 0 20px 0;
+}
+.pricing-banner.ko
+{
+    max-height: 470px; 
+}
+.payment-upgrade-section .order-summary.ko{
+    padding: 50px 20px;
+}
+.foo.ko{
+    font: normal normal normal 14px/30px 'PT Sans', 'sans-serif';
+}
+/* 한국어 ko style ends */
+
+.rightcontainer.payment-upgrade-section .anim-row.prorated-price {
+    margin-bottom: 15px;
+}
+.rightcontainer.payment-upgrade-section .anim-row.prorated-price .anim-col.md-30 {
+    justify-content: end;
+    align-items: center;
+    display: flex;
+}
+
+
+/* NEW CSS UPDATES */
+    /* COMMON PRICING CSS */
+    .payment-upgrade-section .plan-comparison .plan-picker {
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        border: 1px solid white;
+        border-radius: 16px;
+    }
+    tags.save-banner{
+        text-align: center;
+        font: normal normal bold 11px/14px 'PT Sans',sans-serif;
+        letter-spacing: 0px;
+        color: #FFFFFF;
+        background:#774FF0;
+        border-radius: 4px;
+        padding:5px 8px;
+        position: relative;
+        top: -2px;
+    }
+    .plan-picker:before{
+        background: url('../img/inactive-tick.png');
+        height: 20px;
+        width: 20px;
+        background-position: center;
+        background-size: cover;
+        top: 7px;
+        right: 7px;
+        display: block;
+        position: absolute;
+        content:'';
+    }
+    .plan-picker.active:before{
+        background: url('../img/active-tick.png');
+        background-position: center;
+        background-size: cover;
+        width: 25px;
+        height: 25px;
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker label{
+        font:normal normal normal 12px/7px 'PT Sans', 'sans-serif';
+    }
+    h2 strikeThrough{
+        font-size: 15px;
+        font-weight: normal;
+        color:black;
+        text-decoration: line-through;
+        text-decoration-color: red;
+    }
+    .plan-picker.active  h2 strikeThrough{
+        font-size: 17px;
+        font-weight: normal;
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker label{
+        font:normal normal 600 13px/7px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker.active label{
+        font:normal normal 600 15px/7px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker h3{
+        font:normal normal normal 20px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .active.plan-picker h3{
+        font:normal normal bold 24px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .active.plan-picker h2.price{
+        font:normal normal bold 32px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-picker.active h2 sub{
+        font:normal normal normal 16px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-picker.active h2 sup{
+        font:normal normal bold 15px/7px 'PT Sans', 'sans-serif';
+    }
+
+
+
+    /* POPUP CSS */
+
+    .anim-row.plan-cycle-card-container {
+        /* width: 100%;
+        margin: auto; */
+        align-items: center;
+    }
+
+    .payment-upgrade-section .plan-comparison .plan-picker h3{
+        font:normal normal normal 17px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker{
+        height:170px;
+        margin: 20px;
+        max-width: 290px;
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker.active{
+        height:200px;
+        margin: 0;
+        max-width: 325px;
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker label{
+        font:normal normal normal 12px/7px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker h2.price{
+        font:normal normal bold 24px/9px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-picker.active h2 sup{
+        font:normal normal bold 24px 'PT Sans', 'sans-serif';
+    }
+    
+    .payment-upgrade-section .plan-comparison .plan-picker label{
+        font:normal normal normal 13px/7px 'PT Sans', 'sans-serif';
+    }
+    .payment-upgrade-section .plan-comparison .plan-picker.active label{
+        font:normal normal 600 15px/7px 'PT Sans', 'sans-serif';
+    }
+
+
+
+
+    /*  PRICING PAGE CSS */
+    .rightcontainer.payment-upgrade-section .plan-comparison .plan-picker h3{
+        font:normal normal normal 18px/9px 'PT Sans', 'sans-serif';
+    }
+    .rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active h3{
+        font:normal normal bold 18px/9px 'PT Sans', 'sans-serif';
+    }
+    .rightcontainer.payment-upgrade-section .anim-row.plan-cycle-card-container{
+        width: auto;
+        margin: 0 -5px;
+    }
+    .rightcontainer.payment-upgrade-section .plan-comparison .plan-picker{
+        height:165px;
+    }
+    .rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active{
+        height:180px;
+    }
+    .rightcontainer.payment-upgrade-section .plan-comparison .plan-picker h2.price{
+        font:normal normal bold 24px/9px 'PT Sans', 'sans-serif';
+    }
+
+    @media screen and (max-width: 767px) {
+        .pricingPopup.payment-upgrade-section{
+            overflow-y: auto;
+        }
+        .plan-picker{
+            margin-bottom: 20px;
+        }
+        .cc-container{
+            width:auto;
+        }
+        .payment-upgrade-section .toggle-payment{
+            margin-top: 10px;
+        }
+        .scrollingLoaderDisplay{
+            margin: auto;
+        }
+        .anim-row.plan-cycle-card-container div{
+           margin-bottom: 20px;
+        }
+        .payment-upgrade-section .order-summary{
+            padding: 40px 10px;
+        }
+        div.popup_change_credit_card{
+            justify-content: unset;
+            margin-top: 10px;
+        }
+        .order-summary .anim-row{
+            flex-wrap: nowrap;
+        }
+        #planFeatureHeader{
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+        .payment-upgrade-section .card-content{
+            padding: 20px;
+        }
+        .choose-plan{
+            padding: 35px 20px;
+        }
+        .payment-upgrade-section .card{
+            margin-bottom: 15px;
+        }
+        .payment-upgrade-section h2{
+            line-height: 1.2;
+        }
+        .payment-upgrade-section button{
+            width: 200px;
+            left: 0;
+            right: 0;
+
+        }
+        .success-container{
+            width:350px !important;
+        }
+        .payment-confirmation-section h1.head-text{
+            font: normal normal bold 33px/17px 'PT Sans', sans-serif !important;
+        }
+        .payment-confirmation-section .anim-card{
+            padding: 15px !important;
+        }
+        .animaker_access_container{
+            padding:10px !important;
+        }
+        img.success-tick{
+            width:55px !important;
+            height:55px !important;
+        }
+        .premium_success{
+            font: normal normal bold 22px/26px 'PT Sans', sans-serif !important;
+            padding: 0 15px !important;
+        }
+        .elaborateguide,#slack-container{
+            /* display:unset !important; */
+            margin: 10px  !important;
+        }
+        .elaborateguide p,#slack-container p{
+            width:100% !important;
+        }
+        .payment-confirmation-section{
+            background: #290364 !important;
+        }
+        .payment-confirmation-section .anim-row{
+            margin-right:0 !important;
+        }
+        .payment-tooltip .payment-tooltiptext {
+            top: 0;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            right: 0;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .just-cont-end{
+            margin-bottom: 20px;
+        }
+        .enterprise-footer{
+            bottom: -500px;
+            position: relative;
+        }
+        
+    }
+
+.braintree-hosted-invalid{
+    border: 2px solid red!important;
+}
+    
+
+/* RAZORPAY UI FIXES */
+.rightcontainer.payment-upgrade-section .plan-comparison {
+    padding: 90px 0 0 0;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker{
+    height:120px;
+    height: 150px;
+    width:270px;
+    margin: 0;
+    background: #F2F2F2;
+}
+
+.rightcontainer.payment-upgrade-section .plan-comparison .plan-picker.active{
+    height:120px;
+    height:150px;
+    width:270px;
+    margin: 0;
+    background: white;
+}
+.payment-upgrade-section .plan-comparison .plan-picker.active{
+    border: 1px solid #FFC300;
+}
+.payment-upgrade-section .card-content{
+    border-radius: 16px;
+}
+.cc-container{
+    max-width: 560px;
+    width: auto;
+}
+.rightcontainer.payment-upgrade-section label.payment-label-txt{
+    text-align: left;
+    font: normal normal bold 15px/12px 'PT Sans',sans-serif;
+    letter-spacing: 0px;
+    color: #54536E;
+    position: relative;
+    top: -3px;
+    cursor: pointer;
+}
+.rightcontainer.payment-upgrade-section label.card-brand{
+    float: right;
+    line-height: normal;
+    cursor: pointer;
+}
+.rightcontainer.payment-upgrade-section .card-content.upi-indian label.card-brand{
+    top: -2px;
+    position: relative;
+    cursor: pointer;
+}
+
+.card-content.upi-indian .toggle-payment,
+.card-content.indian-card .toggle-payment,
+.international-card .toggle-payment,
+.card-content.paypal .toggle-payment {
+    display: block;
+    padding: 15px;
+}
+.payment-upgrade-section .credit-card-section .international-card .toggle-payment label.green-tick-radio-grp{
+    display: block;
+}
+.card-content.upi-indian .toggle-payment .green-tick-radio-grp,
+.card-content.indian-card .toggle-payment .green-tick-radio-grp,
+.payment-upgrade-section .credit-card-section .international-card .toggle-payment label.green-tick-radio-grp,
+.card-content.paypal .toggle-payment .green-tick-radio-grp{
+    position: relative;
+    width: 100%;
+}
+
+.cc-container img.upi-tick {
+    position: relative;
+    top: -5px;
+}
+.cc-container img.upi-icon{
+    width: 100%;
+    height: auto;
+    max-width: 55px;
+    /* position: absolute;
+    top: -2px;
+    right: -5px; */
+}
+.cc-container img.credit-card-icon-bw{
+    width: 20px;
+    height: auto;
+    position: relative;
+    bottom: 5px;
+}
+
+.rightcontainer.payment-upgrade-section .card-content.upi-indian button.paynow-button,
+.rightcontainer.payment-upgrade-section .card-content.indian-card button.paynow-button,
+.rightcontainer.payment-upgrade-section .credit-card-section button.paynow-button,
+.rightcontainer.payment-upgrade-section .card-content.paypal button.paynow-button{
+    margin-bottom: 0;
+}
+.rightcontainer.payment-upgrade-section .cc-header{
+    padding: 15px;
+}
+.rightcontainer.payment-upgrade-section img.paypal-icon{
+    width: 100%;
+    position: relative;
+    top: -2px;
+    float: right;
+}
+p.plan-txt{
+    margin: 0 0 0 5px;
+    font:normal normal bold 16px/12px 'PT Sans', 'sans-serif'
+}
+.rightcontainer.payment-upgrade-section .card{
+    margin: 8px auto;
+}
+.payment-card-header {
+    margin: 12px 0 8px 0;
+}
+.rightcontainer.payment-upgrade-section span.payment-gateway-txt {
+    margin: 20px 0;
+}
+.payment-upgrade-section button:hover,
+.payment-upgrade-section .order-summary button.paynow-button:hover{
+    background: transparent linear-gradient(279deg, #503DF9 0%, #9E52F7 100%) 0% 0% no-repeat padding-box;
+}
+
+
+/* VOICE APP CHANGES SINGLE CARD IN POPUP */
+
+.payment-upgrade-section #planFeatureStage .card{
+    max-width: 500px;
+    margin: auto;
+}
+.pricingPopup.payment-upgrade-section .card-content{
+    display: flex;
+    justify-content: center;
+}
+.payment-upgrade-section .card-content.voice.pro div.card-planheader-container{
+    justify-content: center;
+}
+.payment-upgrade-section #planFeatureStage .card-content.voice.pro h2.price{
+    text-align: center;
+}
+    
+    

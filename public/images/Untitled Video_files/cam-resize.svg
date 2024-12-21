@@ -1,0 +1,22 @@
+<svg id="Component_30_6" data-name="Component 30 – 6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Group_57457" data-name="Group 57457">
+    <g id="Rectangle_18457" data-name="Rectangle 18457" fill="rgba(96,96,96,0.4)" stroke="#424158" stroke-width="1.6">
+      <rect width="24" height="24" rx="6" stroke="none"/>
+      <rect x="0.8" y="0.8" width="22.4" height="22.4" rx="5.2" fill="none"/>
+    </g>
+  </g>
+  <g id="Group_57460" data-name="Group 57460" transform="translate(4.042 14.13) rotate(-45)">
+    <line id="Line_2805" data-name="Line 2805" x2="8.593" transform="translate(1.657 4.051)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+    <g id="Group_57459" data-name="Group 57459" transform="translate(4.051 0) rotate(45)">
+      <line id="Line_2803" data-name="Line 2803" y2="5.729" transform="translate(0 0)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+      <line id="Line_2804" data-name="Line 2804" x1="5.729" transform="translate(0 5.729)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+    </g>
+  </g>
+  <g id="Group_57461" data-name="Group 57461" transform="translate(19.958 9.87) rotate(135)">
+    <line id="Line_2805-2" data-name="Line 2805" x2="8.593" transform="translate(1.657 4.051)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+    <g id="Group_57459-2" data-name="Group 57459" transform="translate(4.051 0) rotate(45)">
+      <line id="Line_2803-2" data-name="Line 2803" y2="5.729" transform="translate(0 0)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+      <line id="Line_2804-2" data-name="Line 2804" x1="5.729" transform="translate(0 5.729)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>
