@@ -10,7 +10,7 @@ export const UIStore = create(
             set({ darkModeOn: mode })
         },
 
-        searchParam: useRouter().query,
+        searchParams: useRouter().query,
 
         oceanVision: false,
         setOceanVision: (state) => {
