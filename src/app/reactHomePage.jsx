@@ -25,7 +25,6 @@ import {
   setInfiniteScroll,
   setScrollListener,
 } from "@/utils/InfiniteScrollSetUp";
-import { UserStore } from "@/store/UserStore";
 
 export default function ReactHomePage() {
   const router = useRouter();
@@ -46,58 +45,48 @@ export default function ReactHomePage() {
     setDropletDataType,
     dropletsData,
   } = DropletStore();
-  const { anchoringsIds } = UserStore();
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [hasMoreUnFeedDroplets, setHasMoreUnFeedDroplets] = useState(false);
+  const [hasMoreUnFeedData, setHasMoreUnFeedData] = useState(true);
   // const [feedDroplets, setFeedDroplets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const feedRef = useRef();
-  const limit = 5;
 
-  const fetchFeedData = useCallback(async () => {
-    if (isLoading || !hasMore) return;
-    setIsLoading(true);
-    try {
-      if (hasMoreUnFeedDroplets || anchoringsIds.length === 0) {
-        const newData = await GetUnFeedDroplets(page, limit);
-        if (newData?.length > 0) {
-          if (newData.length < limit) {
-            setHasMore(false);
-            setHasMoreUnFeedDroplets(false);
-          } // Stop fetching
-          else setPage((prev) => prev + 1); // Increment only if fetch is valid
-        } else {
-          setHasMore(false);
-          setHasMoreUnFeedDroplets(false);
-        }
-      } else {
-        const newData = await GetFeedDroplets(page, limit);
-        if (newData?.length > 0) {
-          if (newData.length < limit) {
-            setPage(1); // Reset page after last fetch
-            setHasMoreUnFeedDroplets(true);
-          } // Stop fetching
-          else setPage((prev) => prev + 1); // Increment only if fetch is valid
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching droplets:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    isLoading,
-    hasMore,
-    page,
-    hasMoreUnFeedDroplets,
-    GetFeedDroplets,
-    GetUnFeedDroplets,
-  ]);
+  const fetchFeedData = () => {
+    console.log("hasMore", hasMore);
+    if (hasMore)
+      fetchDataForInfiniteScroll(
+        isLoading,
+        setIsLoading,
+        hasMore,
+        setHasMore,
+        page,
+        setPage,
+        5,
+        GetFeedDroplets
+      );
+    if (!hasMore)
+      fetchDataForInfiniteScroll(
+        isLoading,
+        setIsLoading,
+        hasMoreUnFeedData,
+        setHasMoreUnFeedData,
+        page,
+        setPage,
+        10,
+        GetUnFeedDroplets
+      );
+  };
 
   const handleScroll = () =>
-    setInfiniteScroll(feedRef, hasMore, page, isLoading, fetchFeedData);
+    setInfiniteScroll(
+      feedRef,
+      hasMore || hasMoreUnFeedData,
+      page,
+      isLoading,
+      fetchFeedData
+    );
 
   useEffect(() => {
     // Fetch initial droplets
@@ -109,7 +98,8 @@ export default function ReactHomePage() {
     setDropletDataType("feedDroplets");
     fetchFeedData(); // Explicit initial fetch call
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Ensure this runs only once
+  }, [hasMore]); // Ensure this runs only once
+
 
   useEffect(() => {
     setScrollListener(feedRef, handleScroll);
@@ -185,7 +175,7 @@ export default function ReactHomePage() {
             <div className="bg-ternary dark:bg-d_ternary w-full  p-3 px-4  items-center rounded-2xl flex justify-between">
               <div className="text-lg flex flex-col sm:flex-row sm:gap-2">
                 <h1>Whats Happening ?</h1>
-                <h1>Whats in your mind!</h1>
+                <h1>Whats on your mind!</h1>
               </div>
               <Button
                 onClick={() => {
@@ -234,7 +224,7 @@ export default function ReactHomePage() {
               <CycloneRounded className="animate-spin size-8" />
             </div>
           )}
-          {!hasMore && (
+          {!hasMore && !hasMoreUnFeedData && (
             <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
               <CrisisAlertRounded className="size-6 animate-spin" />
               Increase Anchorings to See more...

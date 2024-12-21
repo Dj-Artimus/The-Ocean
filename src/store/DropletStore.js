@@ -447,7 +447,7 @@ export const DropletStore = create(
                     const offset = (page - 1) * limit;
                     const { data, error } = await supabase.schema("Ocean").from("Droplet").select('*,user_id(*)').in('user_id', UserStore.getState().anchoringsIds).order('created_at', { ascending: false }).range(offset, lastDroplet ? lastDroplet : (offset + limit - 1));
                     if (error || !data) {
-                        console.log('No Profile found');
+                        console.log('No Profile found', error);
                         return null;
                     }
 

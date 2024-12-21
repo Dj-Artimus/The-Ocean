@@ -19,6 +19,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        pathname: '/**', // Allow all paths from this domain
+      },
+      {
+        protocol: 'https',
         hostname: 'xcokvvwfhrimlxrialqx.supabase.co',
         pathname: '/**', // Allow all paths from this domain
       },

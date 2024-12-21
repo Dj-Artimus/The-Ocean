@@ -96,7 +96,7 @@ const OceaniteAtolls = () => {
         {/* MAIN CONTENT STARTS HERE */}
         <div
           ref={oceanitesRef}
-          className="h-full w-full m-auto sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px] overflow-y-auto customScrollbar"
+          className="h-full w-full m-auto overflow-x-hidden sm:w-3/4 md:w-[80%] xl:w-[63%] xl:pe-2 p-2 lg:pt-[54px] overflow-y-auto customScrollbar"
         >
           {/* OCEANITES STARTS HERE */}
 

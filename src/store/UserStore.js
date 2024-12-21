@@ -544,7 +544,10 @@ export const UserStore =
 
 
 
-            }), {
-            name: 'user-store', // Storage key in localStorage
-            getStorage: () => localStorage, // You can replace with sessionStorage
-        }));
+            })
+            , {
+                name: 'user-store', // Storage key in localStorage
+                getStorage: () => localStorage, // You can replace with sessionStorage
+            }
+        )
+    );
