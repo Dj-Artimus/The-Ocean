@@ -954,7 +954,7 @@ export const DropletStore = create(
                                 };
                             }
 
-                            if (!notificationExists) {
+                            if (!notificationExists && newDroplet.user_id.id !== user.id) {
                                 const updatedNotifications = [newDroplet, ...state.notificationsData]; // Add new droplet to the top
                                 // get().setDropletsData(updatedDroplets);
                                 UIStore.getState().setNotificationsCount(UIStore.getState().notificationsCount + 1);
