@@ -73,7 +73,6 @@ export default function ReactHomePage() {
           setHasMoreUnFeedDroplets(false);
         }
       } else {
-        console.log("anchorings ids", anchoringsIds);
         const newData = await GetFeedDroplets(page, limit);
         if (newData?.length > 0) {
           if (newData.length < limit) {
