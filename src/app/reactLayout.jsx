@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import "./globals.css";
 import UILoader from "@/components/UILoader";
 import DropletModal from "@/components/DropletModal";
@@ -30,6 +30,7 @@ const ReactLayout = ({ children }) => {
     setIsUILoading,
     isPageLoading,
     darkModeOn,
+    searchParams
   } = UIStore();
   const {
     fetchProfileData,
@@ -40,7 +41,6 @@ const ReactLayout = ({ children }) => {
   } = UserStore();
 
   const pathname = usePathname();            // Get the current pathname
-  const searchParams = useSearchParams();    // Get query parameters from the URL
   const router = useRouter();                // Get the Next.js router (useRouter from next/navigation)
 
   const { history, currentIndex, AddPageToHistory, GoBack, GoForward } =  NavigationStore();
@@ -171,7 +171,7 @@ const ReactLayout = ({ children }) => {
 
   return (
     <ErrorBoundary>
-      <Suspense fallback={<UILoader />} >
+      <>
         <CssBaseline />
         <ToasterProvider />
         <DropletModal />
@@ -184,7 +184,7 @@ const ReactLayout = ({ children }) => {
         <MoreOptionsModal />
         <ShareOptionsModal />
         {isPageLoading && <PageLoader />}
-      </Suspense>
+      </>
     </ErrorBoundary>
   );
 };
