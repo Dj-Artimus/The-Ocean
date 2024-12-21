@@ -229,7 +229,7 @@ const CreateProfile = () => {
                       }}
                       src={avatarData.newSource || avatarData.currentSource}
                       alt="profile"
-                      className="size-[22%] min-w-14 min-h-14 m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
+                      className="size-20 xs6:size-24 sm:size-30 lg:size-40 object-cover m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
                     />
                   </div>
                 </div>
