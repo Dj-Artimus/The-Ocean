@@ -214,8 +214,8 @@ const Droplet = ({
 
   return (
     <div className="">
-      {isDropletLoading && <DropletLoader />}
       <div className="my-3 border bg-foreground dark:bg-d_foreground relative shadow-sm shadow-blue-300 dark:shadow-blue-950 rounded-3xl border-slate-700">
+        {isDropletLoading && <DropletLoader />}
         <div className="flex justify-between items-center px-3 pt-1 rounded-2xl">
           {/* HEADING BAR STARTS HERE */}
           <div className="flex items-center w-full justify-between">
@@ -311,7 +311,7 @@ const Droplet = ({
         </div>
         <hr className="mx-4 mt-1 border-slate-700" />
 
-        <div className="px-4 py-3 pb-4">
+        <div className="px-4 pt-3">
           {/*  DROPLET CONTENT AND MEDIA STARTS HERE  */}
           <ContentAndMediaElement
             content={content}
@@ -321,52 +321,36 @@ const Droplet = ({
           {/*  DROPLET CONTENT AND MEDIA ENDS HERE  */}
         </div>
 
-        <hr className="mx-4 mt-1 border-slate-700" />
-        <div className="flex w-full justify-between items-center px-5 sm:px-10 py-4">
-          <div className="flex items-center gap-2">
+        <hr className="mx-4 border-slate-700" />
+        <div className="flex w-full justify-between items-center px-4 sm:px-10 py-3">
+          <div className="flex items-center">
             <Button
               disabled={isStaring}
               onClick={() => handleStarADroplet(droplet_id)}
-              className="-ms-[6px] cursor-pointer"
+              className="cursor-pointer"
               title="like"
             >
               {stared ? (
-                <StarRoundedIcon
-                  sx={{
-                    width: "34px",
-                    height: "34px",
-                  }}
-                  className="size-[33px] text-amber-400 stroke-amber-500 translate-x-2"
-                />
+                <StarRoundedIcon className="!size-[34px] text-amber-400 stroke-amber-500 " />
               ) : (
-                <StarOutlineRoundedIcon
-                  sx={{
-                    width: "34px",
-                    height: "34px",
-                  }}
-                  className="size-[33px] translate-x-2"
-                />
+                <StarOutlineRoundedIcon className="!size-[34px] " />
               )}
             </Button>
             <h1>{formatCount(stars)}</h1>
           </div>
 
           {oceanVision && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-[1px]">
               <Button>
                 <RepeatRoundedIcon
-                  sx={{
-                    width: "30px",
-                    height: "30px",
-                  }}
-                  className="size-7 cursor-pointer"
+                  className="!size-7 cursor-pointer"
                   title="Repost"
                 />
               </Button>
               <h1> {formatCount(redrops)} </h1>
             </div>
           )}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-[1px]">
             <Button
               onClick={() => {
                 setIsRippleInitiated(true);
@@ -377,22 +361,11 @@ const Droplet = ({
             >
               {rippled ? (
                 <AssistantIcon
-                  sx={{
-                    width: "30px",
-                    height: "30px",
-                  }}
-                  className="size-7 text-sky-500 stroke-sky-700 dark:stroke-none "
+                  className="!size-7 text-sky-500 stroke-sky-700 dark:stroke-none "
                   title="Comment"
                 />
               ) : (
-                <AssistantOutlinedIcon
-                  sx={{
-                    width: "30px",
-                    height: "30px",
-                  }}
-                  className="size-7"
-                  title="Comment"
-                />
+                <AssistantOutlinedIcon className="!size-7" title="Comment" />
               )}
             </Button>
             <h1> {formatCount(ripples)} </h1>
@@ -406,11 +379,7 @@ const Droplet = ({
             className="flex items-center cursor-pointer"
           >
             <IosShareRoundedIcon
-              sx={{
-                width: "30px",
-                height: "30px",
-              }}
-              className="w-[26px] h-[26px] cursor-pointer mb-[2px]"
+              className="!size-7 cursor-pointer mb-[1px]"
               title="Share"
             />
           </Button>
@@ -421,20 +390,12 @@ const Droplet = ({
           >
             {gemmed ? (
               <BookmarkRoundedIcon
-                sx={{
-                  width: "30px",
-                  height: "30px",
-                }}
-                className="size-7 text-emerald-500 stroke-emerald-600 "
+                className="!size-[30px] text-emerald-500 stroke-emerald-600 "
                 title="Save"
               />
             ) : (
               <BookmarkBorderRoundedIcon
-                sx={{
-                  width: "30px",
-                  height: "30px",
-                }}
-                className="size-7"
+                className="!size-[30px]"
                 title="Save"
               />
             )}

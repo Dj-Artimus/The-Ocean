@@ -29,9 +29,9 @@ export const UserStore =
 
                 GetUser: async () => {
                     const { data, error } = await supabase.auth.getUser();
-                    if( data ) return data?.user;
+                    if (data) return data?.user;
                 },
-                
+
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
                     set({ isProfileDataFetched: false });
@@ -319,14 +319,19 @@ export const UserStore =
                                 return null;
                             }
 
-                            const existingOceanites = get().oceanitesData;
-                            const newOceanites = data.filter(
-                                (oceanite) => !existingOceanites.some((existing) => existing.id === oceanite.id)
-                            );
+                            if (page === 1) set({
+                                oceanitesData: data, // Replace existing oceanites
+                            })
+                            else {
+                                const existingOceanites = get().oceanitesData;
+                                const newOceanites = data.filter(
+                                    (oceanite) => !existingOceanites.some((existing) => existing.id === oceanite.id)
+                                );
 
-                            set({
-                                oceanitesData: [...existingOceanites, ...newOceanites], // Append new oceanites
-                            });
+                                set({
+                                    oceanitesData: [...existingOceanites, ...newOceanites], // Append new oceanites
+                                });
+                            }
 
                             return data;
                         }
@@ -334,6 +339,57 @@ export const UserStore =
                         const data = await getOceanites();
 
                         if (data.length === 0) {
+                            const count = await getOceanitesCount();
+                            const data = await getOceanites(count - 1);
+                            return data;
+                        }
+                        return data;
+
+                    } catch (error) {
+                        console.log('error to fetch the oceanites', error);
+                    }
+                },
+
+                SearchOceanites: async (page = 1, limit = 5, keywords) => {
+                    try {
+
+                        const getOceanitesCount = async () => {
+                            const { count } = await supabase.schema("Ocean").from("Profile").select('*', { count: 'exact' }).or(`name.ilike.%${keywords}%,username.ilike.%${keywords}%`);
+                            return count;
+                        }
+
+                        const getOceanites = async (lastOceanite) => {
+                            const offset = (page - 1) * limit;
+                            const { data, error } = await supabase.schema("Ocean")
+                                .from('Profile') // Ensure this is the correct table name
+                                .select('*')
+                                .or(`name.ilike.%${keywords}%,username.ilike.%${keywords}%`)
+                                .range(offset, lastOceanite ? lastOceanite : (offset + limit - 1));
+                            if (error || !data) {
+                                console.log('error', error);
+                                return null;
+                            }
+
+                            if (page === 1) set({
+                                oceanitesData: data, // Replace existing oceanites
+                            })
+                            else {
+                                const existingOceanites = get().oceanitesData;
+                                const newOceanites = data.filter(
+                                    (oceanite) => !existingOceanites.some((existing) => existing.id === oceanite.id)
+                                );
+
+                                set({
+                                    oceanitesData: [...existingOceanites, ...newOceanites], // Append new oceanites
+                                });
+                            }
+
+                            return data;
+                        }
+
+                        const data = await getOceanites();
+
+                        if (data?.length === 0) {
                             const count = await getOceanitesCount();
                             const data = await getOceanites(count - 1);
                             return data;
@@ -360,14 +416,21 @@ export const UserStore =
                                 return null;
                             }
 
-                            const existingAnchors = get().anchorsData;
-                            const newAnchors = data.map(
-                                (oceanite) => !existingAnchors.some((existing) => existing.id === oceanite.anchor_id.id) && oceanite.anchor_id
-                            );
+                            if (page === 1) set({
+                                anchorsData: data, // Replace existing oceanites
+                            })
+                            else {
+                                const existingAnchors = get().anchorsData;
+                                const newAnchors = data.map(
+                                    (oceanite) => !existingAnchors.some((existing) => existing.id === oceanite.anchor_id.id) && oceanite.anchor_id
+                                );
 
-                            set({
-                                anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
-                            });
+                                set({
+                                    anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
+                                });
+                            }
+
+
                             return data;
                         }
 
@@ -400,14 +463,19 @@ export const UserStore =
                                 return null;
                             }
 
-                            const existingAnchorings = get().anchoringsData;
-                            const newAnchorings = data.map(
-                                (oceanite) => !existingAnchorings.some((existing) => existing.id === oceanite.anchoring_id.id) && oceanite.anchoring_id
-                            );
+                            if (page === 1) set({
+                                anchorsData: data, // Replace existing oceanites
+                            })
+                            else {
+                                const existingAnchors = get().anchorsData;
+                                const newAnchors = data.map(
+                                    (oceanite) => !existingAnchors.some((existing) => existing.id === oceanite.anchor_id.id) && oceanite.anchor_id
+                                );
 
-                            set({
-                                anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
-                            });
+                                set({
+                                    anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
+                                });
+                            }
 
                             return data;
                         }
@@ -426,20 +494,21 @@ export const UserStore =
                     }
                 },
 
-                SearchOceanites: async (keywords) => {
-                    try {
-                        const { data, error } = await supabase.schema('Ocean').from('Profile').select('*')
-                            .ilike('name', `%${keywords}%`) // Case-insensitive search for the "name" column
-                            .or(`username.ilike.%${keywords}%`) // Case-insensitive search for the "username" column
-                            .range(0, 9);
+                // SearchOceanites: async (keywords) => {
+                //     try {
+                //         const { data, error } = await supabase
+                //             .from('Profile') // Ensure this is the correct table name
+                //             .select('*')
+                //             .or(`name.ilike.%${keywords}%,username.ilike.%${keywords}%`)
+                //             .range(0, 9);
 
-                        if (error) return console.log('error to search user', error)
-                        set({ oceanitesData: [...data] });
-                        return data;
-                    } catch (error) {
-                        console.log('error to fetch the oceanites', error);
-                    }
-                },
+                //         if (error) return console.log('error to search user', error)
+                //         set({ oceanitesData: [...data] });
+                //         return data;
+                //     } catch (error) {
+                //         console.log('error to fetch the oceanites', error);
+                //     }
+                // },
 
                 AnchorOceanite: async (anchoring_id) => {
                     const user = get().profileData;

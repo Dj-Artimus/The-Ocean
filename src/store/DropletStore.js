@@ -344,7 +344,6 @@ export const DropletStore = create(
                 const { data, error } = await supabase.schema("Ocean").rpc('get_unique_ripple_droplets', { userid });
 
                 if (error || !data) {
-                    console.error('Error fetching rippled droplets:', error || 'No data returned');
                     return null;
                 }
                 set({ userRippledDroplets: data });

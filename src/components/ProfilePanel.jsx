@@ -107,7 +107,7 @@ const ProfilePanel = ({
             ) : (
               <Button
                 disabled={isAnchoring}
-                className="xs1:flex flex-col items-center rounded-xl text-blue-400 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary hover:text-blue-400"
+                className="xs1:flex flex-col items-center rounded-xl  dark:text-blue-400 text-blue-500 font-bold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary hover:text-blue-400 stroke dark:stroke-blue-500 stroke-blue-400"
               >
                 <AnchorIcon /> <h1>Anchor</h1>
               </Button>
@@ -152,7 +152,12 @@ const ProfilePanel = ({
           </div>
         </div>
         <div className="flex flex-col xs3:flex-row xs3:gap-2 xs3:items-center text-blue-500 font-semibold">
-          <div onClick={() => {router.push("/anchors")}} className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
+          <div
+            onClick={() => {
+              user_id === profileData.id && router.push("/anchors");
+            }}
+            className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer"
+          >
             <h1>{formatCount(anchors)}</h1>
             <AnchorIcon className="size-6" />
             <h1>Anchorers</h1>
@@ -160,7 +165,12 @@ const ProfilePanel = ({
           <span className="text-slate-500 -mx-2 xs4:mx-0 hidden xs3:block">
             •
           </span>
-          <div onClick={() => {router.push("/anchorings")}} className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer">
+          <div
+            onClick={() => {
+              user_id === profileData.id && router.push("/anchorings");
+            }}
+            className="flex gap-1 hover:bg-foreground dark:hover:bg-d_foreground hover:text-blue-400 p-2 rounded-xl cursor-pointer"
+          >
             <h1>{formatCount(anchorings)}</h1>
             <SailingRoundedIcon className="size-6" />
             <h1>Anchorings</h1>

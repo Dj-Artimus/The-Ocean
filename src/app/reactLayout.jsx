@@ -22,6 +22,7 @@ import OceanVisionModal from "@/components/OceanVisionModal";
 import { CommunicationStore } from "@/store/CommunicationStore";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { NavigationStore } from "@/store/NavigationStore";
+import toast from "react-hot-toast";
 
 const ReactLayout = ({ children }) => {
   const {
@@ -63,7 +64,7 @@ const ReactLayout = ({ children }) => {
           messageStr?.includes("Failed to fetch") ||
           messageStr?.includes("AuthRetryableFetchError")
         ) {
-          errorToast("Network error. Please check your internet connection.");
+          toast.error("Network error. Please check your internet connection.");
           return; // Skip logging this error to console
         }
 

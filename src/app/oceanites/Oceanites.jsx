@@ -4,7 +4,9 @@ import Navbar from "@/components/Navbar";
 import "../globals.css";
 import {
   ArrowBack,
+  Close,
   CrisisAlertRounded,
+  Cyclone,
   CycloneRounded,
   Search,
 } from "@mui/icons-material";
@@ -29,24 +31,77 @@ const OceaniteAtolls = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
   const oceanitesRef = useRef();
   const router = useRouter();
 
-  const handleSubmit = useCallback(async () => {
-    await SearchOceanites(searchKeyword);
-  }, [SearchOceanites, searchKeyword]);
+  // const handleSubmi  = useCallback(async () => {
+  //   await SearchOceanites(searchKeyword);
+  // }, [SearchOceanites, searchKeyword]);
 
-  const getOceanites = () =>
-    fetchDataForInfiniteScroll(
+  const getSearchedOceanites = useCallback(
+    async (searchPage, initialHasMore) => {
+      const limit = 10;
+      const isHasMore = initialHasMore || hasMore;
+      if (isLoading || !isHasMore) return;
+      setIsLoading(true);
+      try {
+        const newData = await SearchOceanites(
+          searchPage ? searchPage : page,
+          limit,
+          searchKeyword.trim()
+        );
+        if (newData?.length === limit)
+          return setPage(searchPage ? searchPage + 1 : (prev) => prev + 1);
+        if (newData?.length < limit || newData === null) {
+          setHasMore(false);
+          setPage(1);
+        }
+      } catch (error) {
+        console.error("Error fetching oceanites:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [SearchOceanites, searchKeyword, isLoading, hasMore, page]
+  );
+
+  const handleSubmit = useCallback(async () => {
+    setHasMore(true);
+    setIsSearching(true);
+    setIsSearched(true);
+    await getSearchedOceanites(1, true);
+    setIsSearching(false);
+  }, [SearchOceanites, searchKeyword, getSearchedOceanites]);
+
+  const getOceanites = () => {
+    if (searchKeyword.trim().length > 0)
+      fetchDataForInfiniteScroll(
+        isLoading,
+        setIsLoading,
+        hasMore,
+        setHasMore,
+        page,
+        setPage,
+        10,
+        getSearchedOceanites
+      );
+    else getAllOceanites();
+  };
+
+  const getAllOceanites = useCallback(async (initialPage, initialHasMore) => {
+    return fetchDataForInfiniteScroll(
       isLoading,
       setIsLoading,
-      hasMore,
+      initialHasMore || hasMore,
       setHasMore,
-      page,
+      initialPage || page,
       setPage,
       10,
       GetOceanites
     );
+  });
 
   const handleScroll = () =>
     setInfiniteScroll(oceanitesRef, hasMore, page, isLoading, getOceanites);
@@ -62,6 +117,14 @@ const OceaniteAtolls = () => {
   return (
     <div>
       <div className="w-screen flex h-screen relative overflow-x-hidden">
+        {isSearching && (
+          <div className="bg-background bg-opacity-5 dark:bg-opacity-5 backdrop-blur-sm transition-colors duration-150 dark:bg-d_background w-screen h-screen fixed z-50 flex justify-center items-center">
+            <div className=" animate-pulse">
+              <Cyclone className="size-20 animate-spin" />
+            </div>
+          </div>
+        )}
+
         <div
           onClick={() => {
             isMsgsOpen ? setIsMsgsOpen(false) : router.push("/");
@@ -76,6 +139,28 @@ const OceaniteAtolls = () => {
             className="size-7"
           />
         </div>
+
+        {isSearched && (
+          <div
+            onClick={() => {
+              setHasMore(true);
+              setIsSearching(true);
+              setSearchKeyword("");
+              setIsSearched(false);
+              getAllOceanites(1, true);
+              setIsSearching(false);
+            }}
+            className="fixed lg:hidden top-[1px] right-[1px] z-30 text-white bg-blue-700 bg-opacity-80 rounded-tr-none rounded-xl p-[2px] cursor-pointer"
+          >
+            <Close
+              sx={{
+                width: "30px",
+                height: "30px",
+              }}
+              className="size-7"
+            />
+          </div>
+        )}
 
         {/* NAVIGATION BAR STARTS HERE */}
         <Navbar
@@ -144,7 +229,7 @@ const OceaniteAtolls = () => {
 
           {/* OCEANITES ENDS HERE */}
 
-          <div className="h-1 w-full my-20"></div>
+          <div className="h-1 w-full my-7"></div>
         </div>
         {/* MAIN CONTENT ENDS HERE */}
       </div>

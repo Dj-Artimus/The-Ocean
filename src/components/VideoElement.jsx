@@ -39,7 +39,7 @@ const VideoElement = ({ videos, currentVideo, swipeHandlers }) => {
   };
 
   return (
-    <div className="w-full flex justify-center mt-4">
+    <div className="w-full flex justify-center mb-4">
       <div {...swipeHandlers} className="relative">
         {/* Display "Unmute" button only if the video is muted */}
         {isVideoMuted && (
@@ -57,7 +57,7 @@ const VideoElement = ({ videos, currentVideo, swipeHandlers }) => {
           autoPlay={isPlaying}
           preload="auto"
           src={videos[currentVideo]?.split("<|>")[0]}
-          className="rounded-xl shadow shadow-slate-500"
+          className="rounded-xl shadow shadow-slate-500 p-[2px]"
           onVolumeChange={() => {
             if (videoRef.current && !videoRef.current.muted) {
               handleUnmute(); // Sync unmute across all videos

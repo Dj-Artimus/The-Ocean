@@ -26,7 +26,7 @@ const ContentElement = ({ content }) => {
     <div className=" w-full mx-auto">
       <div
         ref={contentRef}
-        className={`overflow-hidden transition-all duration-300 text-lg -mb-1`}
+        className={`overflow-hidden transition-all duration-300 text-lg`}
         style={{
           maxHeight: expanded
             ? `${contentRef.current.scrollHeight}px`
@@ -36,11 +36,11 @@ const ContentElement = ({ content }) => {
         <p>{content}</p>
       </div>
 
-      <div className="flex justify-end">
-        {showToggle && (
+      {showToggle ? (
+        <div className="flex justify-end -mt-1">
           <button
             onClick={toggleExpand}
-            className="flex items-center gap-[1px] text-sm text-blue-500 -my-2 -mt-[2px] transition-all duration-300 hover:text-blue-600"
+            className="flex items-center gap-[1px] text-sm text-blue-500 transition-all duration-300 hover:text-blue-600"
           >
             {expanded ? "Less" : "More"}
             <ExpandMoreIcon
@@ -49,8 +49,8 @@ const ContentElement = ({ content }) => {
               }`}
             />
           </button>
-        )}
-      </div>
+        </div>
+      ) : <div className="mb-3"></div> }
     </div>
   );
 };
