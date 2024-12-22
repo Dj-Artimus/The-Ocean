@@ -464,18 +464,20 @@ export const UserStore =
                             }
 
                             if (page === 1) set({
-                                anchorsData: data, // Replace existing oceanites
+                                anchoringsData: data, // Replace existing oceanites
                             })
                             else {
-                                const existingAnchors = get().anchorsData;
-                                const newAnchors = data.map(
-                                    (oceanite) => !existingAnchors.some((existing) => existing.id === oceanite.anchor_id.id) && oceanite.anchor_id
-                                );
+                                
+                            const existingAnchorings = get().anchoringsData;
+                            const newAnchorings = data.map(
+                                (oceanite) => !existingAnchorings.some((existing) => existing.id === oceanite.anchoring_id.id) && oceanite.anchoring_id
+                            );
 
-                                set({
-                                    anchorsData: [...existingAnchors, ...newAnchors], // Append new oceanites
-                                });
+                            set({
+                                anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
+                            });
                             }
+
 
                             return data;
                         }
