@@ -39,7 +39,7 @@ const VideoElement = ({ videos, currentVideo, swipeHandlers }) => {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center mt-4">
       <div {...swipeHandlers} className="relative">
         {/* Display "Unmute" button only if the video is muted */}
         {isVideoMuted && (

@@ -40,7 +40,7 @@ const ContentElement = ({ content }) => {
         {showToggle && (
           <button
             onClick={toggleExpand}
-            className="flex items-center gap-[1px] text-sm text-blue-500 -my-2 -mt-[6px] transition-all duration-300 hover:text-blue-600"
+            className="flex items-center gap-[1px] text-sm text-blue-500 -my-2 -mt-[2px] transition-all duration-300 hover:text-blue-600"
           >
             {expanded ? "Less" : "More"}
             <ExpandMoreIcon

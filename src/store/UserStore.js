@@ -27,6 +27,11 @@ export const UserStore =
                 harborMatesData: [],
                 anchoringsIds: [],
 
+                GetUser: async () => {
+                    const { data, error } = await supabase.auth.getUser();
+                    if( data ) return data?.user;
+                },
+                
                 fetchProfileData: async () => {
                     const { data, error } = await supabase.auth.getUser();
                     set({ isProfileDataFetched: false });

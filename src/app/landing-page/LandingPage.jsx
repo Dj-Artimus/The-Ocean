@@ -1,15 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import "../globals.css";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { UIStore } from "@/store/UIStore";
 import { toggleTheme } from "@/utils/ThemeToggle";
+import { UserStore } from "@/store/UserStore";
+import { redirect } from "next/navigation";
 
 const ReactLandingPage = () => {
   const { darkModeOn, toggleDarkMode } = UIStore();
+  const { GetUser } = UserStore();
+
+  useEffect(() => {
+    GetUser().then((userData) => {
+      if (userData?.id) return redirect("/");
+    });
+  }, [GetUser]);
 
   return (
     <div className="relative bg-background dark:bg-d_background text-text dark:text-d_text customScrollbar">
@@ -327,11 +336,12 @@ const ReactLandingPage = () => {
             worth taking. 🚀
           </p>
           <p className="mb-4">
-            Although the current version of The Ocean doesn&apos;t yet integrate data
-            from all social media platforms due to technical limitations, the
-            vision remains intact. What I&apos;ve built is a platform that showcases
-            the potential of a unified feed and already supports real-time
-            messaging 💬 , meaningful connections 🔗, and intuitive UI design 📱 .
+            Although the current version of The Ocean doesn&apos;t yet integrate
+            data from all social media platforms due to technical limitations,
+            the vision remains intact. What I&apos;ve built is a platform that
+            showcases the potential of a unified feed and already supports
+            real-time messaging 💬 , meaningful connections 🔗, and intuitive UI
+            design 📱 .
           </p>
         </div>
       </section>

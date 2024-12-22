@@ -1,7 +1,7 @@
 import { differenceInSeconds, differenceInMinutes, differenceInHours, differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
 
 
-export const formatCount = (count) => {
+export const formatCount = (count=0) => {
     if (count < 1000) return count.toString(); // Less than 1k
     if (count < 1_000_000) return (count / 1_000).toFixed(1).replace(/\.0$/, '') + 'k'; // 1k to 999k
     if (count < 1_000_000_000) return (count / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'; // 1M to 999M

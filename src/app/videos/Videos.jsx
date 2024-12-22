@@ -36,11 +36,11 @@ const ReactVideosPage = () => {
   const getVideos = useCallback(async () => {
     // const videoData =
     if (!hasMore) return;
-    const newVideos = await GetFeedVideos(page, 5);
+    const newVideos = await GetFeedVideos( page, 5 );
     if (newVideos?.length < 5 || newVideos === "end") {
       setHasMore(false); // Stop fetching if fewer than limit
     }
-  }, [hasMore, GetFeedVideos]);
+  }, [hasMore, GetFeedVideos, page]);
 
   useEffect(() => {
     setIsMsgsOpen(false);
@@ -50,7 +50,7 @@ const ReactVideosPage = () => {
 
   useEffect(() => {
     getVideos();
-  }, [page, getVideos]);
+  }, [getVideos, page]);
 
   const videoCount = feedVideos?.length;
 
@@ -87,7 +87,7 @@ const ReactVideosPage = () => {
     }
 
     if (currentVideo === videoCount - 2) {
-      setPage((prev) => prev + 1);
+      setPage( page + 1 );
     }
   }, [currentVideo, controls, videoCount]);
 

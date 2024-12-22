@@ -49,7 +49,7 @@ const ContentAndMediaElement = ({ content, images, videos }) => {
       <ContentElement key={Router.asPath} content={content} />
       {/*  DROPLET CONTENT ENDS HERE  */}
       {/* Image Gallery or Slider */}
-      <div className="relative mt-1">
+      <div className="relative mt-3">
         {/* Slider image display */}
         {images?.length > 0 && (
           <img
@@ -65,7 +65,7 @@ const ContentAndMediaElement = ({ content, images, videos }) => {
         )}
         {/* Dot navigation */}
         {images?.length > 1 && (
-          <div className="flex justify-center mt-2 space-x-2">
+          <div className="flex justify-center mt-2 -mb-1 space-x-2">
             {images?.map((_, index) => (
               <span
                 key={index}
@@ -80,7 +80,7 @@ const ContentAndMediaElement = ({ content, images, videos }) => {
       </div>
       {/* Video Gallery or Slider */}
       {videos?.length > 1 ? (
-        <div className="relative mt-2">
+        <div className="relative">
           {/* Slider video display */}
           <VideoElement
             videos={videos}
@@ -88,7 +88,7 @@ const ContentAndMediaElement = ({ content, images, videos }) => {
             swipeHandlers={swipeHandlersForVideos}
           />
           {/* Dot navigation for video */}
-          <div className="flex justify-center mt-2 space-x-2">
+          <div className="flex justify-center mt-2 -mb-2 space-x-2">
             {videos?.map((_, index) => (
               <span
                 key={index}

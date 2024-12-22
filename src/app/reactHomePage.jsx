@@ -65,7 +65,7 @@ export default function ReactHomePage() {
         5,
         GetFeedDroplets
       );
-    if (!hasMore)
+    else if (!hasMore)
       fetchDataForInfiniteScroll(
         isLoading,
         setIsLoading,
@@ -73,7 +73,7 @@ export default function ReactHomePage() {
         setHasMoreUnFeedData,
         page,
         setPage,
-        10,
+        5,
         GetUnFeedDroplets
       );
   };
@@ -98,7 +98,6 @@ export default function ReactHomePage() {
     fetchFeedData(); // Explicit initial fetch call
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore]); // Ensure this runs only once
-
 
   useEffect(() => {
     setScrollListener(feedRef, handleScroll);

@@ -535,6 +535,7 @@ export const DropletStore = create(
                     };
                     // Shuffle the organizedData array
                     const shuffledVideos = shuffleVideos(organizedData);
+
                     set({ feedVideos: [...get().feedVideos, ...shuffledVideos], dropletsData: videoData });
                     return videoData;
                 }
