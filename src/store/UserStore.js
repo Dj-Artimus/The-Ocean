@@ -27,6 +27,31 @@ export const UserStore =
                 harborMatesData: [],
                 anchoringsIds: [],
 
+
+                Logout: async () => {
+                    try {
+                        let { error } = await supabase.auth.signOut()
+                        if (error) {
+                            return console.log(error);
+                        }
+
+                        set({
+                            profileData: {},
+                            oceanitesData: [],
+                            anchorsData: [],
+                            anchoringsData: [],
+                            oceaniteProfileData: {},
+                            harborMatesData: [],
+                            anchoringsIds: [],
+                        })
+                        return successToast("Logout Successfully");
+
+                    } catch (error) {
+                        console.log(error);
+                        return errorToast('Logout Failed , Please try again !')
+                    }
+                },
+
                 GetUser: async () => {
                     const { data, error } = await supabase.auth.getUser();
                     if (data) return data?.user;
@@ -467,15 +492,15 @@ export const UserStore =
                                 anchoringsData: data, // Replace existing oceanites
                             })
                             else {
-                                
-                            const existingAnchorings = get().anchoringsData;
-                            const newAnchorings = data.map(
-                                (oceanite) => !existingAnchorings.some((existing) => existing.id === oceanite.anchoring_id.id) && oceanite.anchoring_id
-                            );
 
-                            set({
-                                anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
-                            });
+                                const existingAnchorings = get().anchoringsData;
+                                const newAnchorings = data.map(
+                                    (oceanite) => !existingAnchorings.some((existing) => existing.id === oceanite.anchoring_id.id) && oceanite.anchoring_id
+                                );
+
+                                set({
+                                    anchoringsData: [...existingAnchorings, ...newAnchorings], // Append new oceanites
+                                });
                             }
 
 

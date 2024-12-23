@@ -148,18 +148,6 @@ export const AuthStore = create((set, get) => ({
         }
     },
 
-    Logout: async () => {
-        try {
-            let { error } = await supabase.auth.signOut()
-            if (error) {
-                return console.log(error);
-            }
-            return successToast("Logout Successfully");
-        } catch (error) {
-            console.log(error);
-            return errorToast('Logout Failed , Please try again !')
-        }
-    },
 
     OAuthLogin: async (provider) => {
         try {
