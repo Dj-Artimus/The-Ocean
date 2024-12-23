@@ -107,7 +107,7 @@ const Navbar = ({ navStyle }) => {
             setMsgsCount(false);
             setUnreadMsgsCountRefresher(new Date().getTime());
           } catch (error) {}
-          // router?.push("/chat");
+          router?.push("/chat");
         }}
       >
         <Badge
