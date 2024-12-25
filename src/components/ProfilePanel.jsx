@@ -160,7 +160,7 @@ const ProfilePanel = ({
           >
             <h1>{formatCount(anchors)}</h1>
             <AnchorIcon className="size-6" />
-            <h1>Anchorers</h1>
+            <h1>Anchors</h1>
           </div>
           <span className="text-slate-500 -mx-2 xs4:mx-0 hidden xs3:block">
             •

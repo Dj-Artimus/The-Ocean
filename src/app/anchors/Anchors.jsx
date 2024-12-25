@@ -151,7 +151,7 @@ const Anchors = () => {
           {!hasMore && (
             <div className="text-cyan-500 animate-pulse w-full flex justify-center items-center mt-2 gap-1">
               <CrisisAlertRounded className="size-6 animate-spin" />
-              No more anchorers...
+              No more Anchors...
             </div>
           )}
 

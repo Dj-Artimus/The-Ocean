@@ -12,7 +12,7 @@ const OceanScore = ({anchors, anchorings}) => {
         <div onClick={() => {router.push("/anchors")}} className="xs1:flex flex-col items-center p-2 rounded-xl text-blue-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary w-full hover:text-blue-400">
           <AnchorIcon />
           <h1 className="-mb-1">{formatCount(anchors)}</h1>
-          <h1>Anchorers</h1>
+          <h1>Anchors</h1>
         </div>
         <div onClick={() => {router.push("/anchorings")}} className="xs1:flex flex-col items-center p-2 rounded-xl text-blue-500 font-semibold hidden cursor-pointer hover:bg-primary dark:hover:bg-d_primary w-full hover:text-blue-400">
           <SailingRoundedIcon />

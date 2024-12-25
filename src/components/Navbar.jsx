@@ -25,7 +25,7 @@ const Navbar = ({ navStyle }) => {
     setIsProfileEditModalOpen,
   } = UIStore();
   const { profileData } = UserStore();
-  const { setUnreadMsgsCountRefresher, msgsCount, setMsgsCount } =
+  const { setUnreadMsgsCountRefresher, msgsCount, setMsgsCount, setCommunicatorId } =
     CommunicationStore();
 
   const router = useRouter();
@@ -44,7 +44,7 @@ const Navbar = ({ navStyle }) => {
       <div
         onClick={() => {
           router?.push("/");
-          setIsMsgsOpen(false);
+          setCommunicatorId('');
         }}
         className={`dark:hover:bg-d_secondary hover:bg-foreground hover:rounded-xl m-[2px] cursor-pointer flex items-center hover:text-blue-500 justify-center w-full ${getActiveClass(
           "/"

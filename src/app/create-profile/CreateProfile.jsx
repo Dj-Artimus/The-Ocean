@@ -111,20 +111,27 @@ const CreateProfile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Sanitize the file name
+    const sanitizedFileName = file.name.replace(/[<>]/g, '');
+
     // Preview the image
     const fileUrl = URL.createObjectURL(file);
+    const sanitizedFileUrl = fileUrl.replace(/[<>]/g, '');
+
     type === "poster"
       ? setPosterData((prevData) => ({
           ...prevData,
-          newSource: fileUrl,
+          newSource: sanitizedFileUrl,
           file: file,
+          fileName: sanitizedFileName,
         }))
       : setAvatarData((prevData) => ({
           ...prevData,
-          newSource: fileUrl,
+          newSource: sanitizedFileUrl,
           file: file,
+          fileName: sanitizedFileName,
         }));
-  };
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -199,7 +206,7 @@ const CreateProfile = () => {
                       onClick={() => {
                         selectPoster.current.click();
                       }}
-                      src={posterData.newSource || posterData.currentSource}
+                      src={posterData.newSource.replace(/[<>]/g, '') || posterData.currentSource.replace(/[<>]/g, '')}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/images/defaultPoster.png";
@@ -227,7 +234,7 @@ const CreateProfile = () => {
                         e.stopPropagation(); // Stop click from propagating to the poster div
                         selectAvatar.current.click();
                       }}
-                      src={avatarData.newSource || avatarData.currentSource}
+                      src={avatarData.newSource.replace(/[<>]/g, '') || avatarData.currentSource.replace(/[<>]/g, '')}
                       alt="profile"
                       className="size-20 xs6:size-24 sm:size-30 lg:size-40 object-cover m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
                     />
