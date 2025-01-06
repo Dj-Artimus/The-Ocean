@@ -79,19 +79,12 @@ const LeftSideBar = ({ styles }) => {
             />
           </div>
           {/* USERS PROFILE IN anchors STARTS HERE */}
-          {searchKeyword
-            ? harborMatesData
-                ?.filter((data) => data.name.toLowerCase().includes(searchKeyword.toLowerCase()))
-                ?.map((data) => (
-                  <UserMsgProfile
-                    key={data?.id}
-                    avatar_url={data?.avatar?.split("<|>")[0]}
-                    name={data.name}
-                    wave={data?.wave}
-                    profile_id={data?.id}
-                  />
-                ))
-            : harborMatesData?.map((data) => (
+          {searchKeyword ? (
+            harborMatesData
+              ?.filter((data) =>
+                data.name.toLowerCase().includes(searchKeyword.toLowerCase())
+              )
+              ?.map((data) => (
                 <UserMsgProfile
                   key={data?.id}
                   avatar_url={data?.avatar?.split("<|>")[0]}
@@ -99,7 +92,20 @@ const LeftSideBar = ({ styles }) => {
                   wave={data?.wave}
                   profile_id={data?.id}
                 />
-              ))}
+              ))
+          ) : harborMatesData?.length <= 0 ? (
+            <div className="w-full h-full flex flex-col px-10 justify-center items-center text-xl" > <h1>No HarborMates...</h1><h2 className="text-sm dark:text-gray-300 text-gray-700 text-center" >Increase your anchors/anchorings to start chatting with HarborMates</h2></div>
+          ) : (
+            harborMatesData?.map((data) => (
+              <UserMsgProfile
+                key={data?.id}
+                avatar_url={data?.avatar?.split("<|>")[0]}
+                name={data.name}
+                wave={data?.wave}
+                profile_id={data?.id}
+              />
+            ))
+          )}
 
           {/* USERS PROFILE IN anchors ENDS HERE */}
         </div>
@@ -109,4 +115,3 @@ const LeftSideBar = ({ styles }) => {
 };
 
 export default LeftSideBar;
-

@@ -26,6 +26,7 @@ export const AuthStore = create((set, get) => ({
                 return false;
             }
             else if (data) {
+                localStorage.removeItem("user-store");
                 successToast('Sign Up done! Email sent for verification');
                 set({ signUpEmail: email })
                 return true;
@@ -80,7 +81,7 @@ export const AuthStore = create((set, get) => ({
                 email,
                 password
             })
-
+            localStorage.removeItem("user-store");
             if (error) {
                 errorToast("Login Error:", error.message);
 

@@ -17,42 +17,12 @@ import { UIStore } from "@/store/UIStore";
 import '../globals.css';
 import { Cyclone } from "@mui/icons-material";
 
-const countries = [
-  { code: "US", name: "United States" },
-  { code: "GB", name: "United Kingdom" },
-  { code: "CA", name: "Canada" },
-  { code: "AU", name: "Australia" },
-  { code: "DE", name: "Germany" },
-  { code: "FR", name: "France" },
-  { code: "IN", name: "India" },
-  { code: "BR", name: "Brazil" },
-  { code: "CN", name: "China" },
-  { code: "JP", name: "Japan" },
-  { code: "RU", name: "Russia" },
-  { code: "IT", name: "Italy" },
-  { code: "ES", name: "Spain" },
-  { code: "MX", name: "Mexico" },
-  { code: "NL", name: "Netherlands" },
-  { code: "SE", name: "Sweden" },
-  { code: "CH", name: "Switzerland" },
-  { code: "NZ", name: "New Zealand" },
-  { code: "SG", name: "Singapore" },
-  { code: "KR", name: "South Korea" },
-  { code: "ZA", name: "South Africa" },
-  { code: "AR", name: "Argentina" },
-  { code: "IE", name: "Ireland" },
-  { code: "NO", name: "Norway" },
-  { code: "FI", name: "Finland" },
-  { code: "PH", name: "Philippines" },
-  // Add more countries as needed
-];
 
 const CreateProfile = () => {
   const redirect = useRouter();
 
   const { setIsMediaFileUploading } = UIStore();
   const { CreateProfile, FileUploader, profileData } = UserStore();
-  const [nationality, setNationality] = useState("");
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
 
@@ -112,11 +82,11 @@ const CreateProfile = () => {
     if (!file) return;
 
     // Sanitize the file name
-    const sanitizedFileName = file.name.replace(/[<>]/g, '');
+    const sanitizedFileName = file?.name?.replace(/[<>]/g, '');
 
     // Preview the image
     const fileUrl = URL.createObjectURL(file);
-    const sanitizedFileUrl = fileUrl.replace(/[<>]/g, '');
+    const sanitizedFileUrl = fileUrl?.replace(/[<>]/g, '');
 
     type === "poster"
       ? setPosterData((prevData) => ({
@@ -206,7 +176,7 @@ const CreateProfile = () => {
                       onClick={() => {
                         selectPoster.current.click();
                       }}
-                      src={posterData.newSource.replace(/[<>]/g, '') || posterData.currentSource.replace(/[<>]/g, '')}
+                      src={posterData?.newSource?.replace(/[<>]/g, '') || posterData?.currentSource?.replace(/[<>]/g, '')}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "/images/defaultPoster.png";
@@ -234,7 +204,7 @@ const CreateProfile = () => {
                         e.stopPropagation(); // Stop click from propagating to the poster div
                         selectAvatar.current.click();
                       }}
-                      src={avatarData.newSource.replace(/[<>]/g, '') || avatarData.currentSource.replace(/[<>]/g, '')}
+                      src={avatarData?.newSource?.replace(/[<>]/g, '') || avatarData?.currentSource?.replace(/[<>]/g, '')}
                       alt="profile"
                       className="size-20 xs6:size-24 sm:size-30 lg:size-40 object-cover m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
                     />

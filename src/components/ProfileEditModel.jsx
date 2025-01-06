@@ -52,8 +52,8 @@ const ProfileEditModal = ({ profileData }) => {
 
   const router = useRouter();
 
-  const [name, setName] = useState(profileData?.name);
-  const [username, setUsername] = useState(profileData?.username);
+  const [name, setName] = useState(profileData?.name || "");
+  const [username, setUsername] = useState(profileData?.username || "");
 
   const [posterData, setPosterData] = useState({
     currentSource: profileData?.poster?.split("<|>")[0],
@@ -102,11 +102,11 @@ const ProfileEditModal = ({ profileData }) => {
     if (!file) return;
 
     // Sanitize the file name
-    const sanitizedFileName = file.name.replace(/[<>]/g, '');
+    const sanitizedFileName = file?.name?.replace(/[<>]/g, '');
 
     // Preview the image
     const fileUrl = URL.createObjectURL(file);
-    const sanitizedFileUrl = fileUrl.replace(/[<>]/g, '');
+    const sanitizedFileUrl = fileUrl?.replace(/[<>]/g, '');
 
     type === "poster"
       ? setPosterData((prevData) => ({
@@ -227,7 +227,7 @@ const ProfileEditModal = ({ profileData }) => {
                         onClick={() => {
                           selectPoster.current.click();
                         }}
-                        src={posterData.newSource.replace(/[<>]/g, '') || posterData.currentSource.replace(/[<>]/g, '')}
+                        src={posterData?.newSource?.replace(/[<>]/g, '') || posterData?.currentSource?.replace(/[<>]/g, '')}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = "/images/defaultPoster.png";
@@ -255,7 +255,7 @@ const ProfileEditModal = ({ profileData }) => {
                           e.stopPropagation(); // Stop click from propagating to the poster div
                           selectAvatar.current.click();
                         }}
-                        src={avatarData.newSource.replace(/[<>]/g, '') || avatarData.currentSource.replace(/[<>]/g, '')}
+                        src={avatarData?.newSource?.replace(/[<>]/g, '') || avatarData?.currentSource?.replace(/[<>]/g, '')}
                         alt="profile"
                         className="size-20 xs6:size-24 sm:size-30 lg:size-40 object-cover m-2 pointer-events-auto rounded-full border p-1 xs6:p-2 border-transparent bg-primary dark:bg-d_primary bg-opacity-70 backdrop-blur-sm shadow-sm shadow-blue-500"
                       />
