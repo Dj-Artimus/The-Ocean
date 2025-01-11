@@ -159,6 +159,7 @@ const ProfileEditModal = ({ profileData }) => {
 
     const isProfileUpdated = await CreateProfile({
       name,
+      username,
       dob,
       gender,
       wave,

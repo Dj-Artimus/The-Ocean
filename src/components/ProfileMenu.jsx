@@ -9,8 +9,8 @@ import { redirect } from "next/navigation";
 import { Switch } from "@mui/joy";
 import { toggleTheme } from "@/utils/ThemeToggle";
 import { UIStore } from "@/store/UIStore";
-import { AuthStore } from "@/store/AuthStore";
 import { successToast } from "./ToasterProvider";
+import { UserStore } from "@/store/UserStore";
 
 export default function ProfileMenu({ children }) {
   const {
@@ -20,7 +20,7 @@ export default function ProfileMenu({ children }) {
     setOceanVision,
     setIsOceanVisionModalOpen,
   } = UIStore();
-  const { Logout } = AuthStore();
+  const { Logout } = UserStore();
 
   const createHandleMenuClick = (menuItem) => {
     return async () => {

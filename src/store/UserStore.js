@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createClient } from '@/utils/supabase/client';
 import { CommunicationStore } from './CommunicationStore';
+import { errorToast, successToast } from '@/components/ToasterProvider';
 
 const supabase = createClient();
 
@@ -34,17 +35,18 @@ export const UserStore =
                         if (error) {
                             return console.log(error);
                         }
-
-                        set({
-                            profileData: {},
-                            oceanitesData: [],
-                            anchorsData: [],
-                            anchoringsData: [],
-                            oceaniteProfileData: {},
-                            harborMatesData: [],
-                            anchoringsIds: [],
-                        })
-                        return successToast("Logout Successfully");
+                        successToast("Logout Successfully");
+                        return setTimeout(() => {
+                            set({
+                                profileData: {},
+                                oceanitesData: [],
+                                anchorsData: [],
+                                anchoringsData: [],
+                                oceaniteProfileData: {},
+                                harborMatesData: [],
+                                anchoringsIds: [],
+                            })
+                        }, 1000);
 
                     } catch (error) {
                         console.log(error);
@@ -266,6 +268,7 @@ export const UserStore =
                             console.log('Something Went Wrong : ', error);
                             return null;
                         } else {
+                            set({ ...user, ...profileData, dob: new Date(profileData.dob).toISOString().split("T")[0] });
                             return true;
                         }
                     } catch (error) {
