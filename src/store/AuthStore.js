@@ -83,9 +83,12 @@ export const AuthStore = create((set, get) => ({
             })
             localStorage.removeItem("user-store");
             if (error) {
-                errorToast("Login Error:", error.message);
-
-                console.log('Error login up:', error.message);
+                if(error.message === "Invalid login credentials"){
+                    errorToast("Invalid Login Credentials!");
+                }else{
+                    errorToast(`Login Error:${error.message}`);
+                }
+                console.log('Error login:', error.message);
                 // Display an error message to the user
                 return false;
             }
